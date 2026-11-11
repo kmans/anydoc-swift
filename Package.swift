@@ -18,7 +18,7 @@ let useLocallyBuiltBridge =
       name: "AnyDocSwiftBridge",
       url:
         "https://github.com/kmans/anydoc-swift/releases/download/binary-0.3.0/AnyDocSwiftBridge.xcframework.zip",
-      checksum: "8349a33218957018a163ae3d1ac12e10dd6916d4eff1eb68afce6f1bcddb9437"
+      checksum: "7d5c71ada88ab225f508bda1ee70aac013d395f098114082d282ac126e426dbe"
     )
   let bridgeLinkerSettings: [LinkerSetting] = []
 #else

@@ -134,28 +134,10 @@ fn values(
         return Ok((Vec::new(), Vec::new()));
     };
     let formula = parent.first_descendant(ns::CHART, "f").map(Element::text);
-    if let Some(mut resolved) = formula.as_deref().and_then(|f| range(f, cells)) {
+    if let Some(resolved) = formula.as_deref().and_then(|f| range(f, cells)) {
         charge(resolved.len(), budget)?;
-        if numeric && resolved.iter().any(|(n, s)| n.is_none() && s.is_empty()) {
-            let cache = cached(parent, true, budget)?;
-            let mut used = false;
-            for (index, value) in resolved.iter_mut().enumerate() {
-                if value.0.is_none() && value.1.is_empty() {
-                    if let Some(cached) = cache.get(index).filter(|(n, _)| n.is_some()) {
-                        *value = cached.clone();
-                        used = true;
-                    }
-                }
-            }
-            if used {
-                diagnostics.push(Diagnostic {
-                    code: "chart.cachedData".into(),
-                    severity: "information".into(),
-                    location: Some(location.clone()),
-                    arguments: vec![],
-                });
-            }
-        }
+        // A readable worksheet is authoritative, including its blank points.
+        // A stale chart cache must never turn a missing source value into data.
         return Ok((resolved, formula.into_iter().collect()));
     }
     let cache = cached(parent, numeric, budget)?;

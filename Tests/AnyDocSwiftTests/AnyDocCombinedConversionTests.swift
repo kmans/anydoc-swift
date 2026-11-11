@@ -28,9 +28,12 @@ final class AnyDocCombinedConversionTests: XCTestCase, @unchecked Sendable {
     XCTAssertEqual(charts.count, 3)
     XCTAssertEqual(charts.first?.series.map(\.name), ["Jan", "Jun"])
     XCTAssertTrue(result.markdown.contains("## Charts"))
-    XCTAssertTrue(result.markdown.contains("bar \"Jan\" [11200, 3100, 1200, 900]"))
+    XCTAssertTrue(result.markdown.contains("**Jan**") && result.markdown.contains("**Jun**"))
     XCTAssertTrue(result.markdown.contains("-0.0577489687684149"))
-    let notice = try XCTUnwrap(result.diagnostics.first { $0.code == "chart.tableFallback" })
+    let notice = try XCTUnwrap(
+      result.diagnostics.first {
+        $0.code == "chart.tableFallback" && $0.location?.object == "Share of the total"
+      })
     XCTAssertEqual(notice.location?.sheet, "Charts")
     XCTAssertEqual(notice.location?.object, "Share of the total")
   }

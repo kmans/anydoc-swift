@@ -335,3 +335,25 @@ fn repeated_images_keep_their_original_assets_and_every_anchor() {
     assert_eq!(md.matches("](anydoc-asset:0)").count(), 2);
     assert_eq!(md.matches("](anydoc-asset:1)").count(), 1);
 }
+
+#[test]
+fn readable_worksheet_holes_are_not_filled_from_stale_chart_caches() {
+    let doc = anydoc::to_document(
+        include_bytes!("../../../Tests/Fixtures/fidelity/worksheet-chart-hole.xlsx"),
+        None,
+    )
+    .unwrap();
+    let line = doc
+        .blocks
+        .iter()
+        .find_map(|block| match block {
+            Block::Chart(chart) if chart.kind == "lineChart" => Some(chart),
+            _ => None,
+        })
+        .unwrap();
+    assert_eq!(line.series[0].values[0], None);
+    assert_eq!(line.series[0].values[1].as_deref(), Some("16100"));
+    assert!(conversion::chart_mermaid(line, options()).is_none());
+    assert!(conversion::render_chart(line, options()).contains("Unavailable"));
+    assert!(!doc.diagnostics.iter().any(|d| d.code == "chart.cachedData"));
+}

@@ -1,6 +1,6 @@
 {
   "archiveSHA256": "cf0d78e4cfe3654eb3ea04422ec5a94352000ee56e97902125e68e51f7527062",
-  "patchSHA256": "ef78ae0e18e7888f0750a27ddb9f883cb3e88967a806fa7203bc2fd3c023a255",
+  "patchSHA256": "38da4db4b5709bfc8c96df69f40fa846ce17fae8c52e5645ea61338fc8e4c403",
   "files": {
     ".cargo_vcs_info.json": "130e1f4ee7f3975bb92a693b27199efb921d194b0bd37bef6707472862c382a8",
     "Cargo.lock": "c02daac5714e2ba227f241fe635290159080fbf728dd6842bb6e422dc891e929",
@@ -36,7 +36,7 @@
     "src/formats/rtf/mod.rs": "2a329a38b28e7aa7c0d29ce2bbb08fe8d5bf5db44a1d8371a74a2ecb131951fb",
     "src/formats/rtf/table.rs": "31a82fc1ddb47b173cd4c2b9006d44dc4ea12e1e0ef3f50a2636b7c5074ea52a",
     "src/formats/rtf/tables.rs": "17a7f7063f0ccebd4b2152a8723b8474deb7595ce69c26f891078a1f505a8df8",
-    "src/formats/sheet/charts.rs": "2a068e2bc28a9e1f45349f5524dfe92ec20a1bd1218a9b0a1d9d2e94753f566d",
+    "src/formats/sheet/charts.rs": "d447eb14fd1690b41abd96d61bb64d27f59ee4cf85eedb96f3e9e8657abcbfe2",
     "src/formats/sheet/controls.rs": "a170dd1d6ce3866b454cd8fc8c3a7d576203a0a1537e85bed07af13cae8448a8",
     "src/formats/sheet/mod.rs": "c43f11a42885076af097aa3b0275b465c4da1ac3e337f2dab86ff7bd92a2799f",
     "src/formats/sheet/numfmt.rs": "52345f9afbcbd9062f71dab41409c910f7594228bf3714a309e1d151d1ceafa2",

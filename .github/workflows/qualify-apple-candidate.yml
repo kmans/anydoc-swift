@@ -46,6 +46,7 @@ jobs:
           PY
       - name: Verify packaging, signatures, ABI, and native imports
         run: |
+          python3 Scripts/record-apple-release.py --check
           bash Scripts/verify-artifact.sh .build/artifacts/AnyDocSwiftBridge.xcframework.zip
           bash Scripts/audit-required-reason-apis.sh
       - name: Build and test public API

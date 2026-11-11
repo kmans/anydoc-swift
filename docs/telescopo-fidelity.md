@@ -52,7 +52,7 @@ are preserved; formulas are not evaluated.
 
 Charts retain original series, categories, axis titles, numeric strings, source
 ranges, and extra dimensions such as bubble size. Worksheet values take priority;
-chart caches can fill unavailable values and are identified in diagnostics. No
+chart caches are used only when the referenced worksheet range cannot be resolved and are identified in diagnostics. Blank points in a readable range remain unavailable, even if an old chart cache contains values. No
 external relationship is fetched. Bar and line use Mermaid XY charts; area can
 use a line; suitable pie/doughnut data uses a pie. Stacking, incompatible/logarithmic
 axes, unsupported types, missing points, precision loss, and oversized diagrams

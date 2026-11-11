@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Record a built Apple candidate's checksum and exact native input fingerprint."""
+import argparse
 import hashlib
 import json
 from pathlib import Path
 
+parser = argparse.ArgumentParser(__doc__)
+parser.add_argument('--check', action='store_true')
+args = parser.parse_args()
 root = Path(__file__).resolve().parent.parent
 record = root / 'Native/apple-release.json'
 archive = root / '.build/artifacts/AnyDocSwiftBridge.xcframework.zip'
@@ -14,10 +18,15 @@ for name in ['Rust/anydoc-swift-bridge/Cargo.toml', 'Rust/anydoc-swift-bridge/Ca
     paths.append(root/name)
 paths += list((root/'Scripts').glob('build-*.sh'))
 inputs = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(set(paths))}
-data = json.loads(record.read_text())
+expected = json.loads(record.read_text())
+data = dict(expected)
 data['sha256'] = hashlib.sha256(archive.read_bytes()).hexdigest()
 data['nativeInputsSHA256'] = hashlib.sha256(json.dumps(inputs, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 data['nativeInputs'] = inputs
 data['nativeInputsAlgorithm'] = 'SHA-256 of sorted compact JSON mapping relative paths to SHA-256 file hashes'
-record.write_text(json.dumps(data, indent=2) + '\n')
+if args.check:
+    if data != expected:
+        raise SystemExit('Native candidate source fingerprint or archive checksum differs')
+else:
+    record.write_text(json.dumps(data, indent=2) + '\n')
 print(data['sha256'])

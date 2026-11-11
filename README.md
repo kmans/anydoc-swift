@@ -3,10 +3,8 @@
 This is the Telescopo fork. See [the conversion profile and maintenance guide](docs/telescopo-fidelity.md) for the single-pass API, DOCX/XLSX fidelity, portable output, and regression workflow. This fork’s 0.3.0 release distributes Apple-platform artifacts; Linux release instructions below describe upstream tooling.
 
 
-[![CI](https://img.shields.io/github/actions/workflow/status/ngutech21/anydoc-swift/ci.yml?branch=master&event=push&label=CI)](https://github.com/ngutech21/anydoc-swift/actions/workflows/ci.yml)
-[![Swift package release](https://img.shields.io/github/v/release/ngutech21/anydoc-swift?filter=%21binary-%2A&sort=semver&label=release)](https://github.com/ngutech21/anydoc-swift/releases)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fngutech21%2Fanydoc-swift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/ngutech21/anydoc-swift)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fngutech21%2Fanydoc-swift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/ngutech21/anydoc-swift)
+[![CI](https://img.shields.io/github/actions/workflow/status/kmans/anydoc-swift/ci.yml?branch=master&event=push&label=CI)](https://github.com/kmans/anydoc-swift/actions/workflows/ci.yml)
+[![Swift package release](https://img.shields.io/github/v/release/kmans/anydoc-swift?filter=%21binary-%2A&sort=semver&label=release)](https://github.com/kmans/anydoc-swift/releases)
 
 AnyDocSwift converts Word, PowerPoint, Excel, OpenDocument, PDF, EPUB, RTF,
 and CSV data to GitHub-Flavored Markdown in Swift applications.
@@ -25,8 +23,6 @@ This independent community project is not affiliated with, endorsed by, or maint
 - Swift 6.2 or later
 - macOS 13 or later on Apple Silicon
 - iOS / iPadOS 17 or later on arm64 devices and Apple-Silicon simulators
-- GNU/Linux on `x86_64` or `aarch64`
-  with glibc 2.26 or later
 
 Intel/x86_64 simulators, Mac Catalyst, and visionOS are unsupported.
 The published iOS frameworks pass
@@ -73,9 +69,10 @@ guides for getting started, formats and PDFs, structured documents, limits and
 errors, and hosted OCR. API reference documentation comes from the public
 Swift declarations and their documentation comments.
 
-Swift Package Index hosting is configured in [`.spi.yml`](.spi.yml). Documentation is
-available through the **Documentation** link on the
-[package page](https://swiftpackageindex.com/ngutech21/anydoc-swift).
+The combined conversion API and this fork’s rendering rules are described in
+[the Telescopo guide](docs/telescopo-fidelity.md). The upstream package’s hosted
+documentation describes its original API; hosted documentation for this fork
+is not claimed by this release.
 See [contributing documentation](CONTRIBUTING.md#documentation) for local
 preview and build instructions.
 
@@ -315,7 +312,8 @@ pinned wrapper contract, Node.js tie-breaker, and deliberate Swift guarantees.
 
 The package does not provide local OCR, streaming output, progress reporting,
 active-parser interruption, file-path or security-scoped URL handling,
-persistence, mutation/builders, or custom rendering.
+persistence, mutation/builders, or arbitrary rendering plugins. The combined API
+provides explicit Markdown rendering options.
 
 ### Native artifacts
 

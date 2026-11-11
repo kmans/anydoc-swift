@@ -136,3 +136,11 @@ paragraph = next(p for p in body.findall('{%s}p'%W) if p.find('.//{%s}drawing'%W
 body.insert(0, copy.deepcopy(paragraph))
 repeated['word/document.xml'] = ET.tostring(r)
 archive('repeated-images.docx', repeated)
+
+# A readable sheet's missing numeric point wins over a stale chart cache.
+missing = dict(original)
+r = ET.fromstring(missing['xl/worksheets/sheet1.xml'])
+cell = next(c for c in r.iter('{%s}c'%S) if c.get('r')=='B9')
+for value in list(cell): cell.remove(value)
+missing['xl/worksheets/sheet1.xml'] = ET.tostring(r)
+archive('worksheet-chart-hole.xlsx', missing)
