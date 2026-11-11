@@ -64,8 +64,9 @@ fn workbook_preserves_titles_and_all_three_charts() {
             .count(),
         3
     );
-    assert!(md.contains("## Charts\n\n```mermaid\nxychart-beta"));
-    assert!(md.contains("bar \"Jan\" [11200, 3100, 1200, 900]"));
+    assert!(md.contains("## Charts\n\n### Spending by category"));
+    assert!(md.contains("**Jan**") && md.contains("**Jun**"));
+    assert!(md.contains("| Berths let | 11200 |") && md.contains("| Berths let | 24900 |"));
     assert!(md.contains("line \"Net\" [14300, 16100, 16200, 26600, 44000, 52500]"));
     assert!(md.contains("-0.0577489687684149"));
     assert!(md.contains("-5.8%"));
@@ -74,7 +75,7 @@ fn workbook_preserves_titles_and_all_three_charts() {
             .iter()
             .filter(|d| d.code == "chart.tableFallback")
             .count(),
-        1
+        2
     );
     assert_eq!(
         notes[0].location.as_ref().unwrap().sheet.as_deref(),
@@ -116,6 +117,18 @@ fn incompatible_axes_and_stacking_are_not_reinterpreted() {
     c.grouping.clear();
     c.incompatible_axes = true;
     assert!(conversion::chart_mermaid(&c, options()).is_none());
+}
+#[test]
+fn overlapping_bar_series_fall_back_without_hiding_values() {
+    let mut c = chart("barChart");
+    assert!(conversion::chart_mermaid(&c, options()).is_some());
+    let mut second = c.series[0].clone();
+    second.name = "Larger".into();
+    second.values = vec![Some("100".into()), Some("200".into())];
+    c.series.push(second);
+    assert!(conversion::chart_mermaid(&c, options()).is_none());
+    let table = conversion::render_chart(&c, options());
+    assert!(table.contains("**Larger**") && table.contains("100") && table.contains("10"));
 }
 #[test]
 fn chart_size_limits_keep_all_table_data() {
@@ -273,4 +286,52 @@ fn extra_visual_details_prevent_a_misleading_simple_chart() {
     assert!(!md.contains("bar \"Jan\""));
     assert!(md.contains("€11,200"));
     assert!(notes.iter().any(|n| n.code == "chart.unsupportedDetails"));
+}
+
+#[test]
+fn table_layouts_preserve_ambiguous_rows_explicit_headers_and_formula_caches() {
+    let doc = anydoc::to_document(
+        include_bytes!("../../../Tests/Fixtures/fidelity/table-layouts.xlsx"),
+        None,
+    )
+    .unwrap();
+    let (md, _) = conversion::render(&doc, options());
+    assert!(
+        md.contains("### Quarterly results\n\nFigures supplied by the source"),
+        "{md}"
+    );
+    assert!(md.contains("| Merged value |  | Tail |"), "{md}");
+    assert!(
+        md.contains(
+            "## Ambiguous\n\n| Column 1 | Column 2 |\n| --- | --- |\n| Alpha | 11 |\n| Beta | 22 |"
+        ),
+        "{md}"
+    );
+    assert!(
+        md.contains(
+            "## Explicit\n\n| North | South |\n| --- | --- |\n| Amber | Blue |\n| Green | Violet |"
+        ),
+        "{md}"
+    );
+    assert!(
+        md.contains("| Cached | Uncached |\n| --- | --- |\n| 4 |  |"),
+        "{md}"
+    );
+    assert!(
+        !md.contains("42"),
+        "Uncached formulas must not be calculated"
+    );
+}
+
+#[test]
+fn repeated_images_keep_their_original_assets_and_every_anchor() {
+    let doc = anydoc::to_document(
+        include_bytes!("../../../Tests/Fixtures/fidelity/repeated-images.docx"),
+        None,
+    )
+    .unwrap();
+    let (md, _) = conversion::render(&doc, options());
+    assert_eq!(doc.assets.len(), 2);
+    assert_eq!(md.matches("](anydoc-asset:0)").count(), 2);
+    assert_eq!(md.matches("](anydoc-asset:1)").count(), 1);
 }

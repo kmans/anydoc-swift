@@ -1,0 +1,12 @@
+/private/tmp/anydoc-swift/Rust/anydoc/target/debug/deps/console-62b9135514b787d0.d: /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/lib.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/common_term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/kb.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/unix_term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/utils.rs
+
+/private/tmp/anydoc-swift/Rust/anydoc/target/debug/deps/libconsole-62b9135514b787d0.rlib: /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/lib.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/common_term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/kb.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/unix_term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/utils.rs
+
+/private/tmp/anydoc-swift/Rust/anydoc/target/debug/deps/libconsole-62b9135514b787d0.rmeta: /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/lib.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/common_term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/kb.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/unix_term.rs /Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/utils.rs
+
+/Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/lib.rs:
+/Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/common_term.rs:
+/Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/kb.rs:
+/Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/term.rs:
+/Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/unix_term.rs:
+/Users/kamil/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/console-0.16.4/src/utils.rs:

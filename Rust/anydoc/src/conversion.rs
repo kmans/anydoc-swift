@@ -314,6 +314,9 @@ pub fn chart_mermaid(chart: &Chart, options: MarkdownOptions) -> Option<String> 
         || chart.incompatible_axes
         || chart.series.is_empty()
         || chart.series.len() > 8
+        // Mermaid overlays bar series instead of grouping them; later bars can
+        // completely hide earlier values. Retain all series as labeled tables.
+        || (chart.kind == "barChart" && chart.series.len() > 1)
         || matches!(chart.grouping.as_str(), "stacked" | "percentStacked")
     {
         return None;

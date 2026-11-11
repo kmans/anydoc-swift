@@ -147,13 +147,25 @@ Amounts in euros; the totals are formulas.
 
 ## Charts
 
-```mermaid
-xychart-beta
-    title "Spending by category"
-    x-axis ["Berths let", "Visitors", "Shop", "Fuel"]
-    bar "Jan" [11200, 3100, 1200, 900]
-    bar "Jun" [24900, 19200, 5200, 4400]
-```
+### Spending by category
+
+**Jan**
+
+| Category | Value | Display value |
+| --- | --- | --- |
+| Berths let | 11200 | €11,200 |
+| Visitors | 3100 | €3,100 |
+| Shop | 1200 | €1,200 |
+| Fuel | 900 | €900 |
+
+**Jun**
+
+| Category | Value | Display value |
+| --- | --- | --- |
+| Berths let | 24900 | €24,900 |
+| Visitors | 19200 | €19,200 |
+| Shop | 5200 | €5,200 |
+| Fuel | 4400 | €4,400 |
 
 ```mermaid
 xychart-beta

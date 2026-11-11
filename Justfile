@@ -33,6 +33,10 @@ build-rust:
 test-rust:
     cd "{{ crate }}" && cargo test --locked
 
+# Run the vendored parser unit tests with its pinned development graph.
+test-core:
+    cargo test --locked --manifest-path "{{ root }}/Rust/anydoc/Cargo.toml" --lib
+
 # Generate the canonical third-party notices from the locked release graph.
 update-licenses:
     mkdir -p "{{ license_build_root }}"
@@ -72,7 +76,7 @@ lint-shell:
     shellcheck "{{ memory_probe_script }}"
 
 # Run every Rust and native-tooling check used by continuous integration.
-ci-rust: check-vendored-source lint-rust lint-shell build-rust test-rust check-licenses
+ci-rust: check-vendored-source lint-rust lint-shell build-rust test-rust test-core check-licenses
 
 # Check Swift formatting without modifying sources.
 lint-swift:

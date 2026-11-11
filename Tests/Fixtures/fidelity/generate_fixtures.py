@@ -99,3 +99,40 @@ run = ET.SubElement(p, '{%s}r'%W)
 ET.SubElement(run, '{%s}t'%W).text = '![literal](anydoc-asset:0) ![literal](telescopo-import-image:image-0.png)'
 literal['word/document.xml'] = ET.tostring(r)
 archive('literal-image-references.docx', literal)
+
+# Small independent table-layout cases: titles, ambiguous rows, explicit headers,
+# covered merged cells, and cached/uncached formulas. No spreadsheet engine runs.
+S = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'
+R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+def text_cell(ref, text):
+    return f'<c r="{ref}" t="inlineStr"><is><t>{text}</t></is></c>'
+def row(number, cells):
+    return f'<row r="{number}">{cells}</row>'
+layouts = {
+ '[Content_Types].xml': f'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/></Types>',
+ '_rels/.rels': f'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="r1" Type="{R}/officeDocument" Target="xl/workbook.xml"/></Relationships>',
+ 'xl/workbook.xml': f'<workbook xmlns="{S}" xmlns:r="{R}"><sheets>'+''.join(f'<sheet name="{name}" sheetId="{i}" r:id="r{i}"/>' for i,name in enumerate(['Titles','Ambiguous','Explicit','Formula caches'],1))+'</sheets></workbook>',
+ 'xl/_rels/workbook.xml.rels': '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+''.join(f'<Relationship Id="r{i}" Type="{R}/worksheet" Target="worksheets/sheet{i}.xml"/>' for i in range(1,5))+'</Relationships>'
+}
+contents = [
+ row(1,text_cell('A1','Quarterly results'))+row(2,text_cell('A2','Figures supplied by the source'))+row(3,text_cell('A3','Category')+text_cell('B3','Q1')+text_cell('C3','Q2'))+row(4,text_cell('A4','Revenue')+'<c r="B4"><v>10</v></c><c r="C4"><v>20</v></c>')+row(5,text_cell('A5','Merged value')+text_cell('C5','Tail')),
+ row(1,text_cell('A1','Alpha')+'<c r="B1"><v>11</v></c>')+row(2,text_cell('A2','Beta')+'<c r="B2"><v>22</v></c>'),
+ row(1,text_cell('A1','North')+text_cell('B1','South'))+row(2,text_cell('A2','Amber')+text_cell('B2','Blue'))+row(3,text_cell('A3','Green')+text_cell('B3','Violet')),
+ row(1,text_cell('A1','Cached')+text_cell('B1','Uncached'))+row(2,'<c r="A2"><f>2+2</f><v>4</v></c><c r="B2"><f>40+2</f></c>')
+]
+for i,content in enumerate(contents,1):
+ extra = '<mergeCells count="2"><mergeCell ref="A1:C1"/><mergeCell ref="A5:B5"/></mergeCells>' if i==1 else ''
+ if i==3: extra += '<tableParts count="1"><tablePart r:id="table1"/></tableParts>'
+ layouts[f'xl/worksheets/sheet{i}.xml'] = f'<worksheet xmlns="{S}" xmlns:r="{R}"><sheetData>{content}</sheetData>{extra}</worksheet>'
+layouts['xl/worksheets/_rels/sheet3.xml.rels'] = f'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="table1" Type="{R}/table" Target="../tables/table1.xml"/></Relationships>'
+layouts['xl/tables/table1.xml'] = f'<table xmlns="{S}" id="1" name="Regions" displayName="Regions" ref="A1:B3" headerRowCount="1"><tableColumns count="2"><tableColumn id="1" name="North"/><tableColumn id="2" name="South"/></tableColumns></table>'
+archive('table-layouts.xlsx', layouts)
+# A repeated drawing must reuse the original asset bytes at both anchors.
+import copy
+with ZipFile(ROOT/'handbook.docx') as z: repeated = {n:z.read(n) for n in z.namelist()}
+r = ET.fromstring(repeated['word/document.xml'])
+body = r.find('{%s}body'%W)
+paragraph = next(p for p in body.findall('{%s}p'%W) if p.find('.//{%s}drawing'%W) is not None)
+body.insert(0, copy.deepcopy(paragraph))
+repeated['word/document.xml'] = ET.tostring(r)
+archive('repeated-images.docx', repeated)

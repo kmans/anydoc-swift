@@ -14,3 +14,9 @@ Units total is intentional and must not be "corrected" by the converter.
 `generate_fixtures.py` deterministically creates the additional focused regression
 inputs. Those authored variants are also dedicated to CC0-1.0. The original two
 source files and their hashes must remain unchanged.
+
+`fixture-sha256.json` records every original and focused document input.
+`table-layouts.xlsx` isolates explicit headers, ambiguous first rows, merged titles
+and covered cells, and cached versus uncached formulas. The workbook golden keeps
+the multi-series bar as labeled tables: Mermaid overlays bar series and obscures
+earlier values. Its line remains Mermaid; its negative-valued pie remains a table.

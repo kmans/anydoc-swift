@@ -56,7 +56,7 @@ chart caches can fill unavailable values and are identified in diagnostics. No
 external relationship is fetched. Bar and line use Mermaid XY charts; area can
 use a line; suitable pie/doughnut data uses a pie. Stacking, incompatible/logarithmic
 axes, unsupported types, missing points, precision loss, and oversized diagrams
-fall back to complete data tables. Diagram generation is limited to 200 categories
+fall back to complete data tables. Multiple bar series also use tables: the bundled Mermaid renderer overlays the bars and can hide earlier series. Diagram generation is limited to 200 categories
 and eight series. Source chart data has a cumulative point budget in addition to
 the parser's existing archive, XML, grid, and expansion limits. Missing values
 never become zero and negative pie values never become absolute values.
@@ -110,3 +110,9 @@ literal Markdown example in source code cannot become an imported attachment.
 Consumers use the returned destination rather than constructing strings from an
 asset ID. Telescopo also uses unique intermediate destinations until its final
 collision-safe save. The literal-reference fixture exercises both boundaries.
+
+Release candidates record their complete native input fingerprint and archive
+checksum with `python3 Scripts/record-apple-release.py`. Update the package
+checksum to that recorded value before the compatibility workflow, and publish
+only the exact checked candidate. The vendored parser's pinned development lock
+is separate from the bridge's release graph; `just test-core` runs its unit tests.

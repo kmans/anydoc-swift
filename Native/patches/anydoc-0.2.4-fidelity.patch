@@ -1,3 +1,30 @@
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -99,6 +99,7 @@
+  "log",
+  "pdf-inspector",
+  "quick-xml",
++ "serde",
+  "sha2 0.11.0",
+  "zip",
+ ]
+@@ -1000,6 +1001,16 @@
+ checksum = "9774ba4a74de5f7b1c1451ed6cd5285a32eddb5cccb8cc655a4e50009e06477f"
+ 
+ [[package]]
++name = "serde"
++version = "1.0.229"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "4148590afebada386688f18773da617792bf2ef03ffc1e4cbd2b1d45b023e0ba"
++dependencies = [
++ "serde_core",
++ "serde_derive",
++]
++
++[[package]]
+ name = "serde_core"
+ version = "1.0.229"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -85,3 +85,7 @@
@@ -10,7 +37,7 @@
 +features = ["derive"]
 --- /dev/null
 +++ b/src/conversion.rs
-@@ -0,0 +1,629 @@
+@@ -0,0 +1,632 @@
 +//! Explicit rendering policy over the parsed document model.
 +use crate::model::{Block, Chart, Diagnostic, Document, ImageSource, Inline, Script};
 +use std::collections::{HashMap, HashSet};
@@ -327,6 +354,9 @@
 +        || chart.incompatible_axes
 +        || chart.series.is_empty()
 +        || chart.series.len() > 8
++        // Mermaid overlays bar series instead of grouping them; later bars can
++        // completely hide earlier values. Retain all series as labeled tables.
++        || (chart.kind == "barChart" && chart.series.len() > 1)
 +        || matches!(chart.grouping.as_str(), "stacked" | "percentStacked")
 +    {
 +        return None;
@@ -7392,7 +7422,7 @@
              if !t.trim().is_empty() {
 --- a/src/render/markdown/tests.rs
 +++ b/src/render/markdown/tests.rs
-@@ -5,11 +5,18 @@
+@@ -5,11 +5,19 @@
  };
  
  fn doc(blocks: Vec<Block>) -> String {
@@ -7401,6 +7431,7 @@
 +        blocks,
 +        notes: Vec::new(),
 +        assets: Vec::new(),
++        diagnostics: Vec::new(),
 +    })
  }
  
@@ -7413,7 +7444,7 @@
  }
  
  fn heading(level: u8, text: &str) -> Block {
-@@ -20,12 +27,27 @@
+@@ -20,12 +28,27 @@
      Block::Table(Table::from_rows(rows, header_rows, TableKind::Data))
  }
  
@@ -7444,7 +7475,7 @@
      assert_eq!(md, "## Title\n\nHello world.\n");
  }
  
-@@ -50,9 +72,16 @@
+@@ -50,9 +73,16 @@
  
  #[test]
  fn math_in_a_table_cell_escapes_pipes() {
@@ -7463,7 +7494,7 @@
          0,
      )]);
      assert!(md.contains("| $\\|x\\|$ |"), "{md}");
-@@ -60,17 +89,25 @@
+@@ -60,17 +90,25 @@
  
  #[test]
  fn escapes_paired_syntax_chars() {
@@ -7493,7 +7524,7 @@
      assert_eq!(md, "x < 5, ~10%, file_name, a[1\n");
  }
  
-@@ -105,7 +142,9 @@
+@@ -105,7 +143,9 @@
  
  #[test]
  fn intraword_underscores_unescaped() {
@@ -7504,7 +7535,7 @@
      assert_eq!(md, "snake_case_name vs \\_lead_\n");
  }
  
-@@ -115,7 +154,9 @@
+@@ -115,7 +155,9 @@
      assert_eq!(md, "\\- not a list\n");
      let md = doc(vec![Block::Paragraph(vec![Inline::plain("1. not a list")])]);
      assert_eq!(md, "1\\. not a list\n");
@@ -7515,7 +7546,7 @@
      assert_eq!(md, "take 2. then rest\n");
  }
  
-@@ -123,9 +164,13 @@
+@@ -123,9 +165,13 @@
  fn line_start_lookalikes_unescaped() {
      let md = doc(vec![Block::Paragraph(vec![Inline::plain("-5°C at dawn")])]);
      assert_eq!(md, "-5°C at dawn\n");
@@ -7531,7 +7562,7 @@
      assert_eq!(md, "#hashtag first\n");
      let md = doc(vec![Block::Paragraph(vec![Inline::plain("--- ruled")])]);
      assert_eq!(md, "--- ruled\n");
-@@ -147,7 +192,10 @@
+@@ -147,7 +193,10 @@
  
  #[test]
  fn trailing_delimiter_before_styled_run_escaped() {
@@ -7543,7 +7574,7 @@
      assert_eq!(md, "star\\***x**\n");
  }
  
-@@ -171,7 +219,13 @@
+@@ -171,7 +220,13 @@
      let md = doc(vec![Block::Paragraph(vec![
          Inline::plain("a `"),
          Inline::LineBreak,
@@ -7558,7 +7589,7 @@
      ])]);
      assert_eq!(md, "a \\`\\\n`x`\n");
  }
-@@ -216,7 +270,16 @@
+@@ -216,7 +271,16 @@
          Inline::plain("a `"),
          Inline::LineBreak,
          Inline::Link {
@@ -7576,7 +7607,7 @@
              target: LinkTarget::External("https://e.test".into()),
          },
      ])]);
-@@ -225,13 +288,19 @@
+@@ -225,13 +289,19 @@
  
  #[test]
  fn bold_trailing_space_moved_out() {
@@ -7598,7 +7629,7 @@
      assert_eq!(md, "**bold**\n");
  }
  
-@@ -239,7 +308,13 @@
+@@ -239,7 +309,13 @@
  fn bold_italic_combo() {
      let md = doc(vec![Block::Paragraph(vec![styled(
          "both",
@@ -7613,7 +7644,7 @@
      )])]);
      assert_eq!(md, "***both***\n");
  }
-@@ -307,24 +382,40 @@
+@@ -307,24 +383,40 @@
          }],
      };
      let md = doc(vec![Block::List(list)]);
@@ -7660,7 +7691,7 @@
      assert_eq!(md, "|  |\n| --- |\n| x |\n");
  }
  
-@@ -382,8 +473,10 @@
+@@ -382,8 +474,10 @@
          Block::Paragraph(vec![Inline::plain("one")]),
          Block::Paragraph(vec![Inline::plain("two")]),
      ]);
@@ -7673,7 +7704,7 @@
      assert_eq!(md, "|  |  |\n| --- | --- |\n| one<br>two | x |\n");
  }
  
-@@ -391,8 +484,14 @@
+@@ -391,8 +485,14 @@
  fn merged_cells_render_blank_covered_positions() {
      let mut b = GridBuilder::new();
      b.next_row();
@@ -7690,7 +7721,7 @@
      b.next_row();
      for t in ["a", "b", "c"] {
          b.place(Cell::from_inlines(vec![Inline::plain(t)])).unwrap();
-@@ -400,14 +499,22 @@
+@@ -400,14 +500,22 @@
      let mut table = b.finish(TableKind::Data);
      table.header_rows = 1;
      let md = doc(vec![Block::Table(table)]);
@@ -7715,7 +7746,7 @@
      let mut table = b.finish(TableKind::Data);
      table.header_rows = 1;
      let md = doc(vec![Block::Table(table)]);
-@@ -421,7 +528,10 @@
+@@ -421,7 +529,10 @@
          target: LinkTarget::External("https://e.test/a|b".into()),
      }]);
      let md = doc(vec![table_from(vec![vec![cell]], 0)]);
@@ -7727,7 +7758,7 @@
  }
  
  #[test]
-@@ -429,11 +539,25 @@
+@@ -429,11 +540,25 @@
      let code = |t: &str| {
          Cell::from_inlines(vec![Inline::Text {
              text: t.into(),
@@ -7756,7 +7787,7 @@
  }
  
  #[test]
-@@ -504,7 +628,13 @@
+@@ -504,7 +629,13 @@
  
  #[test]
  fn code_span_with_backticks() {
@@ -7771,7 +7802,7 @@
      assert_eq!(md, "``a`b``\n");
  }
  
-@@ -530,7 +660,9 @@
+@@ -530,7 +661,9 @@
  
  #[test]
  fn blockquote() {
@@ -7782,7 +7813,7 @@
      assert_eq!(md, "> quoted\n");
  }
  
-@@ -551,7 +683,11 @@
+@@ -551,7 +684,11 @@
  }
  
  fn note(id: &str, blocks: Vec<Block>) -> Note {
@@ -7795,7 +7826,7 @@
  }
  
  #[test]
-@@ -564,7 +700,10 @@
+@@ -564,7 +701,10 @@
              Inline::NoteRef("a".into()),
          ])],
          notes: vec![
@@ -7807,7 +7838,15 @@
              note(
                  "b",
                  vec![
-@@ -590,7 +729,10 @@
+@@ -574,6 +714,7 @@
+             ),
+         ],
+         assets: Vec::new(),
++        diagnostics: Vec::new(),
+     });
+     assert_eq!(
+         md,
+@@ -590,9 +731,13 @@
          ])],
          notes: vec![
              note("empty", vec![Block::Paragraph(vec![])]),
@@ -7818,8 +7857,11 @@
 +            ),
          ],
          assets: Vec::new(),
++        diagnostics: Vec::new(),
      });
-@@ -600,10 +742,19 @@
+     assert_eq!(md, "Text\n\n[^1]: Kept.\n");
+ }
+@@ -600,12 +745,22 @@
  #[test]
  fn duplicate_note_ids_render_one_definition() {
      let md = document_to_markdown(&Document {
@@ -7841,8 +7883,11 @@
 +            ),
          ],
          assets: Vec::new(),
++        diagnostics: Vec::new(),
      });
-@@ -613,7 +764,10 @@
+     assert_eq!(md, "Text[^1]\n\n[^1]: First wins.\n");
+ }
+@@ -613,12 +768,16 @@
  #[test]
  fn blank_duplicate_note_does_not_suppress_a_later_definition() {
      let md = document_to_markdown(&Document {
@@ -7854,7 +7899,13 @@
          notes: vec![
              note("a", vec![Block::Paragraph(Vec::new())]),
              note("a", vec![Block::Paragraph(vec![Inline::plain("Usable.")])]),
-@@ -654,7 +808,10 @@
+         ],
+         assets: Vec::new(),
++        diagnostics: Vec::new(),
+     });
+     assert_eq!(md, "Text[^1]\n\n[^1]: Usable.\n");
+ }
+@@ -654,7 +813,10 @@
          start: 1,
          items: vec![
              ListItem {
@@ -7866,7 +7917,7 @@
                  marker_label: None,
              },
              ListItem {
-@@ -706,13 +863,19 @@
+@@ -706,13 +868,19 @@
  fn anchor_on_plain_paragraph_round_trips() {
      let mark: AnchorId = "My Mark".into();
      let md = doc(vec![
@@ -7888,7 +7939,7 @@
  }
  
  #[test]
-@@ -746,7 +909,11 @@
+@@ -746,7 +914,11 @@
  fn duplicate_heading_slugs_deduped() {
      let md = doc(vec![
          heading(1, "Same"),
@@ -7901,7 +7952,7 @@
          Block::Paragraph(vec![Inline::Link {
              content: vec![Inline::plain("second")],
              target: LinkTarget::Anchor("x".into()),
-@@ -757,14 +924,20 @@
+@@ -757,14 +929,20 @@
  
  #[test]
  fn code_block_in_cell_uses_code_span() {
