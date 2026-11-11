@@ -12,7 +12,7 @@ artifact, privacy, Swift, public-interface, memory, and Xcode package checks.
 Keep the iOS required-reason audit as a hard failure. Do not substitute a manifest
 or an exception for a clean native import audit.
 
-Use immutable `binary-0.3.0` and `0.3.0` tags. Publish the native draft only after
+Use immutable `binary-0.3.1` and `0.3.0` tags. Publish the native draft only after
 all Apple gates pass, pin its checksum in the Swift manifest, and verify a clean
 consumer against the published URL before tagging the Swift release. Candidate
 metadata records compiler/SDK, source and patch revisions, ABI 4, schema 2, and

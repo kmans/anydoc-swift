@@ -24,6 +24,17 @@ license="$root/LICENSE"
 notices="$root/THIRD_PARTY_NOTICES.txt"
 
 test -f "$archive"
+# Check names before extraction: ditto consumes AppleDouble files, but SwiftPM
+# may expose them as extra umbrella headers and fail a clean consumer build.
+python3 - "$archive" <<'PYZIP'
+import sys
+from pathlib import PurePosixPath
+from zipfile import ZipFile
+with ZipFile(sys.argv[1]) as archive:
+    for name in archive.namelist():
+        if any(part == '__MACOSX' or part.startswith('._') for part in PurePosixPath(name).parts):
+            raise SystemExit('Forbidden macOS metadata entry in native archive: ' + name)
+PYZIP
 rm -rf "$verify_root"
 mkdir -p "$verify_root"
 ditto -x -k "$archive" "$verify_root"

@@ -5,7 +5,7 @@ on:
       native_tag:
         description: Draft native release to qualify
         required: true
-        default: binary-0.3.0
+        default: binary-0.3.1
 permissions:
   contents: write
 jobs:
@@ -49,6 +49,7 @@ jobs:
           python3 Scripts/record-apple-release.py --check
           bash Scripts/verify-artifact.sh .build/artifacts/AnyDocSwiftBridge.xcframework.zip
           bash Scripts/audit-required-reason-apis.sh
+          bash Scripts/verify-swiftpm-archive.sh .build/artifacts/AnyDocSwiftBridge.xcframework.zip
       - name: Build and test public API
         run: |
           xcrun swift build --scratch-path .build/swift

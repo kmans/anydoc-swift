@@ -165,5 +165,5 @@ xcrun xcodebuild -create-xcframework \
   -framework "$simulator_framework" \
   -output "$xcframework"
 
-COPYFILE_DISABLE=1 ditto -c -k --keepParent "$xcframework" "$archive"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn -c -k --keepParent "$xcframework" "$archive"
 swift package compute-checksum "$archive"

@@ -64,6 +64,7 @@ _generate-licenses output metadata:
 lint-shell:
     bash -n "{{ root }}/Scripts/build-ios-bridge.sh"
     shellcheck "{{ root }}/Scripts/build-ios-bridge.sh"
+    shellcheck "{{ root }}/Scripts/verify-swiftpm-archive.sh"
     bash -n "{{ root }}/Scripts/test-ios-rust-runtime.sh"
     shellcheck "{{ root }}/Scripts/test-ios-rust-runtime.sh"
     bash -n "{{ root }}/Scripts/verify-artifact.sh" "{{ root }}/Scripts/verify-xcode-package.sh" "{{ root }}/Scripts/test-ios-simulator.sh"

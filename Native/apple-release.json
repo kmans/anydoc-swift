@@ -1,9 +1,9 @@
 {
-  "nativeTag": "binary-0.3.0",
-  "sha256": "7d5c71ada88ab225f508bda1ee70aac013d395f098114082d282ac126e426dbe",
+  "nativeTag": "binary-0.3.1",
+  "sha256": "695ba268f1bd0ae7c5b2e33c4c2bc4e2bd89a6bd38ff3eb1fc13f752ab7e700a",
   "bridgeABI": 4,
   "manifestSchema": 2,
-  "nativeInputsSHA256": "0959333f22dd1c55acf7fe8f5868d37f56095a4f89485cdf8e281841c663442c",
+  "nativeInputsSHA256": "dfc4ed6f0c16be439b544ed5283302822e33d1f3efd48c9270ff7a5c47c0a9d9",
   "anydoc": {
     "version": "0.2.4",
     "revision": "42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c",
@@ -133,10 +133,16 @@
     "Rust/anydoc-swift-bridge/src/engine.rs": "a57aa981e100ffc17691d19333b87a06333ad702072e7b91099a683e3bae29f4",
     "Rust/anydoc-swift-bridge/src/lib.rs": "ba160672d2239bc5dfb4d8d69e4684cb99f369c281d6d8ee0acf0f1318e57072",
     "Rust/anydoc-swift-bridge/src/transport.rs": "840bb02cdfc83643da606dc2617f420c34bbed46cb237e579f7a0070d73d5658",
-    "Scripts/build-artifact.sh": "fbfbfaac972b1d5d06f9a27b336779fbfac0cca287a7c73edf57987882170807",
+    "Scripts/build-artifact.sh": "a4a10b5bd803736c9911d293befc0e6041ee648a8a4ad8aa39629e5183e24434",
     "Scripts/build-ios-bridge.sh": "9e80e36d9f93b9c77b31e4993834fc0d2c3a76e30c9a170bcbc55e51ceff1100",
     "THIRD_PARTY_NOTICES.txt": "c256dc751bc7ecbbf2a524d9ae42919ed3dd3966bf194e105acd2689221ffab5",
     "rust-toolchain.toml": "dc6d73ec0f4bb01df9e9f541ddd866d75ac8ffcf52b5c8d02528a0a9683e09b4"
   },
-  "nativeInputsAlgorithm": "SHA-256 of sorted compact JSON mapping relative paths to SHA-256 file hashes"
+  "nativeInputsAlgorithm": "SHA-256 of sorted compact JSON mapping relative paths to SHA-256 file hashes",
+  "nativeSourceRevision": "d1f052d423e4ce9385c1e0e1c23af5cb4cd0b85f",
+  "repackedFrom": {
+    "tag": "binary-0.3.0",
+    "sha256": "7d5c71ada88ab225f508bda1ee70aac013d395f098114082d282ac126e426dbe",
+    "change": "Remove AppleDouble metadata entries; all retained archive entry bytes are identical."
+  }
 }
