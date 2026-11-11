@@ -1,0 +1,5710 @@
+{
+  "sourceSHA256": "3e3e0247bde87b6fa1c6f9b06f0561f2eae8bc326925b4b28ba2d7d3b8c12792",
+  "cells": [
+    {
+      "sheet": "Budget",
+      "cell": "A1",
+      "display": "Harbour budget, first half",
+      "raw": "0",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A2",
+      "display": "Amounts in euros; the totals are formulas.",
+      "raw": "1",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A3",
+      "display": "Category",
+      "raw": "2",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B3",
+      "display": "Jan",
+      "raw": "3",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C3",
+      "display": "Feb",
+      "raw": "4",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D3",
+      "display": "Mar",
+      "raw": "5",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E3",
+      "display": "Apr",
+      "raw": "6",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F3",
+      "display": "May",
+      "raw": "7",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "G3",
+      "display": "Jun",
+      "raw": "8",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "H3",
+      "display": "Total",
+      "raw": "9",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "I3",
+      "display": "Share",
+      "raw": "10",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A4",
+      "display": "Berths let",
+      "raw": "11",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B4",
+      "display": "€11,200",
+      "raw": "11200",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C4",
+      "display": "€11,800",
+      "raw": "11800",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D4",
+      "display": "€12,100",
+      "raw": "12100",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E4",
+      "display": "€15,400",
+      "raw": "15400",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F4",
+      "display": "€21,800",
+      "raw": "21800",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "G4",
+      "display": "€24,900",
+      "raw": "24900",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "H4",
+      "display": "€97,200",
+      "raw": "97200",
+      "formula": "SUM(B4:G4)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "I4",
+      "display": "57.3%",
+      "raw": "0.572775486152033",
+      "formula": "H4/H$9"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A5",
+      "display": "Visitors",
+      "raw": "12",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B5",
+      "display": "€3,100",
+      "raw": "3100",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C5",
+      "display": "€3,300",
+      "raw": "3300",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D5",
+      "display": "€4,800",
+      "raw": "4800",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E5",
+      "display": "€8,200",
+      "raw": "8200",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F5",
+      "display": "€15,600",
+      "raw": "15600",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "G5",
+      "display": "€19,200",
+      "raw": "19200",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "H5",
+      "display": "€54,200",
+      "raw": "54200",
+      "formula": "SUM(B5:G5)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "I5",
+      "display": "31.9%",
+      "raw": "0.319387153800825",
+      "formula": "H5/H$9"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A6",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B6",
+      "display": "€1,200",
+      "raw": "1200",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C6",
+      "display": "€1,100",
+      "raw": "1100",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D6",
+      "display": "€1,500",
+      "raw": "1500",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E6",
+      "display": "€2,600",
+      "raw": "2600",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F6",
+      "display": "€4,100",
+      "raw": "4100",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "G6",
+      "display": "€5,200",
+      "raw": "5200",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "H6",
+      "display": "€15,700",
+      "raw": "15700",
+      "formula": "SUM(B6:G6)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "I6",
+      "display": "9.3%",
+      "raw": "0.0925162050677666",
+      "formula": "H6/H$9"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A7",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B7",
+      "display": "€900",
+      "raw": "900",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C7",
+      "display": "€800",
+      "raw": "800",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D7",
+      "display": "€1,100",
+      "raw": "1100",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E7",
+      "display": "€1,900",
+      "raw": "1900",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F7",
+      "display": "€3,300",
+      "raw": "3300",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "G7",
+      "display": "€4,400",
+      "raw": "4400",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "H7",
+      "display": "€12,400",
+      "raw": "12400",
+      "formula": "SUM(B7:G7)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "I7",
+      "display": "7.3%",
+      "raw": "0.0730701237477902",
+      "formula": "H7/H$9"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A8",
+      "display": "Repairs",
+      "raw": "15",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B8",
+      "display": "-€2,100",
+      "raw": "-2100",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C8",
+      "display": "-€900",
+      "raw": "-900",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D8",
+      "display": "-€3,300",
+      "raw": "-3300",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E8",
+      "display": "-€1,500",
+      "raw": "-1500",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F8",
+      "display": "-€800",
+      "raw": "-800",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "G8",
+      "display": "-€1,200",
+      "raw": "-1200",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "H8",
+      "display": "-€9,800",
+      "raw": "-9800",
+      "formula": "SUM(B8:G8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "I8",
+      "display": "-5.8%",
+      "raw": "-0.0577489687684149",
+      "formula": "H8/H$9"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A9",
+      "display": "Net",
+      "raw": "16",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B9",
+      "display": "€14,300",
+      "raw": "14300",
+      "formula": "SUM(B4:B8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C9",
+      "display": "€16,100",
+      "raw": "16100",
+      "formula": "SUM(C4:C8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D9",
+      "display": "€16,200",
+      "raw": "16200",
+      "formula": "SUM(D4:D8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E9",
+      "display": "€26,600",
+      "raw": "26600",
+      "formula": "SUM(E4:E8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F9",
+      "display": "€44,000",
+      "raw": "44000",
+      "formula": "SUM(F4:F8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "G9",
+      "display": "€52,500",
+      "raw": "52500",
+      "formula": "SUM(G4:G8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "H9",
+      "display": "€169,700",
+      "raw": "169700",
+      "formula": "SUM(H4:H8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "I9",
+      "display": "100.0%",
+      "raw": "1",
+      "formula": "SUM(I4:I8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A11",
+      "display": "Averages and checks",
+      "raw": "17",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A12",
+      "display": "Average a month",
+      "raw": "18",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B12",
+      "display": "€28,283",
+      "raw": "28283.3333333333",
+      "formula": "AVERAGE(B9:G9)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C12",
+      "display": "Best month",
+      "raw": "19",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D12",
+      "display": "Jun",
+      "raw": "Jun",
+      "formula": "INDEX(B3:G3,MATCH(MAX(B9:G9),B9:G9,0))"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E12",
+      "display": "Months in credit",
+      "raw": "20",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F12",
+      "display": "6",
+      "raw": "6",
+      "formula": "COUNTIF(B9:G9,\">0\")"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A13",
+      "display": "Largest item",
+      "raw": "21",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B13",
+      "display": "€24,900",
+      "raw": "24900",
+      "formula": "MAX(B4:G8)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C13",
+      "display": "Rounded share of fuel",
+      "raw": "22",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D13",
+      "display": "7.3%",
+      "raw": "0.073",
+      "formula": "ROUND(I7,3)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "E13",
+      "display": "Status",
+      "raw": "23",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "F13",
+      "display": "surplus",
+      "raw": "surplus",
+      "formula": "IF(H9>0,\"surplus\",\"deficit\")"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A14",
+      "display": "Lookup: category",
+      "raw": "24",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B14",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C14",
+      "display": "its total",
+      "raw": "25",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D14",
+      "display": "€15,700",
+      "raw": "15700",
+      "formula": "VLOOKUP(B14,A4:H8,8,0)"
+    },
+    {
+      "sheet": "Budget",
+      "cell": "A15",
+      "display": "Link",
+      "raw": "26",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "B15",
+      "display": "exav.org/viewer",
+      "raw": "27",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "C15",
+      "display": "Note on a cell",
+      "raw": "28",
+      "formula": null
+    },
+    {
+      "sheet": "Budget",
+      "cell": "D15",
+      "display": "hover me",
+      "raw": "29",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "A1",
+      "display": "Date",
+      "raw": "30",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B1",
+      "display": "Region",
+      "raw": "31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C1",
+      "display": "Product",
+      "raw": "32",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D1",
+      "display": "Units",
+      "raw": "33",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E1",
+      "display": "Unit price",
+      "raw": "34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F1",
+      "display": "Amount",
+      "raw": "35",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "A2",
+      "display": "2000-01-01",
+      "raw": "36526",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B2",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C2",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D2",
+      "display": "32",
+      "raw": "32",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E2",
+      "display": "€15.74",
+      "raw": "15.74",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F2",
+      "display": "€503.68",
+      "raw": "503.68",
+      "formula": "D2*E2"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A3",
+      "display": "2000-01-02",
+      "raw": "36527",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B3",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C3",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D3",
+      "display": "4",
+      "raw": "4",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E3",
+      "display": "€48.47",
+      "raw": "48.47",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F3",
+      "display": "€193.88",
+      "raw": "193.88",
+      "formula": "D3*E3"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A4",
+      "display": "2000-01-03",
+      "raw": "36528",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B4",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C4",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D4",
+      "display": "34",
+      "raw": "34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E4",
+      "display": "€7.46",
+      "raw": "7.46",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F4",
+      "display": "€253.64",
+      "raw": "253.64",
+      "formula": "D4*E4"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A5",
+      "display": "2000-01-04",
+      "raw": "36529",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B5",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C5",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D5",
+      "display": "23",
+      "raw": "23",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E5",
+      "display": "€27.12",
+      "raw": "27.12",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F5",
+      "display": "€623.76",
+      "raw": "623.76",
+      "formula": "D5*E5"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A6",
+      "display": "2000-01-06",
+      "raw": "36531",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B6",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C6",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D6",
+      "display": "25",
+      "raw": "25",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E6",
+      "display": "€11.26",
+      "raw": "11.26",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F6",
+      "display": "€281.50",
+      "raw": "281.5",
+      "formula": "D6*E6"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A7",
+      "display": "2000-01-07",
+      "raw": "36532",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B7",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C7",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D7",
+      "display": "19",
+      "raw": "19",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E7",
+      "display": "€44.61",
+      "raw": "44.61",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F7",
+      "display": "€847.59",
+      "raw": "847.59",
+      "formula": "D7*E7"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A8",
+      "display": "2000-01-08",
+      "raw": "36533",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B8",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C8",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D8",
+      "display": "2",
+      "raw": "2",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E8",
+      "display": "€24.69",
+      "raw": "24.69",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F8",
+      "display": "€49.38",
+      "raw": "49.38",
+      "formula": "D8*E8"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A9",
+      "display": "2000-01-09",
+      "raw": "36534",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B9",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C9",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D9",
+      "display": "5",
+      "raw": "5",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E9",
+      "display": "€31.97",
+      "raw": "31.97",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F9",
+      "display": "€159.85",
+      "raw": "159.85",
+      "formula": "D9*E9"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A10",
+      "display": "2000-01-11",
+      "raw": "36536",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B10",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C10",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D10",
+      "display": "17",
+      "raw": "17",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E10",
+      "display": "€36.03",
+      "raw": "36.03",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F10",
+      "display": "€612.51",
+      "raw": "612.51",
+      "formula": "D10*E10"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A11",
+      "display": "2000-01-12",
+      "raw": "36537",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B11",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C11",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D11",
+      "display": "17",
+      "raw": "17",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E11",
+      "display": "€44.79",
+      "raw": "44.79",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F11",
+      "display": "€761.43",
+      "raw": "761.43",
+      "formula": "D11*E11"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A12",
+      "display": "2000-01-13",
+      "raw": "36538",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B12",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C12",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D12",
+      "display": "30",
+      "raw": "30",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E12",
+      "display": "€18.48",
+      "raw": "18.48",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F12",
+      "display": "€554.40",
+      "raw": "554.4",
+      "formula": "D12*E12"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A13",
+      "display": "2000-01-14",
+      "raw": "36539",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B13",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C13",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D13",
+      "display": "38",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E13",
+      "display": "€39.62",
+      "raw": "39.62",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F13",
+      "display": "€1,505.56",
+      "raw": "1505.56",
+      "formula": "D13*E13"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A14",
+      "display": "2000-01-16",
+      "raw": "36541",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B14",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C14",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D14",
+      "display": "26",
+      "raw": "26",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E14",
+      "display": "€18.98",
+      "raw": "18.98",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F14",
+      "display": "€493.48",
+      "raw": "493.48",
+      "formula": "D14*E14"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A15",
+      "display": "2000-01-17",
+      "raw": "36542",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B15",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C15",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D15",
+      "display": "28",
+      "raw": "28",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E15",
+      "display": "€2.09",
+      "raw": "2.09",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F15",
+      "display": "€58.52",
+      "raw": "58.52",
+      "formula": "D15*E15"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A16",
+      "display": "2000-01-18",
+      "raw": "36543",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B16",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C16",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D16",
+      "display": "3",
+      "raw": "3",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E16",
+      "display": "€19.31",
+      "raw": "19.31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F16",
+      "display": "€57.93",
+      "raw": "57.93",
+      "formula": "D16*E16"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A17",
+      "display": "2000-01-19",
+      "raw": "36544",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B17",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C17",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D17",
+      "display": "38",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E17",
+      "display": "€20.21",
+      "raw": "20.21",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F17",
+      "display": "€767.98",
+      "raw": "767.98",
+      "formula": "D17*E17"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A18",
+      "display": "2000-01-21",
+      "raw": "36546",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B18",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C18",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D18",
+      "display": "2",
+      "raw": "2",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E18",
+      "display": "€35.94",
+      "raw": "35.94",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F18",
+      "display": "€71.88",
+      "raw": "71.88",
+      "formula": "D18*E18"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A19",
+      "display": "2000-01-22",
+      "raw": "36547",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B19",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C19",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D19",
+      "display": "35",
+      "raw": "35",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E19",
+      "display": "€29.34",
+      "raw": "29.34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F19",
+      "display": "€1,026.90",
+      "raw": "1026.9",
+      "formula": "D19*E19"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A20",
+      "display": "2000-01-23",
+      "raw": "36548",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B20",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C20",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D20",
+      "display": "8",
+      "raw": "8",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E20",
+      "display": "€3.76",
+      "raw": "3.76",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F20",
+      "display": "€30.08",
+      "raw": "30.08",
+      "formula": "D20*E20"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A21",
+      "display": "2000-01-24",
+      "raw": "36549",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B21",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C21",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D21",
+      "display": "31",
+      "raw": "31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E21",
+      "display": "€43.00",
+      "raw": "43",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F21",
+      "display": "€1,333.00",
+      "raw": "1333",
+      "formula": "D21*E21"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A22",
+      "display": "2000-01-26",
+      "raw": "36551",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B22",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C22",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D22",
+      "display": "21",
+      "raw": "21",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E22",
+      "display": "€7.27",
+      "raw": "7.27",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F22",
+      "display": "€152.67",
+      "raw": "152.67",
+      "formula": "D22*E22"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A23",
+      "display": "2000-01-27",
+      "raw": "36552",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B23",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C23",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D23",
+      "display": "15",
+      "raw": "15",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E23",
+      "display": "€40.31",
+      "raw": "40.31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F23",
+      "display": "€604.65",
+      "raw": "604.65",
+      "formula": "D23*E23"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A24",
+      "display": "2000-01-28",
+      "raw": "36553",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B24",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C24",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D24",
+      "display": "21",
+      "raw": "21",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E24",
+      "display": "€14.02",
+      "raw": "14.02",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F24",
+      "display": "€294.42",
+      "raw": "294.42",
+      "formula": "D24*E24"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A25",
+      "display": "2000-02-01",
+      "raw": "36557",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B25",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C25",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D25",
+      "display": "37",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E25",
+      "display": "€38.55",
+      "raw": "38.55",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F25",
+      "display": "€1,426.35",
+      "raw": "1426.35",
+      "formula": "D25*E25"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A26",
+      "display": "2000-02-03",
+      "raw": "36559",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B26",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C26",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D26",
+      "display": "10",
+      "raw": "10",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E26",
+      "display": "€45.02",
+      "raw": "45.02",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F26",
+      "display": "€450.20",
+      "raw": "450.2",
+      "formula": "D26*E26"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A27",
+      "display": "2000-02-04",
+      "raw": "36560",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B27",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C27",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D27",
+      "display": "12",
+      "raw": "12",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E27",
+      "display": "€43.89",
+      "raw": "43.89",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F27",
+      "display": "€526.68",
+      "raw": "526.68",
+      "formula": "D27*E27"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A28",
+      "display": "2000-02-05",
+      "raw": "36561",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B28",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C28",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D28",
+      "display": "26",
+      "raw": "26",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E28",
+      "display": "€50.13",
+      "raw": "50.13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F28",
+      "display": "€1,303.38",
+      "raw": "1303.38",
+      "formula": "D28*E28"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A29",
+      "display": "2000-02-06",
+      "raw": "36562",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B29",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C29",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D29",
+      "display": "9",
+      "raw": "9",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E29",
+      "display": "€40.14",
+      "raw": "40.14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F29",
+      "display": "€361.26",
+      "raw": "361.26",
+      "formula": "D29*E29"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A30",
+      "display": "2000-02-08",
+      "raw": "36564",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B30",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C30",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D30",
+      "display": "1",
+      "raw": "1",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E30",
+      "display": "€49.56",
+      "raw": "49.56",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F30",
+      "display": "€49.56",
+      "raw": "49.56",
+      "formula": "D30*E30"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A31",
+      "display": "2000-02-09",
+      "raw": "36565",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B31",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C31",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D31",
+      "display": "27",
+      "raw": "27",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E31",
+      "display": "€26.86",
+      "raw": "26.86",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F31",
+      "display": "€725.22",
+      "raw": "725.22",
+      "formula": "D31*E31"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A32",
+      "display": "2000-02-10",
+      "raw": "36566",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B32",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C32",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D32",
+      "display": "38",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E32",
+      "display": "€52.95",
+      "raw": "52.95",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F32",
+      "display": "€2,012.10",
+      "raw": "2012.1",
+      "formula": "D32*E32"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A33",
+      "display": "2000-02-11",
+      "raw": "36567",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B33",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C33",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D33",
+      "display": "30",
+      "raw": "30",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E33",
+      "display": "€7.93",
+      "raw": "7.93",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F33",
+      "display": "€237.90",
+      "raw": "237.9",
+      "formula": "D33*E33"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A34",
+      "display": "2000-02-13",
+      "raw": "36569",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B34",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C34",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D34",
+      "display": "24",
+      "raw": "24",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E34",
+      "display": "€24.85",
+      "raw": "24.85",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F34",
+      "display": "€596.40",
+      "raw": "596.4",
+      "formula": "D34*E34"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A35",
+      "display": "2000-02-14",
+      "raw": "36570",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B35",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C35",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D35",
+      "display": "34",
+      "raw": "34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E35",
+      "display": "€29.82",
+      "raw": "29.82",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F35",
+      "display": "€1,013.88",
+      "raw": "1013.88",
+      "formula": "D35*E35"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A36",
+      "display": "2000-02-15",
+      "raw": "36571",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B36",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C36",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D36",
+      "display": "16",
+      "raw": "16",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E36",
+      "display": "€42.51",
+      "raw": "42.51",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F36",
+      "display": "€680.16",
+      "raw": "680.16",
+      "formula": "D36*E36"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A37",
+      "display": "2000-02-16",
+      "raw": "36572",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B37",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C37",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D37",
+      "display": "6",
+      "raw": "6",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E37",
+      "display": "€18.93",
+      "raw": "18.93",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F37",
+      "display": "€113.58",
+      "raw": "113.58",
+      "formula": "D37*E37"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A38",
+      "display": "2000-02-18",
+      "raw": "36574",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B38",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C38",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D38",
+      "display": "25",
+      "raw": "25",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E38",
+      "display": "€17.97",
+      "raw": "17.97",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F38",
+      "display": "€449.25",
+      "raw": "449.25",
+      "formula": "D38*E38"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A39",
+      "display": "2000-02-19",
+      "raw": "36575",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B39",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C39",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D39",
+      "display": "34",
+      "raw": "34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E39",
+      "display": "€34.58",
+      "raw": "34.58",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F39",
+      "display": "€1,175.72",
+      "raw": "1175.72",
+      "formula": "D39*E39"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A40",
+      "display": "2000-02-20",
+      "raw": "36576",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B40",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C40",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D40",
+      "display": "16",
+      "raw": "16",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E40",
+      "display": "€37.55",
+      "raw": "37.55",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F40",
+      "display": "€600.80",
+      "raw": "600.8",
+      "formula": "D40*E40"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A41",
+      "display": "2000-02-21",
+      "raw": "36577",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B41",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C41",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D41",
+      "display": "16",
+      "raw": "16",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E41",
+      "display": "€13.41",
+      "raw": "13.41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F41",
+      "display": "€214.56",
+      "raw": "214.56",
+      "formula": "D41*E41"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A42",
+      "display": "2000-02-23",
+      "raw": "36579",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B42",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C42",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D42",
+      "display": "32",
+      "raw": "32",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E42",
+      "display": "€45.32",
+      "raw": "45.32",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F42",
+      "display": "€1,450.24",
+      "raw": "1450.24",
+      "formula": "D42*E42"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A43",
+      "display": "2000-02-24",
+      "raw": "36580",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B43",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C43",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D43",
+      "display": "8",
+      "raw": "8",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E43",
+      "display": "€45.63",
+      "raw": "45.63",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F43",
+      "display": "€365.04",
+      "raw": "365.04",
+      "formula": "D43*E43"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A44",
+      "display": "2000-02-25",
+      "raw": "36581",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B44",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C44",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D44",
+      "display": "13",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E44",
+      "display": "€55.42",
+      "raw": "55.42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F44",
+      "display": "€720.46",
+      "raw": "720.46",
+      "formula": "D44*E44"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A45",
+      "display": "2000-02-26",
+      "raw": "36582",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B45",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C45",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D45",
+      "display": "23",
+      "raw": "23",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E45",
+      "display": "€13.93",
+      "raw": "13.93",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F45",
+      "display": "€320.39",
+      "raw": "320.39",
+      "formula": "D45*E45"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A46",
+      "display": "2000-02-28",
+      "raw": "36584",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B46",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C46",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D46",
+      "display": "10",
+      "raw": "10",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E46",
+      "display": "€11.80",
+      "raw": "11.8",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F46",
+      "display": "€118.00",
+      "raw": "118",
+      "formula": "D46*E46"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A47",
+      "display": "2000-03-01",
+      "raw": "36586",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B47",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C47",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D47",
+      "display": "34",
+      "raw": "34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E47",
+      "display": "€57.93",
+      "raw": "57.93",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F47",
+      "display": "€1,969.62",
+      "raw": "1969.62",
+      "formula": "D47*E47"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A48",
+      "display": "2000-03-02",
+      "raw": "36587",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B48",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C48",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D48",
+      "display": "38",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E48",
+      "display": "€37.20",
+      "raw": "37.2",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F48",
+      "display": "€1,413.60",
+      "raw": "1413.6",
+      "formula": "D48*E48"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A49",
+      "display": "2000-03-03",
+      "raw": "36588",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B49",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C49",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D49",
+      "display": "25",
+      "raw": "25",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E49",
+      "display": "€58.29",
+      "raw": "58.29",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F49",
+      "display": "€1,457.25",
+      "raw": "1457.25",
+      "formula": "D49*E49"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A50",
+      "display": "2000-03-05",
+      "raw": "36590",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B50",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C50",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D50",
+      "display": "24",
+      "raw": "24",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E50",
+      "display": "€47.82",
+      "raw": "47.82",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F50",
+      "display": "€1,147.68",
+      "raw": "1147.68",
+      "formula": "D50*E50"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A51",
+      "display": "2000-03-06",
+      "raw": "36591",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B51",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C51",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D51",
+      "display": "31",
+      "raw": "31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E51",
+      "display": "€5.14",
+      "raw": "5.14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F51",
+      "display": "€159.34",
+      "raw": "159.34",
+      "formula": "D51*E51"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A52",
+      "display": "2000-03-07",
+      "raw": "36592",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B52",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C52",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D52",
+      "display": "21",
+      "raw": "21",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E52",
+      "display": "€6.92",
+      "raw": "6.92",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F52",
+      "display": "€145.32",
+      "raw": "145.32",
+      "formula": "D52*E52"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A53",
+      "display": "2000-03-08",
+      "raw": "36593",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B53",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C53",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D53",
+      "display": "15",
+      "raw": "15",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E53",
+      "display": "€13.22",
+      "raw": "13.22",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F53",
+      "display": "€198.30",
+      "raw": "198.3",
+      "formula": "D53*E53"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A54",
+      "display": "2000-03-10",
+      "raw": "36595",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B54",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C54",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D54",
+      "display": "28",
+      "raw": "28",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E54",
+      "display": "€51.80",
+      "raw": "51.8",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F54",
+      "display": "€1,450.40",
+      "raw": "1450.4",
+      "formula": "D54*E54"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A55",
+      "display": "2000-03-11",
+      "raw": "36596",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B55",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C55",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D55",
+      "display": "9",
+      "raw": "9",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E55",
+      "display": "€9.35",
+      "raw": "9.35",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F55",
+      "display": "€84.15",
+      "raw": "84.15",
+      "formula": "D55*E55"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A56",
+      "display": "2000-03-12",
+      "raw": "36597",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B56",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C56",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D56",
+      "display": "3",
+      "raw": "3",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E56",
+      "display": "€30.59",
+      "raw": "30.59",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F56",
+      "display": "€91.77",
+      "raw": "91.77",
+      "formula": "D56*E56"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A57",
+      "display": "2000-03-13",
+      "raw": "36598",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B57",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C57",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D57",
+      "display": "12",
+      "raw": "12",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E57",
+      "display": "€51.27",
+      "raw": "51.27",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F57",
+      "display": "€615.24",
+      "raw": "615.24",
+      "formula": "D57*E57"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A58",
+      "display": "2000-03-15",
+      "raw": "36600",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B58",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C58",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D58",
+      "display": "23",
+      "raw": "23",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E58",
+      "display": "€43.07",
+      "raw": "43.07",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F58",
+      "display": "€990.61",
+      "raw": "990.61",
+      "formula": "D58*E58"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A59",
+      "display": "2000-03-16",
+      "raw": "36601",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B59",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C59",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D59",
+      "display": "38",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E59",
+      "display": "€14.39",
+      "raw": "14.39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F59",
+      "display": "€546.82",
+      "raw": "546.82",
+      "formula": "D59*E59"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A60",
+      "display": "2000-03-17",
+      "raw": "36602",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B60",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C60",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D60",
+      "display": "30",
+      "raw": "30",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E60",
+      "display": "€42.95",
+      "raw": "42.95",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F60",
+      "display": "€1,288.50",
+      "raw": "1288.5",
+      "formula": "D60*E60"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A61",
+      "display": "2000-03-18",
+      "raw": "36603",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B61",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C61",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D61",
+      "display": "22",
+      "raw": "22",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E61",
+      "display": "€5.01",
+      "raw": "5.01",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F61",
+      "display": "€110.22",
+      "raw": "110.22",
+      "formula": "D61*E61"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A62",
+      "display": "2000-03-20",
+      "raw": "36605",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B62",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C62",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D62",
+      "display": "12",
+      "raw": "12",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E62",
+      "display": "€23.36",
+      "raw": "23.36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F62",
+      "display": "€280.32",
+      "raw": "280.32",
+      "formula": "D62*E62"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A63",
+      "display": "2000-03-21",
+      "raw": "36606",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B63",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C63",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D63",
+      "display": "27",
+      "raw": "27",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E63",
+      "display": "€36.20",
+      "raw": "36.2",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F63",
+      "display": "€977.40",
+      "raw": "977.4",
+      "formula": "D63*E63"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A64",
+      "display": "2000-03-22",
+      "raw": "36607",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B64",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C64",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D64",
+      "display": "4",
+      "raw": "4",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E64",
+      "display": "€40.81",
+      "raw": "40.81",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F64",
+      "display": "€163.24",
+      "raw": "163.24",
+      "formula": "D64*E64"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A65",
+      "display": "2000-03-23",
+      "raw": "36608",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B65",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C65",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D65",
+      "display": "27",
+      "raw": "27",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E65",
+      "display": "€32.34",
+      "raw": "32.34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F65",
+      "display": "€873.18",
+      "raw": "873.18",
+      "formula": "D65*E65"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A66",
+      "display": "2000-03-25",
+      "raw": "36610",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B66",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C66",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D66",
+      "display": "12",
+      "raw": "12",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E66",
+      "display": "€13.49",
+      "raw": "13.49",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F66",
+      "display": "€161.88",
+      "raw": "161.88",
+      "formula": "D66*E66"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A67",
+      "display": "2000-03-26",
+      "raw": "36611",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B67",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C67",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D67",
+      "display": "22",
+      "raw": "22",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E67",
+      "display": "€30.72",
+      "raw": "30.72",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F67",
+      "display": "€675.84",
+      "raw": "675.84",
+      "formula": "D67*E67"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A68",
+      "display": "2000-03-27",
+      "raw": "36612",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B68",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C68",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D68",
+      "display": "25",
+      "raw": "25",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E68",
+      "display": "€29.88",
+      "raw": "29.88",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F68",
+      "display": "€747.00",
+      "raw": "747",
+      "formula": "D68*E68"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A69",
+      "display": "2000-03-28",
+      "raw": "36613",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B69",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C69",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D69",
+      "display": "5",
+      "raw": "5",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E69",
+      "display": "€33.10",
+      "raw": "33.1",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F69",
+      "display": "€165.50",
+      "raw": "165.5",
+      "formula": "D69*E69"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A70",
+      "display": "2000-04-02",
+      "raw": "36618",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B70",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C70",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D70",
+      "display": "29",
+      "raw": "29",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E70",
+      "display": "€24.83",
+      "raw": "24.83",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F70",
+      "display": "€720.07",
+      "raw": "720.07",
+      "formula": "D70*E70"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A71",
+      "display": "2000-04-03",
+      "raw": "36619",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B71",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C71",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D71",
+      "display": "31",
+      "raw": "31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E71",
+      "display": "€3.14",
+      "raw": "3.14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F71",
+      "display": "€97.34",
+      "raw": "97.34",
+      "formula": "D71*E71"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A72",
+      "display": "2000-04-04",
+      "raw": "36620",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B72",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C72",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D72",
+      "display": "25",
+      "raw": "25",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E72",
+      "display": "€13.90",
+      "raw": "13.9",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F72",
+      "display": "€347.50",
+      "raw": "347.5",
+      "formula": "D72*E72"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A73",
+      "display": "2000-04-05",
+      "raw": "36621",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B73",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C73",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D73",
+      "display": "21",
+      "raw": "21",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E73",
+      "display": "€44.99",
+      "raw": "44.99",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F73",
+      "display": "€944.79",
+      "raw": "944.79",
+      "formula": "D73*E73"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A74",
+      "display": "2000-04-07",
+      "raw": "36623",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B74",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C74",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D74",
+      "display": "27",
+      "raw": "27",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E74",
+      "display": "€24.07",
+      "raw": "24.07",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F74",
+      "display": "€649.89",
+      "raw": "649.89",
+      "formula": "D74*E74"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A75",
+      "display": "2000-04-08",
+      "raw": "36624",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B75",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C75",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D75",
+      "display": "16",
+      "raw": "16",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E75",
+      "display": "€54.75",
+      "raw": "54.75",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F75",
+      "display": "€876.00",
+      "raw": "876",
+      "formula": "D75*E75"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A76",
+      "display": "2000-04-09",
+      "raw": "36625",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B76",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C76",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D76",
+      "display": "4",
+      "raw": "4",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E76",
+      "display": "€22.23",
+      "raw": "22.23",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F76",
+      "display": "€88.92",
+      "raw": "88.92",
+      "formula": "D76*E76"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A77",
+      "display": "2000-04-10",
+      "raw": "36626",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B77",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C77",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D77",
+      "display": "16",
+      "raw": "16",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E77",
+      "display": "€22.19",
+      "raw": "22.19",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F77",
+      "display": "€355.04",
+      "raw": "355.04",
+      "formula": "D77*E77"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A78",
+      "display": "2000-04-12",
+      "raw": "36628",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B78",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C78",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D78",
+      "display": "20",
+      "raw": "20",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E78",
+      "display": "€7.41",
+      "raw": "7.41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F78",
+      "display": "€148.20",
+      "raw": "148.2",
+      "formula": "D78*E78"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A79",
+      "display": "2000-04-13",
+      "raw": "36629",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B79",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C79",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D79",
+      "display": "19",
+      "raw": "19",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E79",
+      "display": "€33.71",
+      "raw": "33.71",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F79",
+      "display": "€640.49",
+      "raw": "640.49",
+      "formula": "D79*E79"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A80",
+      "display": "2000-04-14",
+      "raw": "36630",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B80",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C80",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D80",
+      "display": "3",
+      "raw": "3",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E80",
+      "display": "€34.65",
+      "raw": "34.65",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F80",
+      "display": "€103.95",
+      "raw": "103.95",
+      "formula": "D80*E80"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A81",
+      "display": "2000-04-15",
+      "raw": "36631",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B81",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C81",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D81",
+      "display": "36",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E81",
+      "display": "€45.15",
+      "raw": "45.15",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F81",
+      "display": "€1,625.40",
+      "raw": "1625.4",
+      "formula": "D81*E81"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A82",
+      "display": "2000-04-17",
+      "raw": "36633",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B82",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C82",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D82",
+      "display": "1",
+      "raw": "1",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E82",
+      "display": "€50.84",
+      "raw": "50.84",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F82",
+      "display": "€50.84",
+      "raw": "50.84",
+      "formula": "D82*E82"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A83",
+      "display": "2000-04-18",
+      "raw": "36634",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B83",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C83",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D83",
+      "display": "37",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E83",
+      "display": "€45.15",
+      "raw": "45.15",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F83",
+      "display": "€1,670.55",
+      "raw": "1670.55",
+      "formula": "D83*E83"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A84",
+      "display": "2000-04-19",
+      "raw": "36635",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B84",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C84",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D84",
+      "display": "6",
+      "raw": "6",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E84",
+      "display": "€49.57",
+      "raw": "49.57",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F84",
+      "display": "€297.42",
+      "raw": "297.42",
+      "formula": "D84*E84"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A85",
+      "display": "2000-04-20",
+      "raw": "36636",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B85",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C85",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D85",
+      "display": "32",
+      "raw": "32",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E85",
+      "display": "€16.72",
+      "raw": "16.72",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F85",
+      "display": "€535.04",
+      "raw": "535.04",
+      "formula": "D85*E85"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A86",
+      "display": "2000-04-22",
+      "raw": "36638",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B86",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C86",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D86",
+      "display": "22",
+      "raw": "22",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E86",
+      "display": "€21.88",
+      "raw": "21.88",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F86",
+      "display": "€481.36",
+      "raw": "481.36",
+      "formula": "D86*E86"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A87",
+      "display": "2000-04-23",
+      "raw": "36639",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B87",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C87",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D87",
+      "display": "19",
+      "raw": "19",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E87",
+      "display": "€17.18",
+      "raw": "17.18",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F87",
+      "display": "€326.42",
+      "raw": "326.42",
+      "formula": "D87*E87"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A88",
+      "display": "2000-04-24",
+      "raw": "36640",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B88",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C88",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D88",
+      "display": "20",
+      "raw": "20",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E88",
+      "display": "€20.44",
+      "raw": "20.44",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F88",
+      "display": "€408.80",
+      "raw": "408.8",
+      "formula": "D88*E88"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A89",
+      "display": "2000-04-25",
+      "raw": "36641",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B89",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C89",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D89",
+      "display": "23",
+      "raw": "23",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E89",
+      "display": "€37.88",
+      "raw": "37.88",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F89",
+      "display": "€871.24",
+      "raw": "871.24",
+      "formula": "D89*E89"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A90",
+      "display": "2000-04-27",
+      "raw": "36643",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B90",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C90",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D90",
+      "display": "7",
+      "raw": "7",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E90",
+      "display": "€8.06",
+      "raw": "8.06",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F90",
+      "display": "€56.42",
+      "raw": "56.42",
+      "formula": "D90*E90"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A91",
+      "display": "2000-04-28",
+      "raw": "36644",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B91",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C91",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D91",
+      "display": "23",
+      "raw": "23",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E91",
+      "display": "€27.66",
+      "raw": "27.66",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F91",
+      "display": "€636.18",
+      "raw": "636.18",
+      "formula": "D91*E91"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A92",
+      "display": "2000-05-01",
+      "raw": "36647",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B92",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C92",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D92",
+      "display": "37",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E92",
+      "display": "€42.99",
+      "raw": "42.99",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F92",
+      "display": "€1,590.63",
+      "raw": "1590.63",
+      "formula": "D92*E92"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A93",
+      "display": "2000-05-02",
+      "raw": "36648",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B93",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C93",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D93",
+      "display": "16",
+      "raw": "16",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E93",
+      "display": "€7.11",
+      "raw": "7.11",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F93",
+      "display": "€113.76",
+      "raw": "113.76",
+      "formula": "D93*E93"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A94",
+      "display": "2000-05-04",
+      "raw": "36650",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B94",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C94",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D94",
+      "display": "5",
+      "raw": "5",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E94",
+      "display": "€31.73",
+      "raw": "31.73",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F94",
+      "display": "€158.65",
+      "raw": "158.65",
+      "formula": "D94*E94"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A95",
+      "display": "2000-05-05",
+      "raw": "36651",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B95",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C95",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D95",
+      "display": "7",
+      "raw": "7",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E95",
+      "display": "€25.47",
+      "raw": "25.47",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F95",
+      "display": "€178.29",
+      "raw": "178.29",
+      "formula": "D95*E95"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A96",
+      "display": "2000-05-06",
+      "raw": "36652",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B96",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C96",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D96",
+      "display": "35",
+      "raw": "35",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E96",
+      "display": "€21.31",
+      "raw": "21.31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F96",
+      "display": "€745.85",
+      "raw": "745.85",
+      "formula": "D96*E96"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A97",
+      "display": "2000-05-07",
+      "raw": "36653",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B97",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C97",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D97",
+      "display": "26",
+      "raw": "26",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E97",
+      "display": "€13.44",
+      "raw": "13.44",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F97",
+      "display": "€349.44",
+      "raw": "349.44",
+      "formula": "D97*E97"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A98",
+      "display": "2000-05-09",
+      "raw": "36655",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B98",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C98",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D98",
+      "display": "34",
+      "raw": "34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E98",
+      "display": "€16.15",
+      "raw": "16.15",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F98",
+      "display": "€549.10",
+      "raw": "549.1",
+      "formula": "D98*E98"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A99",
+      "display": "2000-05-10",
+      "raw": "36656",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B99",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C99",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D99",
+      "display": "37",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E99",
+      "display": "€10.53",
+      "raw": "10.53",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F99",
+      "display": "€389.61",
+      "raw": "389.61",
+      "formula": "D99*E99"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A100",
+      "display": "2000-05-11",
+      "raw": "36657",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B100",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C100",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D100",
+      "display": "6",
+      "raw": "6",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E100",
+      "display": "€21.70",
+      "raw": "21.7",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F100",
+      "display": "€130.20",
+      "raw": "130.2",
+      "formula": "D100*E100"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A101",
+      "display": "2000-05-12",
+      "raw": "36658",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B101",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C101",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D101",
+      "display": "11",
+      "raw": "11",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E101",
+      "display": "€15.06",
+      "raw": "15.06",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F101",
+      "display": "€165.66",
+      "raw": "165.66",
+      "formula": "D101*E101"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A102",
+      "display": "2000-05-14",
+      "raw": "36660",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B102",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C102",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D102",
+      "display": "25",
+      "raw": "25",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E102",
+      "display": "€56.34",
+      "raw": "56.34",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F102",
+      "display": "€1,408.50",
+      "raw": "1408.5",
+      "formula": "D102*E102"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A103",
+      "display": "2000-05-15",
+      "raw": "36661",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B103",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C103",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D103",
+      "display": "21",
+      "raw": "21",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E103",
+      "display": "€9.31",
+      "raw": "9.31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F103",
+      "display": "€195.51",
+      "raw": "195.51",
+      "formula": "D103*E103"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A104",
+      "display": "2000-05-16",
+      "raw": "36662",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B104",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C104",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D104",
+      "display": "31",
+      "raw": "31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E104",
+      "display": "€40.75",
+      "raw": "40.75",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F104",
+      "display": "€1,263.25",
+      "raw": "1263.25",
+      "formula": "D104*E104"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A105",
+      "display": "2000-05-17",
+      "raw": "36663",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B105",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C105",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D105",
+      "display": "17",
+      "raw": "17",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E105",
+      "display": "€53.31",
+      "raw": "53.31",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F105",
+      "display": "€906.27",
+      "raw": "906.27",
+      "formula": "D105*E105"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A106",
+      "display": "2000-05-19",
+      "raw": "36665",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B106",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C106",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D106",
+      "display": "37",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E106",
+      "display": "€10.33",
+      "raw": "10.33",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F106",
+      "display": "€382.21",
+      "raw": "382.21",
+      "formula": "D106*E106"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A107",
+      "display": "2000-05-20",
+      "raw": "36666",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B107",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C107",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D107",
+      "display": "39",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E107",
+      "display": "€33.16",
+      "raw": "33.16",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F107",
+      "display": "€1,293.24",
+      "raw": "1293.24",
+      "formula": "D107*E107"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A108",
+      "display": "2000-05-21",
+      "raw": "36667",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B108",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C108",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D108",
+      "display": "4",
+      "raw": "4",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E108",
+      "display": "€5.08",
+      "raw": "5.08",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F108",
+      "display": "€20.32",
+      "raw": "20.32",
+      "formula": "D108*E108"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A109",
+      "display": "2000-05-22",
+      "raw": "36668",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B109",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C109",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D109",
+      "display": "35",
+      "raw": "35",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E109",
+      "display": "€36.12",
+      "raw": "36.12",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F109",
+      "display": "€1,264.20",
+      "raw": "1264.2",
+      "formula": "D109*E109"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A110",
+      "display": "2000-05-24",
+      "raw": "36670",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B110",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C110",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D110",
+      "display": "2",
+      "raw": "2",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E110",
+      "display": "€46.53",
+      "raw": "46.53",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F110",
+      "display": "€93.06",
+      "raw": "93.06",
+      "formula": "D110*E110"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A111",
+      "display": "2000-05-25",
+      "raw": "36671",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B111",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C111",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D111",
+      "display": "7",
+      "raw": "7",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E111",
+      "display": "€56.38",
+      "raw": "56.38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F111",
+      "display": "€394.66",
+      "raw": "394.66",
+      "formula": "D111*E111"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A112",
+      "display": "2000-05-26",
+      "raw": "36672",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B112",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C112",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D112",
+      "display": "12",
+      "raw": "12",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E112",
+      "display": "€2.52",
+      "raw": "2.52",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F112",
+      "display": "€30.24",
+      "raw": "30.24",
+      "formula": "D112*E112"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A113",
+      "display": "2000-05-27",
+      "raw": "36673",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B113",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C113",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D113",
+      "display": "21",
+      "raw": "21",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E113",
+      "display": "€5.73",
+      "raw": "5.73",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F113",
+      "display": "€120.33",
+      "raw": "120.33",
+      "formula": "D113*E113"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A114",
+      "display": "2000-06-01",
+      "raw": "36678",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B114",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C114",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D114",
+      "display": "5",
+      "raw": "5",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E114",
+      "display": "€51.14",
+      "raw": "51.14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F114",
+      "display": "€255.70",
+      "raw": "255.7",
+      "formula": "D114*E114"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A115",
+      "display": "2000-06-02",
+      "raw": "36679",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B115",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C115",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D115",
+      "display": "17",
+      "raw": "17",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E115",
+      "display": "€15.73",
+      "raw": "15.73",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F115",
+      "display": "€267.41",
+      "raw": "267.41",
+      "formula": "D115*E115"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A116",
+      "display": "2000-06-03",
+      "raw": "36680",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B116",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C116",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D116",
+      "display": "5",
+      "raw": "5",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E116",
+      "display": "€25.51",
+      "raw": "25.51",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F116",
+      "display": "€127.55",
+      "raw": "127.55",
+      "formula": "D116*E116"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A117",
+      "display": "2000-06-04",
+      "raw": "36681",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B117",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C117",
+      "display": "Mooring",
+      "raw": "37",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D117",
+      "display": "27",
+      "raw": "27",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E117",
+      "display": "€17.38",
+      "raw": "17.38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F117",
+      "display": "€469.26",
+      "raw": "469.26",
+      "formula": "D117*E117"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A118",
+      "display": "2000-06-06",
+      "raw": "36683",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B118",
+      "display": "West",
+      "raw": "36",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C118",
+      "display": "Power",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D118",
+      "display": "39",
+      "raw": "39",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E118",
+      "display": "€19.88",
+      "raw": "19.88",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F118",
+      "display": "€775.32",
+      "raw": "775.32",
+      "formula": "D118*E118"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A119",
+      "display": "2000-06-07",
+      "raw": "36684",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B119",
+      "display": "East",
+      "raw": "38",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C119",
+      "display": "Fuel",
+      "raw": "14",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D119",
+      "display": "28",
+      "raw": "28",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E119",
+      "display": "€23.57",
+      "raw": "23.57",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F119",
+      "display": "€659.96",
+      "raw": "659.96",
+      "formula": "D119*E119"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A120",
+      "display": "2000-06-08",
+      "raw": "36685",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B120",
+      "display": "North",
+      "raw": "40",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C120",
+      "display": "Shop",
+      "raw": "13",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D120",
+      "display": "18",
+      "raw": "18",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E120",
+      "display": "€30.72",
+      "raw": "30.72",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F120",
+      "display": "€552.96",
+      "raw": "552.96",
+      "formula": "D120*E120"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A121",
+      "display": "2000-06-09",
+      "raw": "36686",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "B121",
+      "display": "South",
+      "raw": "41",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "C121",
+      "display": "Water",
+      "raw": "42",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D121",
+      "display": "30",
+      "raw": "30",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "E121",
+      "display": "€47.47",
+      "raw": "47.47",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "F121",
+      "display": "€1,424.10",
+      "raw": "1424.1",
+      "formula": "D121*E121"
+    },
+    {
+      "sheet": "Data",
+      "cell": "A122",
+      "display": "Total",
+      "raw": "9",
+      "formula": null
+    },
+    {
+      "sheet": "Data",
+      "cell": "D122",
+      "display": "€2,479",
+      "raw": "2479",
+      "formula": "SUM(D2:D121)"
+    },
+    {
+      "sheet": "Data",
+      "cell": "F122",
+      "display": "€70,070",
+      "raw": "70070.1",
+      "formula": "SUBTOTAL(9,F2:F121)"
+    }
+  ]
+}

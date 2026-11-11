@@ -2,7 +2,7 @@ name: Release Swift Package
 
 env:
   EMBEDDED_ANYDOC_VERSION: 0.2.4
-  BRIDGE_ABI_VERSION: 3
+  BRIDGE_ABI_VERSION: 4
 
 on:
   workflow_dispatch:

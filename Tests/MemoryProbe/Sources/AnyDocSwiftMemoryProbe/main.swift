@@ -14,9 +14,22 @@ enum MemoryProbe {
     let fixture = CommandLine.arguments[1]
     let profile = CommandLine.arguments[2]
     let data = try Data(contentsOf: URL(fileURLWithPath: fixture))
-    let document = try await AnyDocConverter().document(from: data, format: .docx)
+    let document: AnyDocDocument
+    let conversion: AnyDocConversion?
+    if profile.hasPrefix("combined-") {
+      let result = try await AnyDocConverter().convert(
+        from: data, format: .docx,
+        options: .init(
+          scripts: .latex, charts: .mermaidOrTable, tables: .portable, images: .assetReferences))
+      guard let parsed = result.document else { fatalError("combined result has no document") }
+      document = parsed
+      conversion = result
+    } else {
+      document = try await AnyDocConverter().document(from: data, format: .docx)
+      conversion = nil
+    }
 
-    switch profile {
+    switch profile.replacingOccurrences(of: "combined-", with: "") {
     case "asset":
       guard document.assets.count == 1,
         document.assets[0].bytes.count == assetByteCount
@@ -32,6 +45,8 @@ enum MemoryProbe {
     }
 
     // Keep the complete public graph live until the measurement process exits.
-    print("\(profile): \(document.blocks.count) blocks, \(document.assets.count) assets")
+    print(
+      "\(profile): \(document.blocks.count) blocks, \(document.assets.count) assets, \(conversion?.markdown.utf8.count ?? 0) Markdown bytes"
+    )
   }
 }

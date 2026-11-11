@@ -7,7 +7,7 @@ final class AnyDocDocumentDecoderTests: XCTestCase {
   func testMalformedJSONSchemaTagsAndNumbersAreRejected() {
     let manifests = [
       "not json",
-      emptyManifest(schemaVersion: "2"),
+      emptyManifest(schemaVersion: "1"),
       emptyManifest(blocks: "[{\"kind\":\"future\"}]"),
       emptyManifest(
         blocks: "[{\"kind\":\"heading\",\"value\":{\"level\":0,\"anchor\":null,\"content\":[]}}]"),
@@ -90,12 +90,12 @@ final class AnyDocDocumentDecoderTests: XCTestCase {
   }
 
   private func emptyManifest(
-    schemaVersion: String = "1",
+    schemaVersion: String = "2",
     blocks: String = "[]",
     notes: String = "[]",
     assets: String = "[]"
   ) -> String {
-    "{\"schemaVersion\":\(schemaVersion),\"blocks\":\(blocks),\"notes\":\(notes),\"assets\":\(assets)}"
+    "{\"schemaVersion\":\(schemaVersion),\"markdown\":null,\"diagnostics\":[],\"blocks\":\(blocks),\"notes\":\(notes),\"assets\":\(assets)}"
   }
 
   private func assertBridgeFailure(manifest: String, assets: [Data]) {

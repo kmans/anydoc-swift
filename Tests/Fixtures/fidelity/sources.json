@@ -1,0 +1,26 @@
+[
+  {
+    "file": "handbook.docx",
+    "title": "Harbour handbook (Word)",
+    "features": "title page, table of contents with links, outline numbering, character and paragraph styles, bulleted and numbered lists of three levels, tables with merged cells and a repeated header, two pictures (one floating with wrapped text), a shape, footnotes, hyperlinks, bookmarks, fields, a comment, tracked changes, a two-column section, a landscape section with a wide table, headers and footers with page numbers",
+    "author": "exav project",
+    "source": "https://github.com/sylvinus/exav/blob/main/crates/exav-viewer/demo/examples/generate/make-office.py",
+    "evidence": "https://github.com/sylvinus/exav/blob/main/crates/exav-viewer/demo/examples/generate/make-office.py",
+    "evidence_quote": "Output: CC0-1.0, a public domain dedication by the exav project.",
+    "licence": "CC0-1.0",
+    "sha256": "46c4fb53949dbd25cfc8b1fecbbd282d470b767d16c1fea426394872fcffc95d",
+    "download": "https://raw.githubusercontent.com/sylvinus/exav/main/crates/exav-viewer/demo/examples/files/office/handbook.docx"
+  },
+  {
+    "file": "workbook.xlsx",
+    "title": "Harbour workbook (Excel)",
+    "features": "three sheets: a budget with formulas (SUM, AVERAGE, INDEX, MATCH, COUNTIF, IF, VLOOKUP, ROUND), currency, percent and date formats, merged title, frozen header rows, a validation list, a comment, a hyperlink and named ranges; 120 rows of sales with an autofilter; a bar, a line and a pie chart",
+    "author": "exav project",
+    "source": "https://github.com/sylvinus/exav/blob/main/crates/exav-viewer/demo/examples/generate/make-office.py",
+    "evidence": "https://github.com/sylvinus/exav/blob/main/crates/exav-viewer/demo/examples/generate/make-office.py",
+    "evidence_quote": "Output: CC0-1.0, a public domain dedication by the exav project.",
+    "licence": "CC0-1.0",
+    "sha256": "3e3e0247bde87b6fa1c6f9b06f0561f2eae8bc326925b4b28ba2d7d3b8c12792",
+    "download": "https://raw.githubusercontent.com/sylvinus/exav/main/crates/exav-viewer/demo/examples/files/office/workbook.xlsx"
+  }
+]

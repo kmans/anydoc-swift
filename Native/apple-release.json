@@ -1,0 +1,26 @@
+{
+  "nativeTag": "binary-0.3.0",
+  "sha256": "8e6a9a1c75cca6c644ba20e8a8773f948fd4bc23d54e653bdef77c6b2b2ea000",
+  "bridgeABI": 4,
+  "manifestSchema": 2,
+  "nativeInputsSHA256": "0653cd3cc46e75aba880ce6b40095cc9a55f2267c51d452d9ee1626bc4ec3411",
+  "anydoc": {
+    "version": "0.2.4",
+    "revision": "42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c",
+    "archive": "https://static.crates.io/crates/anydoc/anydoc-0.2.4.crate",
+    "sha256": "cf0d78e4cfe3654eb3ea04422ec5a94352000ee56e97902125e68e51f7527062",
+    "license": "MIT"
+  },
+  "producer": {
+    "rust": "1.94.1",
+    "xcode": "27.2",
+    "swift": "6.4.2",
+    "macOSMinimum": "13.0",
+    "iOSMinimum": "17.0"
+  },
+  "slices": [
+    "macos-arm64",
+    "ios-arm64",
+    "ios-arm64-simulator"
+  ]
+}

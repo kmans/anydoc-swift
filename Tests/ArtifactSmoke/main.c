@@ -11,11 +11,11 @@
 int main(void) {
   static const char expected_version[] =
       "anydoc 0.2.4 (42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c); "
-      "AnyDocSwift bridge ABI 3";
+      "Telescopo conversion-fidelity 1; AnyDocSwift bridge ABI 4";
 
   size_t length = 0;
   const uint8_t *version = anydoc_swift_engine_version(&length);
-  if (anydoc_swift_abi_version() != 3 || version == NULL ||
+  if (anydoc_swift_abi_version() != 4 || version == NULL ||
       length != sizeof(expected_version) - 1 ||
       memcmp(version, expected_version, length) != 0) {
     return 1;

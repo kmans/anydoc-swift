@@ -8,6 +8,7 @@ final class FakeNativeBridge: @unchecked Sendable {
   enum Operation: Sendable, Equatable {
     case markdown
     case document
+    case combined
   }
 
   struct Invocation: Sendable, Equatable {
@@ -198,7 +199,8 @@ final class FakeNativeBridge: @unchecked Sendable {
   init(
     abiVersion: UInt32 = AnyDocCAdapter.expectedABIVersion,
     versionBytes: [UInt8]? = Array(
-      "anydoc 0.2.4 (42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c); AnyDocSwift bridge ABI 3".utf8
+      "anydoc 0.2.4 (42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c); Telescopo conversion-fidelity 1; AnyDocSwift bridge ABI 4"
+        .utf8
     ),
     responseProvider: @escaping ResponseProvider = { _ in .success("Markdown") }
   ) {
@@ -226,6 +228,13 @@ final class FakeNativeBridge: @unchecked Sendable {
   func makeAdapter() -> AnyDocCAdapter {
     AnyDocCAdapter(
       functions: AnyDocCAdapter.Functions(
+        convertCombined: {
+          [self] bytes, length, format, formatLength, inputLimit, _, documentLimit, _ in
+          makeResult(
+            operation: .combined, bytes: bytes, bytesLength: length, formatBytes: format,
+            formatLength: formatLength, maximumInputBytes: inputLimit,
+            maximumResultBytes: documentLimit)
+        },
         abiVersion: { [abiVersion] in abiVersion },
         engineVersion: { [self] outLength in
           guard let outLength else {

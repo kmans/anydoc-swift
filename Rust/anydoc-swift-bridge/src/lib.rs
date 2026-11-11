@@ -14,9 +14,9 @@ use pdf_inspector as _;
 use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::{ptr, slice, str};
 
-const ABI_VERSION: u32 = 3;
+const ABI_VERSION: u32 = 4;
 const ENGINE_VERSION: &[u8] =
-    b"anydoc 0.2.4 (42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c); AnyDocSwift bridge ABI 3";
+    b"anydoc 0.2.4 (42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c); Telescopo conversion-fidelity 1; AnyDocSwift bridge ABI 4";
 
 const INVALID_INPUT_CODE: &str = "wrapper.invalidInput";
 const INPUT_LIMIT_CODE: &str = "wrapper.inputLimit";
@@ -368,6 +368,38 @@ pub unsafe extern "C" fn anydoc_swift_convert_document(
                 maximum_document_bytes,
             )
         }
+    })
+}
+
+/// Converts once to Markdown, assets, diagnostics, and a structured model.
+///
+/// # Safety
+/// The buffer obligations and ownership are identical to `anydoc_swift_convert_document`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn anydoc_swift_convert_combined(
+    bytes: *const u8,
+    bytes_length: usize,
+    format_utf8: *const u8,
+    format_length: usize,
+    maximum_input_bytes: u64,
+    maximum_output_bytes: u64,
+    maximum_document_bytes: u64,
+    flags: u32,
+) -> *mut AnydocSwiftResult {
+    run_conversion(|| {
+        // SAFETY: The caller supplies readable buffers for the documented lengths;
+        // decode_raw_input borrows them only for this synchronous owned conversion.
+        let (bytes, format) =
+            unsafe { decode_raw_input(bytes, bytes_length, format_utf8, format_length) }?;
+        engine::convert_combined(
+            bytes,
+            format,
+            maximum_input_bytes,
+            maximum_output_bytes,
+            maximum_document_bytes,
+            flags,
+        )
+        .map(ConversionSuccess::Document)
     })
 }
 
@@ -860,7 +892,7 @@ i Endnote body text.
         assert!(
             result
                 .manifest()
-                .is_some_and(|manifest| manifest.starts_with("{\"schemaVersion\":1,"))
+                .is_some_and(|manifest| manifest.contains("\"schemaVersion\":2,"))
         );
         assert_eq!(result.markdown(), None);
     }
@@ -908,7 +940,7 @@ i Endnote body text.
         assert_eq!(markdown.asset(0), None);
 
         let document = OwnedResult::from_document_payload(transport::DocumentPayload {
-            manifest: br#"{"schemaVersion":1,"blocks":[],"notes":[],"assets":[]}"#
+            manifest: br#"{"schemaVersion":2,"markdown":null,"diagnostics":[],"blocks":[],"notes":[],"assets":[]}"#
                 .to_vec()
                 .into_boxed_slice(),
             assets: vec![Vec::new().into_boxed_slice(), vec![7].into_boxed_slice()],
@@ -943,7 +975,7 @@ i Endnote body text.
 
     #[test]
     fn reports_embedded_abi_and_engine_versions() {
-        assert_eq!(anydoc_swift_abi_version(), 3);
+        assert_eq!(anydoc_swift_abi_version(), 4);
 
         let mut length = 0;
         // SAFETY: `length` is writable for the accessor call.

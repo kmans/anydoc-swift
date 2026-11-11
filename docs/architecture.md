@@ -1,5 +1,8 @@
 # AnyDocSwift Architecture
 
+For the Telescopo fork, read [the fidelity profile](telescopo-fidelity.md) alongside this guide. Apple distribution, ABI 4, schema 2, combined conversion, and the reviewed vendored parser patch are the current fork contract.
+
+
 AnyDocSwift is one deep Swift module over the pinned Rust
 [`anydoc`](https://github.com/firecrawl/anydoc) engine. It converts complete
 in-memory document bytes either to GitHub-Flavored Markdown or to an immutable,
@@ -80,6 +83,7 @@ conversion entry point:
 let converter = AnyDocConverter()
 let markdown = try await converter.markdown(from: data, format: .docx)
 let document = try await converter.document(from: data, format: .docx)
+let conversion = try await converter.convert(from: data, format: .docx, options: .init(scripts: .latex, charts: .mermaidOrTable, tables: .portable, images: .assetReferences))
 ```
 
 [`AnyDocFormat`](../Sources/AnyDocSwift/AnyDocFormat.swift) is a closed set of
@@ -199,10 +203,10 @@ The transport represents those single empty positions as 1-by-1 origins.
 Cells containing blocks or having only one zero span retain their source
 values for Swift's defensive validation.
 
-The manifest has top-level `schemaVersion`, `blocks`, `notes`, and `assets` fields.
+The schema-2 manifest has top-level `schemaVersion`, `markdown`, `diagnostics`, `blocks`, `notes`, and `assets` fields. `markdown` is present only for combined results.
 Associated-value enums use an adjacent `kind` plus optional `value` envelope
 with upstream camel-case tags. Asset metadata contains `id`, `mediaType`,
-`originPart`, and `byteLength`; asset bytes never enter JSON. Integer conversion
+`originPart`, `byteLength`, and optional `markdownReference`; asset bytes never enter JSON. Integer conversion
 or serialization failures return the fixed, non-content-bearing
 `bridge.transport` error.
 
@@ -223,7 +227,7 @@ error.
 
 ## Runtime paths
 
-Both operations check cancellation and input size, acquire a FIFO slot, enqueue
+All operations check cancellation and input size, acquire a FIFO slot, enqueue
 one typed native closure, invoke anydoc synchronously, copy/validate the selected
 result, release the native owner, then check cancellation again. The slot is
 released on every exit path. Cancelled waiters are removed without waiting for
@@ -375,3 +379,22 @@ mixed operations stay FIFO; C and Rust declarations remain private; no borrowed
 buffer outlives its result owner; a panic never crosses C; diagnostics contain
 no document content; and consuming builds never invoke Cargo or link an
 unpackaged Rust library.
+
+
+## Combined conversion and asset identity
+
+The combined API uses the same FIFO and ownership path as the original APIs.
+Non-PDF input is parsed once. The core renderer consumes the structured model and
+explicit options; the bridge retains Markdown, source diagnostics, and assets in
+one versioned result. PDF retains its Markdown-only path and never opts into OCR.
+Swift checks the combined Markdown bound before copying asset bytes.
+
+Chart blocks retain original numeric strings, labels, locations, axis metadata,
+and extra dimensions. Text styles carry explicit baseline/superscript/subscript
+positions. Both extend the immutable Swift graph without exposing native types.
+
+Each combined conversion assigns opaque asset destinations to AST image nodes.
+The exact destination is exposed on `AnyDocDocument.Asset.markdownReference`.
+Consumers replace only these destinations when choosing file locations. Literal
+Markdown examples remain untouched; fixed strings such as `anydoc-asset:0` are
+not a substitution contract. Ordinary document results have no Markdown references.

@@ -1,5 +1,8 @@
 # AnyDocSwift
 
+This is the Telescopo fork. See [the conversion profile and maintenance guide](docs/telescopo-fidelity.md) for the single-pass API, DOCX/XLSX fidelity, portable output, and regression workflow. This fork’s 0.3.0 release distributes Apple-platform artifacts; Linux release instructions below describe upstream tooling.
+
+
 [![CI](https://img.shields.io/github/actions/workflow/status/ngutech21/anydoc-swift/ci.yml?branch=master&event=push&label=CI)](https://github.com/ngutech21/anydoc-swift/actions/workflows/ci.yml)
 [![Swift package release](https://img.shields.io/github/v/release/ngutech21/anydoc-swift?filter=%21binary-%2A&sort=semver&label=release)](https://github.com/ngutech21/anydoc-swift/releases)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fngutech21%2Fanydoc-swift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/ngutech21/anydoc-swift)
@@ -46,8 +49,8 @@ let package = Package(
   platforms: [.macOS(.v13)],
   dependencies: [
     .package(
-      url: "https://github.com/ngutech21/anydoc-swift.git",
-      exact: "0.2.3"
+      url: "https://github.com/kmans/anydoc-swift.git",
+      exact: "0.3.0"
     )
   ],
   targets: [

@@ -1,0 +1,62 @@
+name: Qualify Apple candidate
+on:
+  workflow_dispatch:
+    inputs:
+      native_tag:
+        description: Draft native release to qualify
+        required: true
+        default: binary-0.3.0
+permissions:
+  contents: write
+jobs:
+  qualify:
+    name: Candidate / Xcode ${{ matrix.xcode }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-26
+            xcode: '26.2'
+          - runner: xcode-27
+            xcode: '27.0'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 35
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
+      ANYDOC_SWIFT_USE_LOCAL_BRIDGE: '1'
+      NATIVE_RELEASE_TAG: ${{ inputs.native_tag }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check toolchain and download exact candidate
+        run: |
+          test "$(uname -m)" = arm64
+          xcodebuild -version
+          xcrun swift --version
+          mkdir -p .build/artifacts
+          gh release download "$NATIVE_RELEASE_TAG" --pattern AnyDocSwiftBridge.xcframework.zip --dir .build/artifacts
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          record=json.loads(pathlib.Path('Native/apple-release.json').read_text())
+          artifact=pathlib.Path('.build/artifacts/AnyDocSwiftBridge.xcframework.zip')
+          assert hashlib.sha256(artifact.read_bytes()).hexdigest()==record['sha256'], 'Candidate checksum mismatch'
+          PY
+      - name: Verify packaging, signatures, ABI, and native imports
+        run: |
+          bash Scripts/verify-artifact.sh .build/artifacts/AnyDocSwiftBridge.xcframework.zip
+          bash Scripts/audit-required-reason-apis.sh
+      - name: Build and test public API
+        run: |
+          xcrun swift build --scratch-path .build/swift
+          xcrun swift build -c release --scratch-path .build/swift
+          xcrun swift test --scratch-path .build/swift
+          bash Scripts/check-public-interface.sh
+      - name: Verify memory and Xcode consumers
+        run: |
+          bash Scripts/memory-probe.sh
+          bash Scripts/verify-xcode-package.sh
+      - name: Build documentation
+        run: xcrun xcodebuild -quiet docbuild -scheme AnyDocSwift -destination 'generic/platform=macOS' -derivedDataPath .build/documentation ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO OTHER_DOCC_FLAGS='--warnings-as-errors'

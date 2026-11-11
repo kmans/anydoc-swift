@@ -10,8 +10,8 @@ let package = Package(
   ],
   dependencies: [
     .package(
-      url: "https://github.com/ngutech21/anydoc-swift.git",
-      exact: "0.2.3"
+      url: "https://github.com/kmans/anydoc-swift.git",
+      exact: "0.3.0"
     )
   ],
   targets: [

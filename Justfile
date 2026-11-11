@@ -72,7 +72,7 @@ lint-shell:
     shellcheck "{{ memory_probe_script }}"
 
 # Run every Rust and native-tooling check used by continuous integration.
-ci-rust: lint-rust lint-shell build-rust test-rust check-licenses
+ci-rust: check-vendored-source lint-rust lint-shell build-rust test-rust check-licenses
 
 # Check Swift formatting without modifying sources.
 lint-swift:
@@ -80,7 +80,7 @@ lint-swift:
 
 # Build the public DocC catalog on macOS, failing on documentation warnings.
 docs:
-    xcrun xcodebuild -quiet docbuild -scheme AnyDocSwift -destination "generic/platform=macOS" -derivedDataPath "{{ root }}/.build/documentation" ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO OTHER_DOCC_FLAGS="--warnings-as-errors"
+    env ANYDOC_SWIFT_USE_LOCAL_BRIDGE=1 xcrun xcodebuild -quiet docbuild -scheme AnyDocSwift -destination "generic/platform=macOS" -derivedDataPath "{{ root }}/.build/documentation" ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO OTHER_DOCC_FLAGS="--warnings-as-errors"
 
 # Build the macOS, iOS-device, and iOS-simulator XCFramework on an Apple host.
 build-artifact-macos: check-licenses
@@ -236,3 +236,7 @@ final-check:
 # Convert the rich DOCX fixture with the command-line example.
 run-example:
     swift run --package-path Examples/AnyDocSwiftExample AnyDocSwiftExample Tests/Fixtures/docx/handmade-rich.docx
+
+# Verify that parser source and the reviewed patch agree, without network access.
+check-vendored-source:
+    python3 "{{ root }}/Scripts/check-vendored-anydoc.py"

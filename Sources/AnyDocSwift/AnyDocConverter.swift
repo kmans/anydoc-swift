@@ -184,6 +184,23 @@ public actor AnyDocConverter {
     }
   }
 
+  /// Convert locally in one native parse. This API never enables hosted OCR.
+  /// PDF preserves the original Markdown-only conversion path.
+  public func convert(
+    from data: Data, format: AnyDocFormat? = nil, options: AnyDocMarkdownOptions = .init()
+  ) async throws -> AnyDocConversion {
+    try await perform(data: data) { converter in
+      try await converter.performNative { adapter, limits in
+        if format == .pdf || (format == nil && data.starts(with: Data("%PDF-".utf8))) {
+          return AnyDocConversion(
+            markdown: try adapter.markdown(from: data, format: format, limits: limits),
+            document: nil, diagnostics: [])
+        }
+        return try adapter.convert(from: data, format: format, options: options, limits: limits)
+      }
+    }
+  }
+
   private func perform<Output: Sendable>(
     data: Data,
     operation: @Sendable (isolated AnyDocConverter) async throws -> Output

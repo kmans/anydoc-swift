@@ -52,8 +52,8 @@ binary_directory="$(
 probe="$binary_directory/AnyDocSwiftMemoryProbe"
 [[ -x "$probe" ]]
 
-for profile in asset manifest; do
-  fixture="$fixtures/$profile-heavy.docx"
+for profile in asset manifest combined-asset combined-manifest; do
+  fixture="$fixtures/${profile#combined-}-heavy.docx"
   "$probe" "$fixture" "$profile" >/dev/null
   for run in 1 2 3; do
     echo "$profile-heavy run $run"

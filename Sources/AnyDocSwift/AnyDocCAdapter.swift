@@ -1,4 +1,6 @@
-internal import AnyDocSwiftBridge
+#if arch(arm64)
+  internal import AnyDocSwiftBridge
+#endif
 import Foundation
 
 /// The non-public Swift-to-C adapter.
@@ -8,7 +10,7 @@ import Foundation
 /// each synchronous native call. Result buffers are copied while their opaque
 /// owner is live, and that owner is released exactly once on every exit path.
 struct AnyDocCAdapter: Sendable {
-  static let expectedABIVersion: UInt32 = 3
+  static let expectedABIVersion: UInt32 = 4
   static let live = AnyDocCAdapter(functions: .live)
 
   struct Functions: Sendable {
@@ -25,6 +27,11 @@ struct AnyDocCAdapter: Sendable {
         UInt64,
         UInt64
       ) -> OpaquePointer?
+    typealias ConvertCombined =
+      @Sendable (
+        UnsafePointer<UInt8>?, Int, UnsafePointer<UInt8>?, Int, UInt64, UInt64, UInt64, UInt32
+      ) -> OpaquePointer?
+    var convertCombined: ConvertCombined? = nil
     typealias ResultKind = @Sendable (OpaquePointer?) -> Int32
     typealias ResultAccessor =
       @Sendable (
@@ -64,26 +71,51 @@ struct AnyDocCAdapter: Sendable {
     let copyBytes: CopyBytes
     let copyPages: CopyPages
 
-    static let live = Functions(
-      abiVersion: { anydoc_swift_abi_version() },
-      engineVersion: { anydoc_swift_engine_version($0) },
-      convertMarkdown: {
-        anydoc_swift_convert_markdown($0, $1, $2, $3, $4, $5)
-      },
-      convertDocument: {
-        anydoc_swift_convert_document($0, $1, $2, $3, $4, $5)
-      },
-      resultKind: { anydoc_swift_result_kind($0) },
-      markdown: { anydoc_swift_result_markdown($0, $1) },
-      documentManifest: { anydoc_swift_result_document_manifest($0, $1) },
-      documentAsset: { anydoc_swift_result_document_asset($0, $1, $2, $3) },
-      errorCode: { anydoc_swift_result_error_code($0, $1) },
-      errorMessage: { anydoc_swift_result_error_message($0, $1) },
-      needsOCRPages: { anydoc_swift_result_needs_ocr_pages($0, $1, $2) },
-      freeResult: { anydoc_swift_result_free($0) },
-      copyBytes: { Data(bytes: $0, count: $1) },
-      copyPages: { Array(UnsafeBufferPointer(start: $0, count: $1)) }
-    )
+    #if arch(arm64)
+      static let live: Functions = {
+        var value = Functions(
+          abiVersion: { anydoc_swift_abi_version() },
+          engineVersion: { anydoc_swift_engine_version($0) },
+          convertMarkdown: {
+            anydoc_swift_convert_markdown($0, $1, $2, $3, $4, $5)
+          },
+          convertDocument: {
+            anydoc_swift_convert_document($0, $1, $2, $3, $4, $5)
+          },
+          resultKind: { anydoc_swift_result_kind($0) },
+          markdown: { anydoc_swift_result_markdown($0, $1) },
+          documentManifest: { anydoc_swift_result_document_manifest($0, $1) },
+          documentAsset: { anydoc_swift_result_document_asset($0, $1, $2, $3) },
+          errorCode: { anydoc_swift_result_error_code($0, $1) },
+          errorMessage: { anydoc_swift_result_error_message($0, $1) },
+          needsOCRPages: { anydoc_swift_result_needs_ocr_pages($0, $1, $2) },
+          freeResult: { anydoc_swift_result_free($0) },
+          copyBytes: { Data(bytes: $0, count: $1) },
+          copyPages: { Array(UnsafeBufferPointer(start: $0, count: $1)) }
+        )
+        value.convertCombined = { anydoc_swift_convert_combined($0, $1, $2, $3, $4, $5, $6, $7) }
+        return value
+      }()
+    #else
+      // Preserve Intel application builds without importing the arm64 framework.
+      // ABI zero makes the upstream adapter reject any accidental direct call.
+      static let live = Functions(
+        abiVersion: { 0 },
+        engineVersion: { _ in nil },
+        convertMarkdown: { _, _, _, _, _, _ in nil },
+        convertDocument: { _, _, _, _, _, _ in nil },
+        resultKind: { _ in 0 },
+        markdown: { _, _ in nil },
+        documentManifest: { _, _ in nil },
+        documentAsset: { _, _, _, _ in 0 },
+        errorCode: { _, _ in nil },
+        errorMessage: { _, _ in nil },
+        needsOCRPages: { _, _, _ in nil },
+        freeResult: { _ in },
+        copyBytes: { Data(bytes: $0, count: $1) },
+        copyPages: { Array(UnsafeBufferPointer(start: $0, count: $1)) }
+      )
+    #endif
   }
 
   private struct NativeBuffer {
@@ -168,6 +200,37 @@ struct AnyDocCAdapter: Sendable {
     }
   }
 
+  func convert(
+    from data: Data, format: AnyDocFormat?, options: AnyDocMarkdownOptions,
+    limits: AnyDocConverter.Limits
+  ) throws -> AnyDocConversion {
+    guard let native = functions.convertCombined else {
+      throw bridgeFailure("Combined conversion is unavailable in this bridge.")
+    }
+    return try invoke(
+      data: data, format: format, maximumResultBytes: limits.maximumDocumentBytes, limits: limits,
+      convert: { native($0, $1, $2, $3, $4, limits.maximumOutputBytes, $5, options.flags) }
+    ) { result in
+      switch functions.resultKind(result) {
+      case 2:
+        let decoded = try decodeDocumentResult(
+          result, maximumDocumentBytes: limits.maximumDocumentBytes,
+          maximumOutputBytes: limits.maximumOutputBytes,
+          requireAssetReferences: options.images == .assetReferences)
+        guard let markdown = decoded.markdown else {
+          throw bridgeFailure("Combined conversion returned no Markdown.")
+        }
+        guard UInt64(markdown.utf8.count) <= limits.maximumOutputBytes else {
+          throw AnyDocConversionError.outputTooLarge(maximumBytes: limits.maximumOutputBytes)
+        }
+        return AnyDocConversion(
+          markdown: markdown, document: decoded.document, diagnostics: decoded.document.diagnostics)
+      case 0: throw try decodeFailure(result, dataCount: data.count, limits: limits)
+      default: throw bridgeFailure("Native bridge returned a non-document combined result.")
+      }
+    }
+  }
+
   private func invoke<Output>(
     data: Data,
     format: AnyDocFormat?,
@@ -241,6 +304,15 @@ struct AnyDocCAdapter: Sendable {
     _ result: OpaquePointer,
     maximumDocumentBytes: UInt64
   ) throws -> AnyDocDocument {
+    try decodeDocumentResult(result, maximumDocumentBytes: maximumDocumentBytes).document
+  }
+
+  private func decodeDocumentResult(
+    _ result: OpaquePointer, maximumDocumentBytes: UInt64, maximumOutputBytes: UInt64? = nil,
+    requireAssetReferences: Bool = false
+  ) throws
+    -> (document: AnyDocDocument, markdown: String?)
+  {
     try requireAbsent(functions.markdown, result: result, name: "Markdown")
     try requireNoError(result)
 
@@ -248,6 +320,17 @@ struct AnyDocCAdapter: Sendable {
       result,
       maximumDocumentBytes: maximumDocumentBytes
     )
+    guard !requireAssetReferences || prepared.hasCompleteAssetReferences else {
+      throw bridgeFailure("Combined conversion returned incomplete embedded image references.")
+    }
+    if let maximumOutputBytes {
+      guard let markdown = prepared.markdown else {
+        throw bridgeFailure("Combined conversion returned no Markdown.")
+      }
+      guard UInt64(markdown.utf8.count) <= maximumOutputBytes else {
+        throw AnyDocConversionError.outputTooLarge(maximumBytes: maximumOutputBytes)
+      }
+    }
     try validateCumulativeLimit(
       prepared,
       maximumDocumentBytes: maximumDocumentBytes
@@ -265,7 +348,7 @@ struct AnyDocCAdapter: Sendable {
       )
     }
     try requireNoDocumentAsset(result, index: prepared.assetByteLengths.count)
-    return try prepared.materialize(assetBytes: assets)
+    return (try prepared.materialize(assetBytes: assets), prepared.markdown)
   }
 
   private func prepareManifest(

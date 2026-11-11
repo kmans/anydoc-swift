@@ -6,14 +6,14 @@ import XCTest
 
 final class AnyDocConverterTests: XCTestCase, @unchecked Sendable {
   private static let emptyManifest =
-    "{\"schemaVersion\":1,\"blocks\":[],\"notes\":[],\"assets\":[]}"
+    "{\"schemaVersion\":2,\"markdown\":null,\"diagnostics\":[],\"blocks\":[],\"notes\":[],\"assets\":[]}"
   private static let allVariantsManifest =
     """
     {
-      "schemaVersion":1,
+      "schemaVersion":2,"markdown":null,"diagnostics":[],
       "blocks":[
         {"kind":"heading","value":{"level":7,"anchor":"heading","content":[
-          {"kind":"text","value":{"text":"styled","style":{"bold":true,"italic":true,"strike":true,"code":true}}},
+          {"kind":"text","value":{"text":"styled","style":{"script":"baseline","bold":true,"italic":true,"strike":true,"code":true}}},
           {"kind":"link","value":{"content":[],"target":{"kind":"external","value":"https://example.com"}}},
           {"kind":"link","value":{"content":[],"target":{"kind":"relative","value":"chapter.xml"}}},
           {"kind":"link","value":{"content":[],"target":{"kind":"anchor","value":"inside"}}},
@@ -82,7 +82,7 @@ final class AnyDocConverterTests: XCTestCase, @unchecked Sendable {
     XCTAssertEqual(
       AnyDocConverter.engineVersion
         .replacingOccurrences(of: "AnyDoc ", with: "anydoc ", options: .anchored),
-      "anydoc 0.2.4 (42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c); AnyDocSwift bridge ABI 3"
+      "anydoc 0.2.4 (42bf1c5ecdde9eb0d96d6bd75a9e6698cf93b14c); Telescopo conversion-fidelity 1; AnyDocSwift bridge ABI 4"
     )
   }
 
@@ -360,7 +360,7 @@ final class AnyDocConverterTests: XCTestCase, @unchecked Sendable {
       probe.leave()
       switch invocation.operation {
       case .markdown: return .success("first")
-      case .document: return .document(manifest: Self.emptyManifest, assets: [])
+      case .document, .combined: return .document(manifest: Self.emptyManifest, assets: [])
       }
     })
     let converter = AnyDocConverter(

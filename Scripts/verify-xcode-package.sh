@@ -42,6 +42,7 @@ build_package() {
       ARCHS=arm64 \
       ONLY_ACTIVE_ARCH=YES \
       CODE_SIGNING_ALLOWED=NO \
+      COMPILER_INDEX_STORE_ENABLE=NO \
       build
 }
 

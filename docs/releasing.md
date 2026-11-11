@@ -1,3 +1,28 @@
+# Telescopo Apple release qualification
+
+The Telescopo 0.3.0 fork publishes one Apple XCFramework archive. Its three slices
+are Mac arm64, iOS arm64, and arm64 Simulator. The all-platform upstream checklist
+below is retained as reference; no Linux artifact is advertised by this release.
+
+Before publishing, obtain authorization, run `just final-check`, run the Release
+memory probe for document and combined APIs, and qualify the exact candidate
+archive with both Swift 6.2 / Xcode 26.2 and Swift 6.4 / Xcode 27. The candidate
+workflow downloads the draft asset and verifies its committed checksum before
+artifact, privacy, Swift, public-interface, memory, and Xcode package checks.
+Keep the iOS required-reason audit as a hard failure. Do not substitute a manifest
+or an exception for a clean native import audit.
+
+Use immutable `binary-0.3.0` and `0.3.0` tags. Publish the native draft only after
+all Apple gates pass, pin its checksum in the Swift manifest, and verify a clean
+consumer against the published URL before tagging the Swift release. Candidate
+metadata records compiler/SDK, source and patch revisions, ABI 4, schema 2, and
+archive SHA-256. Never replace assets under a published tag.
+
+The application plan explicitly authorizes preparing the fork and native release.
+Future publishing still requires maintainer authorization.
+
+---
+
 # Releasing AnyDocSwift
 
 Publishing, tagging, and uploading are maintainer-only actions and require

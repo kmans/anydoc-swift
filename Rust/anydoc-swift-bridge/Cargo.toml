@@ -60,3 +60,6 @@ panic = "unwind"
 # https://github.com/rust-lang/rust/issues/157750
 [profile.release.build-override]
 strip = "none"
+
+[patch.crates-io]
+anydoc = { path = "../anydoc" }

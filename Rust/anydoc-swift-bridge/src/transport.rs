@@ -7,7 +7,7 @@ use serde::Serialize;
 
 use super::{BridgeFailure, DOCUMENT_LIMIT_CODE, TRANSPORT_CODE, TRANSPORT_MESSAGE};
 
-pub(super) const SCHEMA_VERSION: u32 = 1;
+pub(super) const SCHEMA_VERSION: u32 = 2;
 
 /// Bridge-owned structural bytes and separately retained asset buffers.
 pub(super) struct DocumentPayload {
@@ -19,10 +19,25 @@ pub(super) fn encode_document(
     document: source::Document,
     maximum_document_bytes: u64,
 ) -> Result<DocumentPayload, BridgeFailure> {
+    encode_conversion(
+        document,
+        maximum_document_bytes,
+        None,
+        &std::collections::HashMap::new(),
+    )
+}
+
+pub(super) fn encode_conversion(
+    document: source::Document,
+    maximum_document_bytes: u64,
+    markdown: Option<String>,
+    references: &std::collections::HashMap<usize, String>,
+) -> Result<DocumentPayload, BridgeFailure> {
     let source::Document {
         blocks,
         notes,
         assets,
+        diagnostics,
     } = document;
     let mut metadata = Vec::with_capacity(assets.len());
     let mut retained_assets = Vec::with_capacity(assets.len());
@@ -38,6 +53,7 @@ pub(super) fn encode_document(
             return Err(transport_failure());
         }
         metadata.push(AssetMetadata {
+            markdown_reference: references.get(&id.0).cloned(),
             id: checked_u64(id.0)?,
             media_type,
             origin_part,
@@ -48,6 +64,8 @@ pub(super) fn encode_document(
 
     let manifest_value = Manifest {
         schema_version: SCHEMA_VERSION,
+        markdown,
+        diagnostics,
         blocks: blocks
             .into_iter()
             .map(convert_block)
@@ -107,6 +125,8 @@ fn transport_failure() -> BridgeFailure {
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct Manifest {
+    markdown: Option<String>,
+    diagnostics: Vec<source::Diagnostic>,
     schema_version: u32,
     blocks: Vec<Block>,
     notes: Vec<Note>,
@@ -116,6 +136,7 @@ struct Manifest {
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct AssetMetadata {
+    markdown_reference: Option<String>,
     id: u64,
     media_type: String,
     origin_part: String,
@@ -129,6 +150,7 @@ struct AssetMetadata {
     reason = "wire tags intentionally mirror the pinned upstream Block cases"
 )]
 enum Block {
+    Chart(source::Chart),
     Heading {
         level: u64,
         anchor: Option<String>,
@@ -174,6 +196,7 @@ enum Inline {
     reason = "the four independent style flags are part of manifest schema version 1"
 )]
 struct Style {
+    script: source::Script,
     bold: bool,
     italic: bool,
     strike: bool,
@@ -273,6 +296,7 @@ enum NoteKind {
 
 fn convert_block(block: source::Block) -> Result<Block, BridgeFailure> {
     match block {
+        source::Block::Chart(chart) => Ok(Block::Chart(chart)),
         source::Block::Heading {
             level,
             anchor,
@@ -304,6 +328,7 @@ fn convert_inline(inline: source::Inline) -> Result<Inline, BridgeFailure> {
         source::Inline::Text { text, style } => Ok(Inline::Text {
             text,
             style: Style {
+                script: style.script,
                 bold: style.bold,
                 italic: style.italic,
                 strike: style.strike,
@@ -436,6 +461,7 @@ mod tests {
         let styled = source::Inline::Text {
             text: "styled".to_owned(),
             style: source::Style {
+                script: source::Script::Baseline,
                 bold: true,
                 italic: true,
                 strike: true,
@@ -443,6 +469,7 @@ mod tests {
             },
         };
         let document = source::Document {
+            diagnostics: vec![],
             blocks: vec![
                 source::Block::Heading {
                     level: 7,
@@ -552,9 +579,9 @@ mod tests {
         assert_eq!(
             manifest,
             concat!(
-                "{\"schemaVersion\":1,\"blocks\":[",
+                "{\"markdown\":null,\"diagnostics\":[],\"schemaVersion\":2,\"blocks\":[",
                 "{\"kind\":\"heading\",\"value\":{\"level\":7,\"anchor\":\"heading\",\"content\":[",
-                "{\"kind\":\"text\",\"value\":{\"text\":\"styled\",\"style\":{\"bold\":true,\"italic\":true,\"strike\":true,\"code\":true}}},",
+                "{\"kind\":\"text\",\"value\":{\"text\":\"styled\",\"style\":{\"script\":\"baseline\",\"bold\":true,\"italic\":true,\"strike\":true,\"code\":true}}},",
                 "{\"kind\":\"link\",\"value\":{\"content\":[],\"target\":{\"kind\":\"external\",\"value\":\"https://example.com\"}}},",
                 "{\"kind\":\"link\",\"value\":{\"content\":[],\"target\":{\"kind\":\"relative\",\"value\":\"chapter.xml\"}}},",
                 "{\"kind\":\"link\",\"value\":{\"content\":[],\"target\":{\"kind\":\"anchor\",\"value\":\"inside\"}}},",
@@ -578,8 +605,8 @@ mod tests {
                 "{\"id\":\"note-1\",\"kind\":\"footnote\",\"blocks\":[]},",
                 "{\"id\":\"note-2\",\"kind\":\"endnote\",\"blocks\":[]}",
                 "],\"assets\":[",
-                "{\"id\":0,\"mediaType\":\"application/octet-stream\",\"originPart\":\"empty.bin\",\"byteLength\":0},",
-                "{\"id\":1,\"mediaType\":\"image/png\",\"originPart\":\"image.png\",\"byteLength\":2}",
+                "{\"markdownReference\":null,\"id\":0,\"mediaType\":\"application/octet-stream\",\"originPart\":\"empty.bin\",\"byteLength\":0},",
+                "{\"markdownReference\":null,\"id\":1,\"mediaType\":\"image/png\",\"originPart\":\"image.png\",\"byteLength\":2}",
                 "]}"
             )
         );
@@ -595,6 +622,7 @@ mod tests {
     #[test]
     fn only_empty_upstream_filler_cells_receive_unit_spans() {
         let document = source::Document {
+            diagnostics: vec![],
             blocks: vec![source::Block::Table(source::Table {
                 grid: vec![vec![
                     source::CellSlot::Origin(source::Cell::default()),
@@ -675,6 +703,7 @@ mod tests {
     fn document_limit_counts_the_manifest_and_asset_buffers_exactly() {
         fn document() -> source::Document {
             source::Document {
+                diagnostics: vec![],
                 blocks: vec![],
                 notes: vec![],
                 assets: vec![source::Asset {

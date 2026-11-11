@@ -4,6 +4,7 @@
 
 use super::transport::{self, DocumentPayload};
 use super::{BridgeFailure, INPUT_LIMIT_CODE, OUTPUT_LIMIT_CODE};
+use std::hash::BuildHasher as _;
 
 impl From<anydoc::ConvertError> for BridgeFailure {
     fn from(error: anydoc::ConvertError) -> Self {
@@ -96,4 +97,66 @@ fn parse_canonical_format(format: &str) -> Result<anydoc::Format, BridgeFailure>
             "format_utf8 must name a canonical anydoc format",
         )),
     }
+}
+
+/// One parse, one render, and one owned transport for the combined Swift API.
+pub(super) fn convert_combined(
+    bytes: &[u8],
+    format: Option<&str>,
+    maximum_input_bytes: u64,
+    maximum_output_bytes: u64,
+    maximum_document_bytes: u64,
+    flags: u32,
+) -> Result<DocumentPayload, BridgeFailure> {
+    validate_input(bytes, maximum_input_bytes)?;
+    if flags & !15 != 0 {
+        return Err(BridgeFailure::new(
+            super::INVALID_INPUT_CODE,
+            "unknown Markdown option flags",
+        ));
+    }
+    let format = format.map(parse_canonical_format).transpose()?;
+    let mut document = anydoc::to_document(bytes, format).map_err(BridgeFailure::from)?;
+    let options = anydoc::conversion::MarkdownOptions {
+        math_scripts: flags & 1 != 0,
+        mermaid_charts: flags & 2 != 0,
+        portable_tables: flags & 4 != 0,
+        asset_references: flags & 8 != 0,
+    };
+    // Per-conversion opaque destinations cannot match source code examples.
+    // Hash-map seeds already use the platform entropy path used by the parser.
+    let namespace = format!(
+        "{:016x}{:016x}",
+        std::collections::hash_map::RandomState::new().hash_one(bytes),
+        std::collections::hash_map::RandomState::new().hash_one(bytes)
+    );
+    let references: std::collections::HashMap<usize, String> = if options.asset_references {
+        document
+            .assets
+            .iter()
+            .map(|asset| {
+                (
+                    asset.id.0,
+                    format!("anydoc-asset:{namespace}:{}", asset.id.0),
+                )
+            })
+            .collect()
+    } else {
+        std::collections::HashMap::new()
+    };
+    let (markdown, diagnostics) =
+        anydoc::conversion::render_with_references(&document, options, &references);
+    if u64::try_from(markdown.len()).map_or(true, |n| n > maximum_output_bytes) {
+        return Err(BridgeFailure::new(
+            OUTPUT_LIMIT_CODE,
+            "Markdown exceeds configured output limit",
+        ));
+    }
+    document.diagnostics = diagnostics;
+    transport::encode_conversion(
+        document,
+        maximum_document_bytes,
+        Some(markdown),
+        &references,
+    )
 }

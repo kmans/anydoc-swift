@@ -5,7 +5,7 @@ import XCTest
 
 final class AnyDocCAdapterTests: XCTestCase {
   private static let emptyManifest =
-    "{\"schemaVersion\":1,\"blocks\":[],\"notes\":[],\"assets\":[]}"
+    "{\"schemaVersion\":2,\"markdown\":null,\"diagnostics\":[],\"blocks\":[],\"notes\":[],\"assets\":[]}"
 
   private let limits = AnyDocConverter.Limits(
     maximumInputBytes: 128,
@@ -36,7 +36,7 @@ final class AnyDocCAdapterTests: XCTestCase {
 
   func testDocumentCopiesManifestAndAssetsAndPassesTheDocumentLimit() throws {
     let manifest = """
-      {"schemaVersion":1,"blocks":[{"kind":"paragraph","value":[{"kind":"image","value":{"alt":"x","source":{"kind":"asset","value":0}}}]}],"notes":[],"assets":[{"id":0,"mediaType":"image/png","originPart":"image.png","byteLength":2}]}
+      {"schemaVersion":2,"markdown":null,"diagnostics":[],"blocks":[{"kind":"paragraph","value":[{"kind":"image","value":{"alt":"x","source":{"kind":"asset","value":0}}}]}],"notes":[],"assets":[{"id":0,"mediaType":"image/png","originPart":"image.png","byteLength":2}]}
       """
     let bridge = FakeNativeBridge(responseProvider: { _ in
       .document(manifest: manifest, assets: [[1, 2]])
@@ -72,7 +72,7 @@ final class AnyDocCAdapterTests: XCTestCase {
 
   func testDocumentDistinguishesAValidEmptyAssetFromAnAccessorMiss() throws {
     let manifest =
-      "{\"schemaVersion\":1,\"blocks\":[],\"notes\":[],\"assets\":[{\"id\":0,\"mediaType\":\"application/octet-stream\",\"originPart\":\"empty.bin\",\"byteLength\":0}]}"
+      "{\"schemaVersion\":2,\"markdown\":null,\"diagnostics\":[],\"blocks\":[],\"notes\":[],\"assets\":[{\"id\":0,\"mediaType\":\"application/octet-stream\",\"originPart\":\"empty.bin\",\"byteLength\":0}]}"
     let bridge = FakeNativeBridge(responseProvider: { _ in
       .document(manifest: manifest, assets: [[]])
     })
@@ -100,7 +100,7 @@ final class AnyDocCAdapterTests: XCTestCase {
           switch operation {
           case .markdown:
             _ = try bridge.makeAdapter().markdown(from: Data([1]), format: nil, limits: .standard)
-          case .document:
+          case .document, .combined:
             _ = try bridge.makeAdapter().document(from: Data([1]), format: nil, limits: .standard)
           }
         }()
@@ -138,7 +138,7 @@ final class AnyDocCAdapterTests: XCTestCase {
     XCTAssertEqual(oversizedManifest.freeCount, 1)
 
     let manifest =
-      "{\"schemaVersion\":1,\"blocks\":[],\"notes\":[],\"assets\":[{\"id\":0,\"mediaType\":\"x\",\"originPart\":\"a\",\"byteLength\":5}]}"
+      "{\"schemaVersion\":2,\"markdown\":null,\"diagnostics\":[],\"blocks\":[],\"notes\":[],\"assets\":[{\"id\":0,\"mediaType\":\"x\",\"originPart\":\"a\",\"byteLength\":5}]}"
     let assetLimited = FakeNativeBridge(responseProvider: { _ in
       .document(manifest: manifest, assets: [[1, 2, 3, 4, 5]])
     })
@@ -162,7 +162,7 @@ final class AnyDocCAdapterTests: XCTestCase {
 
   func testDocumentRejectsAccessorMismatchesAndAlwaysFreesTheResult() {
     let manifest =
-      "{\"schemaVersion\":1,\"blocks\":[],\"notes\":[],\"assets\":[{\"id\":0,\"mediaType\":\"x\",\"originPart\":\"a\",\"byteLength\":1}]}"
+      "{\"schemaVersion\":2,\"markdown\":null,\"diagnostics\":[],\"blocks\":[],\"notes\":[],\"assets\":[{\"id\":0,\"mediaType\":\"x\",\"originPart\":\"a\",\"byteLength\":1}]}"
     let responses: [FakeNativeBridge.Response] = [
       .init(
         status: 2,

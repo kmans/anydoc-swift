@@ -34,6 +34,11 @@ anydoc_swift_result_t *anydoc_swift_convert_document(
     uint64_t maximum_document_bytes
 );
 
+anydoc_swift_result_t *anydoc_swift_convert_combined(
+    const uint8_t *bytes, size_t bytes_length, const uint8_t *format_utf8, size_t format_length,
+    uint64_t maximum_input_bytes, uint64_t maximum_output_bytes, uint64_t maximum_document_bytes, uint32_t flags
+);
+
 /* Returns -1 for null, 0 for failure, 1 for Markdown, or 2 for document. */
 int32_t anydoc_swift_result_kind(
     const anydoc_swift_result_t *result

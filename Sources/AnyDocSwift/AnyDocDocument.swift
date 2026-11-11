@@ -5,6 +5,13 @@ public import Foundation
 /// The graph is read-only parser output. Embedded assets retain their exact
 /// source bytes, so the value remains usable after the input buffer is gone.
 public struct AnyDocDocument: Sendable, Equatable {
+  /// Parser and rendering notices with stable identifiers.
+  public let diagnostics: [AnyDocDiagnostic]
+
+  init(blocks: [Block], notes: [Note], assets: [Asset], diagnostics: [AnyDocDiagnostic] = []) {
+    self.blocks = blocks; self.notes = notes; self.assets = assets; self.diagnostics = diagnostics
+  }
+
   /// Top-level content in document order.
   public let blocks: [Block]
   /// Footnotes and endnotes referenced by the document.
@@ -16,6 +23,8 @@ public struct AnyDocDocument: Sendable, Equatable {
 extension AnyDocDocument {
   /// A block of content, including containers with nested blocks or inlines.
   public indirect enum Block: Sendable, Equatable {
+    /// Original chart data and presentation metadata.
+    case chart(AnyDocChart)
     /// A heading with its level, optional anchor, and inline content.
     case heading(level: Int, anchor: String?, content: [Inline])
     /// A paragraph of inline content.
@@ -56,6 +65,13 @@ extension AnyDocDocument {
 
   /// Formatting flags attached to a text run.
   public struct Style: Sendable, Equatable {
+    public enum Script: String, Sendable { case baseline, superscript, `subscript` }
+    public let script: Script
+    init(bold: Bool, italic: Bool, strike: Bool, code: Bool, script: Script = .baseline) {
+      self.bold = bold; self.italic = italic; self.strike = strike; self.code = code;
+      self.script = script
+    }
+
     /// Whether the text is bold.
     public let bold: Bool
     /// Whether the text is italic.
@@ -176,6 +192,14 @@ extension AnyDocDocument {
 
   /// An embedded asset whose bytes are owned by the Swift document value.
   public struct Asset: Sendable, Equatable {
+    /// Opaque destination used by this combined conversion's Markdown, if enabled.
+    public let markdownReference: String?
+    init(
+      id: Int, mediaType: String, originPart: String, bytes: Data, markdownReference: String? = nil
+    ) {
+      self.id = id; self.mediaType = mediaType; self.originPart = originPart; self.bytes = bytes;
+      self.markdownReference = markdownReference
+    }
     /// The asset's index in ``AnyDocDocument/assets``.
     public let id: Int
     /// The media type recorded by the parser.

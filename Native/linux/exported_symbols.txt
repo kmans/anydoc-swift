@@ -10,3 +10,4 @@ anydoc_swift_result_markdown
 anydoc_swift_result_document_manifest
 anydoc_swift_result_document_asset
 anydoc_swift_result_needs_ocr_pages
+anydoc_swift_convert_combined

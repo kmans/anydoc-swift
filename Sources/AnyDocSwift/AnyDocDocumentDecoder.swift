@@ -7,8 +7,16 @@ enum AnyDocDocumentDecoder {
     fileprivate let manifest: Manifest
     let manifestByteCount: UInt64
 
+    var markdown: String? { manifest.markdown }
+    var diagnostics: [AnyDocDiagnostic] {
+      get throws { try manifest.diagnostics.map { try $0.materialize() } }
+    }
+
     var assetByteLengths: [UInt64] {
       manifest.assets.map(\.byteLength)
+    }
+    var hasCompleteAssetReferences: Bool {
+      manifest.assets.allSatisfy { $0.markdownReference != nil }
     }
 
     func materialize(assetBytes: [Data]) throws -> AnyDocDocument {
@@ -19,7 +27,7 @@ enum AnyDocDocumentDecoder {
   static func prepare(manifest data: Data) throws -> Prepared {
     do {
       let manifest = try JSONDecoder().decode(Manifest.self, from: data)
-      guard manifest.schemaVersion == 1 else {
+      guard manifest.schemaVersion == 2 else {
         throw invalidManifest()
       }
       guard let byteCount = UInt64(exactly: data.count) else {
@@ -43,6 +51,8 @@ enum AnyDocDocumentDecoder {
 }
 
 private struct Manifest: Decodable {
+  let markdown: String?
+  let diagnostics: [WireDiagnostic]
   let schemaVersion: UInt64
   let blocks: [WireBlock]
   let notes: [WireNote]
@@ -61,12 +71,21 @@ private struct Manifest: Decodable {
       guard id == index, metadata.byteLength == UInt64(bytes.count) else {
         throw AnyDocDocumentDecoder.invalidManifest()
       }
+      if let reference = metadata.markdownReference {
+        let parts = reference.split(separator: ":", omittingEmptySubsequences: false)
+        guard parts.count == 3, parts[0] == "anydoc-asset", parts[1].utf8.count == 32,
+          parts[1].allSatisfy({ "0123456789abcdef".contains($0) }), parts[2] == String(id)
+        else {
+          throw AnyDocDocumentDecoder.invalidManifest()
+        }
+      }
       publicAssets.append(
         .init(
           id: id,
           mediaType: metadata.mediaType,
           originPart: metadata.originPart,
-          bytes: bytes
+          bytes: bytes,
+          markdownReference: metadata.markdownReference
         )
       )
     }
@@ -75,12 +94,14 @@ private struct Manifest: Decodable {
     return try AnyDocDocument(
       blocks: blocks.map { try $0.materialize(assetCount: assetCount) },
       notes: notes.map { try $0.materialize(assetCount: assetCount) },
-      assets: publicAssets
+      assets: publicAssets,
+      diagnostics: try diagnostics.map { try $0.materialize() }
     )
   }
 }
 
 private struct WireAsset: Decodable {
+  let markdownReference: String?
   let id: UInt64
   let mediaType: String
   let originPart: String
@@ -107,6 +128,7 @@ private enum WireNoteKind: String, Decodable {
 }
 
 private enum WireBlock: Decodable {
+  case chart(WireChart)
   case heading(HeadingValue)
   case paragraph([WireInline])
   case list(WireList)
@@ -124,6 +146,7 @@ private enum WireBlock: Decodable {
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     switch try container.decode(String.self, forKey: .kind) {
+    case "chart": self = .chart(try container.decode(WireChart.self, forKey: .value))
     case "heading":
       self = .heading(try container.decode(HeadingValue.self, forKey: .value))
     case "paragraph":
@@ -151,6 +174,7 @@ private enum WireBlock: Decodable {
 
   func materialize(assetCount: Int) throws -> AnyDocDocument.Block {
     switch self {
+    case .chart(let value): return .chart(try value.materialize())
     case .heading(let value):
       let level = try checkedInt(value.level)
       guard (1...Int(UInt8.max)).contains(level) else {
@@ -242,7 +266,8 @@ private enum WireInline: Decodable {
           bold: value.style.bold,
           italic: value.style.italic,
           strike: value.style.strike,
-          code: value.style.code
+          code: value.style.code,
+          script: try value.style.materializeScript()
         )
       )
     case .link(let value):
@@ -275,6 +300,14 @@ private struct TextValue: Decodable {
 }
 
 private struct WireStyle: Decodable {
+  let script: String
+  func materializeScript() throws -> AnyDocDocument.Style.Script {
+    guard let value = AnyDocDocument.Style.Script(rawValue: script) else {
+      throw AnyDocDocumentDecoder.invalidManifest()
+    }
+    return value
+  }
+
   let bold: Bool
   let italic: Bool
   let strike: Bool
@@ -592,5 +625,48 @@ private func validateCovered(
     (row, column) != (originRow, originColumn)
   else {
     throw AnyDocDocumentDecoder.invalidManifest()
+  }
+}
+
+private struct WireLocation: Decodable {
+  let part: String; let sheet: String?; let object: String?
+  func materialize() -> AnyDocSourceLocation { .init(part: part, sheet: sheet, object: object) }
+}
+private struct WireDiagnostic: Decodable {
+  let code: String; let severity: String; let location: WireLocation?; let arguments: [String]
+  func materialize() throws -> AnyDocDiagnostic {
+    guard let level = AnyDocDiagnostic.Severity(rawValue: severity), !code.isEmpty else {
+      throw AnyDocDocumentDecoder.invalidManifest()
+    }
+    return .init(
+      code: code, severity: level, location: location?.materialize(), arguments: arguments)
+  }
+}
+private struct WireChart: Decodable {
+  struct Series: Decodable {
+    let name: String; let categories: [String]; let values: [String?]; let displayValues: [String?];
+    let sourceRanges: [String]
+    let additionalValues: [String: [String?]]
+  }
+  let kind: String; let title: String; let grouping: String; let horizontal: Bool
+  let incompatibleAxes: Bool; let axisTitles: [String]; let series: [Series];
+  let location: WireLocation
+  func materialize() throws -> AnyDocChart {
+    guard series.count <= 4_000_000,
+      series.allSatisfy({
+        $0.values.count <= 4_000_000 && $0.displayValues.count == $0.values.count
+          && $0.additionalValues.values.allSatisfy { $0.count <= 4_000_000 }
+      })
+    else { throw AnyDocDocumentDecoder.invalidManifest() }
+    return .init(
+      kind: kind, title: title, grouping: grouping, horizontal: horizontal,
+      incompatibleAxes: incompatibleAxes,
+      axisTitles: axisTitles,
+      series: series.map {
+        .init(
+          name: $0.name, categories: $0.categories, values: $0.values,
+          displayValues: $0.displayValues, sourceRanges: $0.sourceRanges,
+          additionalValues: $0.additionalValues)
+      }, location: location.materialize())
   }
 }

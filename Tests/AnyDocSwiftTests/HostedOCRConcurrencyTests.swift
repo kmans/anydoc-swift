@@ -105,7 +105,9 @@ final class HostedOCRConcurrencyTests: XCTestCase, @unchecked Sendable {
       if invocation.data == Data([1]) { return .needsOCR(pages: [1], pageCount: 1) }
       if invocation.operation == .document {
         return .document(
-          manifest: #"{"schemaVersion":1,"blocks":[],"notes":[],"assets":[]}"#, assets: [])
+          manifest:
+            #"{"schemaVersion":2,"markdown":null,"diagnostics":[],"blocks":[],"notes":[],"assets":[]}"#,
+          assets: [])
       }
       return .success("local")
     }

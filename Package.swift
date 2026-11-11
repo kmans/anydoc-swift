@@ -17,43 +17,15 @@ let useLocallyBuiltBridge =
     : .binaryTarget(
       name: "AnyDocSwiftBridge",
       url:
-        "https://github.com/ngutech21/anydoc-swift/releases/download/binary-0.2.1/AnyDocSwiftBridge.xcframework.zip",
-      checksum: "ec81289086e0ef7f23212172433ea184b8f634e55f757a825210e2a91fd4f6f6"
+        "https://github.com/kmans/anydoc-swift/releases/download/binary-0.3.0/AnyDocSwiftBridge.xcframework.zip",
+      checksum: "8e6a9a1c75cca6c644ba20e8a8773f948fd4bc23d54e653bdef77c6b2b2ea000"
     )
   let bridgeLinkerSettings: [LinkerSetting] = []
-#elseif os(Linux) && (arch(x86_64) || arch(arm64))
-  let bridgeTarget: Target
-  if useLocallyBuiltBridge {
-    bridgeTarget = .binaryTarget(
-      name: "AnyDocSwiftBridge",
-      path: ".build/artifact/verified/AnyDocSwiftBridge.artifactbundle"
-    )
-  } else {
-    #if arch(x86_64)
-      bridgeTarget = .binaryTarget(
-        name: "AnyDocSwiftBridge",
-        url:
-          "https://github.com/ngutech21/anydoc-swift/releases/download/binary-0.2.1/AnyDocSwiftBridge-x86_64-unknown-linux-gnu.artifactbundle.zip",
-        checksum: "520d353696ee28d63d7406be053af56a388b894676f3c493cd2b37b4df9260ad"
-      )
-    #else
-      bridgeTarget = .binaryTarget(
-        name: "AnyDocSwiftBridge",
-        url:
-          "https://github.com/ngutech21/anydoc-swift/releases/download/binary-0.2.1/AnyDocSwiftBridge-aarch64-unknown-linux-gnu.artifactbundle.zip",
-        checksum: "f8b35c5b20c32535ad2eb055a94cc7fb965e9b517461f3be627f065d247b5358"
-      )
-    #endif
-  }
-  // Mirrors the non-default entries in Native/linux/native-static-libs.txt.
-  let bridgeLinkerSettings: [LinkerSetting] = [
-    .linkedLibrary("rt", .when(platforms: [.linux])),
-    .linkedLibrary("util", .when(platforms: [.linux])),
-  ]
 #else
-  fatalError(
-    "AnyDocSwift supports only macOS 13+ on arm64 and GNU/Linux on x86_64 or arm64."
-  )
+  let bridgeTarget: Target = {
+    fatalError("This Telescopo fork currently distributes Apple-platform artifacts only.")
+  }()
+  let bridgeLinkerSettings: [LinkerSetting] = []
 #endif
 
 let swiftSettings: [SwiftSetting] = [
