@@ -7,14 +7,19 @@ use super::controls::{Checkboxes, cell_inlines, read_vml_checkboxes};
 use super::numfmt::{DateParts, NumberFormat, Rendered, builtin_code};
 use super::{format_duration_days, format_float, format_time_of_day};
 use crate::error::ConvertError;
-use crate::model::{Block, Cell, Document, GridBuilder, Inline, Table, TableKind};
+use crate::model::{
+    Block, Cell, Diagnostic, Document, GridBuilder, Inline, LinkTarget, SourceLocation, Table,
+    TableKind,
+};
 use crate::package::limits;
-use crate::package::relationships::{Relationships, read_rels, rel_type, rels_part_for};
+use crate::package::relationships::{
+    Relationships, TargetMode, read_rels, rel_type, rels_part_for,
+};
 use crate::package::xml::{Element, ns};
 use crate::package::{Package, path};
 use crate::shared::header::resolve_header_rows;
 use crate::shared::text::clean_text;
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::rc::Rc;
 
 pub(super) const SHARED_STRINGS_REL: &str =
@@ -63,6 +68,9 @@ pub(super) fn parse(pkg: &mut Package, wb_part: &str) -> Result<Document, Conver
     // Visible sheets in workbook order; hidden and veryHidden sheets are
     // omitted entirely, heading included.
     let mut sheets: Vec<(String, String)> = Vec::new();
+    let mut doc = Document::default();
+    let mut eligible = 0usize;
+    let mut failed = 0usize;
     for sheet in workbook
         .first_descendant(ns::SML, "sheets")
         .into_iter()
@@ -78,38 +86,89 @@ pub(super) fn parse(pkg: &mut Package, wb_part: &str) -> Result<Document, Conver
             .attr_unqualified("name")
             .unwrap_or_default()
             .to_string();
+        eligible += 1;
         let Some(target) = sheet
             .attr_qualified(ns::R, "id")
             .and_then(|rid| wb_rels.internal_target(rid))
         else {
-            log::warn!("skipping sheet {name:?} with no worksheet relationship");
+            failed += 1;
+            doc.diagnostics.push(sheet_notice(
+                "spreadsheet.sheetUnavailable",
+                wb_part,
+                &name,
+                None,
+            ));
             continue;
         };
         match path::resolve(wb_part, target) {
             Ok(t) => sheets.push((name, t.path)),
-            Err(e) => log::warn!("skipping sheet {name:?} with unresolvable target: {e}"),
+            Err(_) => {
+                failed += 1;
+                doc.diagnostics.push(sheet_notice(
+                    "spreadsheet.sheetUnavailable",
+                    wb_part,
+                    &name,
+                    None,
+                ));
+            }
         }
     }
 
     let multi_sheet = sheets.len() > 1;
-    let mut doc = Document::default();
-    let mut failed = 0usize;
     // One budget for the workbook, so sheets cannot multiply the cap.
     let mut slots = 0u64;
     let mut chart_points = 0u64;
     let mut parsed = Vec::new();
-    let mut chart_cells = super::charts::WorkbookCells::new();
+    let mut chart_cells = super::charts::WorkbookCells {
+        date1904,
+        ..Default::default()
+    };
+    let mut link_work = 0u64;
     for (name, part) in &sheets {
         let root = pkg.optional_xml_part(part)?;
         let Some(root) = root else {
             failed += 1;
+            doc.diagnostics.push(sheet_notice(
+                "spreadsheet.sheetUnavailable",
+                part,
+                name,
+                None,
+            ));
             continue;
         };
-        let Some(worksheet) = root.find(ns::SML, "worksheet") else {
+        let Some(worksheet) = root
+            .find(ns::SML, "worksheet")
+            .or_else(|| root.find(ns::SML, "chartsheet"))
+        else {
             failed += 1;
+            doc.diagnostics.push(sheet_notice(
+                "spreadsheet.sheetUnavailable",
+                part,
+                name,
+                None,
+            ));
             continue;
         };
-        let content = read_sheet(&worksheet, &shared, &styles, date1904);
+        let mut content = read_sheet(&worksheet, &shared, &styles, date1904);
+        read_hyperlinks(
+            pkg,
+            &worksheet,
+            part,
+            name,
+            &mut content,
+            &mut doc.diagnostics,
+            &mut link_work,
+        )?;
+        for cell in worksheet.descendants(ns::SML, "c") {
+            if formula_result_unavailable(cell) {
+                doc.diagnostics.push(sheet_notice(
+                    "spreadsheet.formulaResultUnavailable",
+                    part,
+                    name,
+                    cell.attr_unqualified("r"),
+                ));
+            }
+        }
         let mut values = HashMap::new();
         for cell in worksheet.descendants(ns::SML, "c") {
             if let Some(at) = cell
@@ -129,12 +188,13 @@ pub(super) fn parse(pkg: &mut Package, wb_part: &str) -> Result<Document, Conver
                 );
             }
         }
-        chart_cells.insert(name.clone(), values);
+        chart_cells.sheets.insert(name.clone(), values);
         parsed.push((name, part, root, content));
     }
     for (name, part, root, mut content) in parsed {
         let worksheet = root
             .find(ns::SML, "worksheet")
+            .or_else(|| root.find(ns::SML, "chartsheet"))
             .expect("validated worksheet");
         content.checkboxes = read_vml_checkboxes(pkg, part)?;
         let explicit_header = explicit_header_row(pkg, &worksheet, part)?;
@@ -166,8 +226,12 @@ pub(super) fn parse(pkg: &mut Package, wb_part: &str) -> Result<Document, Conver
                     if nonempty.len() != 1 || nonempty[0].0.1 != 0 {
                         break;
                     }
+                    if content.links.contains_key(&nonempty[0].0) {
+                        break;
+                    }
                     let (at, text) = &nonempty[0];
                     if chart_cells
+                        .sheets
                         .get(name)
                         .and_then(|s| s.get(at))
                         .is_some_and(|(raw, _)| raw.is_some())
@@ -186,6 +250,11 @@ pub(super) fn parse(pkg: &mut Package, wb_part: &str) -> Result<Document, Conver
             }
         }
         let first_data_row = content.cells.keys().map(|(r, _)| *r).min();
+        let numeric_first_row = chart_cells.sheets.get(name).is_some_and(|cells| {
+            cells
+                .iter()
+                .any(|((row, _), (raw, _))| Some(*row) == first_data_row && raw.is_some())
+        });
         let table = build_table(content, &mut slots)?;
         let charts = super::charts::read_charts(
             pkg,
@@ -207,17 +276,116 @@ pub(super) fn parse(pkg: &mut Package, wb_part: &str) -> Result<Document, Conver
         if let Some(mut table) = table {
             if explicit_header.is_some() && explicit_header == first_data_row {
                 table.header_rows = 1;
+            } else if explicit_header.is_none() && numeric_first_row {
+                // Formatting a number as currency/date does not turn its data
+                // row into textual column headings. Keep all rows under generic labels.
+                table.header_rows = 0;
             }
             doc.blocks.push(Block::Table(table));
         }
         doc.blocks.extend(charts.into_iter().map(Block::Chart));
     }
-    if !sheets.is_empty() && failed == sheets.len() {
+    if eligible > 0 && failed == eligible {
         return Err(ConvertError::malformed(
             "no sheet in the workbook could be read",
         ));
     }
     Ok(doc)
+}
+
+fn sheet_notice(code: &str, part: &str, sheet: &str, object: Option<&str>) -> Diagnostic {
+    Diagnostic {
+        code: code.into(),
+        severity: "warning".into(),
+        location: Some(SourceLocation {
+            part: part.into(),
+            sheet: Some(sheet.into()),
+            object: object.map(str::to_owned),
+        }),
+        arguments: vec![],
+    }
+}
+
+fn formula_result_unavailable(cell: &Element) -> bool {
+    cell.find(ns::SML, "f").is_some()
+        && match cell.find(ns::SML, "v") {
+            None => cell.find(ns::SML, "is").is_none(),
+            Some(value) => value.text().is_empty() && cell.attr_unqualified("t") != Some("str"),
+        }
+}
+
+fn read_hyperlinks(
+    pkg: &mut Package,
+    sheet: &Element,
+    part: &str,
+    name: &str,
+    content: &mut SheetContent,
+    diagnostics: &mut Vec<Diagnostic>,
+    work: &mut u64,
+) -> Result<(), ConvertError> {
+    let rels = read_rels(pkg, &rels_part_for(part))?;
+    let positions: std::collections::BTreeSet<_> = content.cells.keys().copied().collect();
+    for link in sheet
+        .find_all(ns::SML, "hyperlinks")
+        .flat_map(|e| e.find_all(ns::SML, "hyperlink"))
+    {
+        let reference = link.attr_unqualified("ref");
+        let relationship = link.attr_qualified(ns::R, "id").and_then(|id| rels.get(id));
+        let target = relationship
+            .filter(|r| r.mode == TargetMode::External && r.rel_type.ends_with("/hyperlink"))
+            .map(|r| r.target.trim())
+            .filter(|s| {
+                let scheme = s
+                    .split_once(':')
+                    .map(|(scheme, _)| scheme.to_ascii_lowercase());
+                matches!(scheme.as_deref(), Some("https" | "http" | "mailto"))
+                    && !s.chars().any(char::is_control)
+            });
+        let Some(target) = target else {
+            diagnostics.push(sheet_notice(
+                if relationship.is_none() && link.attr_unqualified("location").is_some() {
+                    "anchor.targetUnavailable"
+                } else {
+                    "spreadsheet.linkUnavailable"
+                },
+                part,
+                name,
+                reference,
+            ));
+            continue;
+        };
+        let mut target = target.to_owned();
+        if let Some(fragment) = link.attr_unqualified("location").filter(|s| !s.is_empty()) {
+            target.truncate(target.find('#').unwrap_or(target.len()));
+            target.push('#');
+            target.push_str(fragment);
+        }
+        let Some((r1, c1, r2, c2)) = reference.and_then(parse_region) else {
+            diagnostics.push(sheet_notice(
+                "spreadsheet.linkUnavailable",
+                part,
+                name,
+                reference,
+            ));
+            continue;
+        };
+        // Match only existing cells: hyperlink ranges must not expand an empty grid.
+        for &at in positions.range((r1, 0)..=(r2, MAX_COLS - 1)) {
+            *work = work.saturating_add(1);
+            if *work > limits::MAX_GRID_SLOTS {
+                return Err(ConvertError::ResourceLimit {
+                    limit: "max_grid_slots",
+                    detail: "hyperlink ranges exceed workbook work limit".into(),
+                });
+            }
+            if at.1 >= c1 && at.1 <= c2 {
+                content
+                    .links
+                    .insert(at, LinkTarget::External(target.clone()));
+            }
+        }
+    }
+    Ok(())
 }
 
 /// Part name for a workbook-level sibling: the relationship of the given
@@ -363,6 +531,7 @@ pub(super) fn resolve_format(id: u32, custom: &HashMap<u32, &str>) -> CellFormat
 pub(super) struct SheetContent {
     /// Rendered text by zero-based (row, col); empty results are absent.
     pub(super) cells: HashMap<(u32, u32), String>,
+    pub(super) links: HashMap<(u32, u32), LinkTarget>,
     /// Form control checkboxes by the cell they are anchored in.
     pub(super) checkboxes: Checkboxes,
     pub(super) hidden_rows: HashSet<u32>,
@@ -379,8 +548,31 @@ fn read_sheet(
     date1904: bool,
 ) -> SheetContent {
     let mut out = SheetContent::default();
+    // Piecewise column defaults. Each interval edit removes previously inserted
+    // boundaries, avoiding repeated expansion of adversarial whole-column ranges.
+    let mut column_styles: BTreeMap<u32, Option<&str>> =
+        BTreeMap::from([(0, None), (MAX_COLS, None)]);
     for cols in worksheet.find_all(ns::SML, "cols") {
         for col in cols.find_all(ns::SML, "col") {
+            if let (Some(min), Some(max), Some(style)) = (
+                col.attr_unqualified("min")
+                    .and_then(|s| s.parse::<u32>().ok())
+                    .and_then(|n| n.checked_sub(1)),
+                col.attr_unqualified("max")
+                    .and_then(|s| s.parse::<u32>().ok()),
+                col.attr_unqualified("style"),
+            ) {
+                let max = max.min(MAX_COLS);
+                if min < max {
+                    let after = *column_styles.range(..=max).next_back().unwrap().1;
+                    let old: Vec<_> = column_styles.range(min..max).map(|(&k, _)| k).collect();
+                    for key in old {
+                        column_styles.remove(&key);
+                    }
+                    column_styles.insert(min, Some(style));
+                    column_styles.insert(max, after);
+                }
+            }
             if !col.attr_unqualified("hidden").is_some_and(bool_attr) {
                 continue;
             }
@@ -426,7 +618,17 @@ fn read_sheet(
             if cr >= MAX_ROWS || cc >= MAX_COLS {
                 continue;
             }
-            let text = cell_text(c, shared, styles, date1904);
+            let inherited = row
+                .attr_unqualified("customFormat")
+                .filter(|s| bool_attr(s))
+                .and_then(|_| row.attr_unqualified("s"))
+                .or_else(|| *column_styles.range(..=cc).next_back().unwrap().1);
+            let fmt = styles.for_cell(c.attr_unqualified("s").or(inherited));
+            let text = if formula_result_unavailable(c) {
+                "Formula result unavailable".into()
+            } else {
+                cell_text(c, shared, fmt, date1904)
+            };
             if !text.is_empty() {
                 out.cells.insert((cr, cc), text);
             }
@@ -449,8 +651,7 @@ fn read_sheet(
 }
 
 /// A cell's rendered text, per its `t` type and resolved number format.
-fn cell_text(c: &Element, shared: &[String], styles: &Styles, date1904: bool) -> String {
-    let fmt = styles.for_cell(c.attr_unqualified("s"));
+fn cell_text(c: &Element, shared: &[String], fmt: &CellFormat, date1904: bool) -> String {
     let value = || c.find(ns::SML, "v").map(|v| v.text()).unwrap_or_default();
     match c.attr_unqualified("t").unwrap_or("n") {
         "s" => {
@@ -548,7 +749,14 @@ pub(super) fn build_table(
         }
     }
     for (at, text) in sheet.cells.drain() {
-        cells.insert(at, vec![Inline::plain(text)]);
+        let content = vec![Inline::plain(text)];
+        cells.insert(
+            at,
+            match sheet.links.remove(&at) {
+                Some(target) => vec![Inline::Link { content, target }],
+                None => content,
+            },
+        );
     }
     // A merge with no surviving row or column disappears with its content.
     // One whose origin is hidden keeps its content at the first surviving
@@ -721,7 +929,7 @@ fn render_serial(serial: f64, parts: DateParts, date1904: bool) -> String {
     }
     // A serial carrying no whole day has no date for a date format to show;
     // the clock a combined format also names still renders.
-    if serial.abs() < 1.0 {
+    if !date1904 && serial.abs() < 1.0 {
         return if parts.time {
             format_time_of_day(serial)
         } else {
@@ -1032,6 +1240,149 @@ mod tests {
         assert_eq!(
             texts(first_table(&doc)),
             vec![vec!["TRUE", "#DIV/0!", "=sum", "2026-03-15", "inline"]]
+        );
+    }
+
+    #[test]
+    fn cell_row_and_column_number_formats_have_explicit_precedence() {
+        let wb = Wb {
+            styles: Some(
+                r#"<numFmts><numFmt numFmtId="164" formatCode="&quot;$&quot;0.00"/></numFmts><cellXfs><xf numFmtId="0"/><xf numFmtId="164"/><xf numFmtId="9"/><xf numFmtId="14"/></cellXfs>"#,
+            ),
+            ..one_sheet(
+                r#"<cols><col min="1" max="4" style="1"/><col min="4" max="4" style="3"/></cols><sheetData>
+            <row r="1"><c r="A1"><v>2</v></c><c r="B1" s="0"><v>2</v></c><c r="C1" s="2"><v>0.25</v></c><c r="D1"><v>43466</v></c></row>
+            <row r="2" s="2" customFormat="1"><c r="A2"><v>0.25</v></c><c r="B2" s="1"><v>2</v></c><c r="C2" s="0"><v>0.25</v></c></row>
+            <row r="3" s="2" customFormat="0"><c r="A3"><v>2</v></c></row></sheetData>"#,
+            )
+        };
+        let doc = parse(&wb.build()).unwrap();
+        let rows = texts(first_table(&doc));
+        assert_eq!(first_table(&doc).header_rows, 0);
+        assert_eq!(rows[0], vec!["$2.00", "2", "25%", "2019-01-01"]);
+        assert_eq!(&rows[1][..3], &["25%", "$2.00", "0.25"]);
+        assert_eq!(rows[2][0], "$2.00");
+    }
+
+    #[test]
+    fn missing_formula_caches_are_not_confused_with_valid_empty_results() {
+        let doc = parse(&one_sheet(r#"<sheetData><row r="1"><c r="A1"><f>1+1</f></c><c r="B1"><f>1+1</f><v/></c><c r="C1" t="str"><f>IF(1,&quot;&quot;,&quot;x&quot;)</f><v/></c><c r="D1"><f>1-1</f><v>0</v></c><c r="E1" t="e"><f>1/0</f><v>#DIV/0!</v></c></row></sheetData>"#).build()).unwrap();
+        assert_eq!(
+            texts(first_table(&doc))[0],
+            vec![
+                "Formula result unavailable",
+                "Formula result unavailable",
+                "",
+                "0",
+                "#DIV/0!"
+            ]
+        );
+        assert_eq!(
+            doc.diagnostics
+                .iter()
+                .filter(|d| d.code == "spreadsheet.formulaResultUnavailable")
+                .count(),
+            2
+        );
+        assert_eq!(
+            doc.diagnostics[0]
+                .location
+                .as_ref()
+                .unwrap()
+                .object
+                .as_deref(),
+            Some("A1")
+        );
+    }
+
+    #[test]
+    fn native_chart_sheets_keep_dates_values_units_and_partial_import_notices() {
+        for (fixture, first, last) in [
+            ("spreadsheet-followups.xlsx", "2019-01-01", "2019-01-03"),
+            (
+                "spreadsheet-followups-1904.xlsx",
+                "1904-01-01",
+                "1904-01-03",
+            ),
+        ] {
+            let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../Tests/Fixtures/fidelity")
+                .join(fixture);
+            let doc = parse(&std::fs::read(path).unwrap()).unwrap();
+            let charts: Vec<_> = doc
+                .blocks
+                .iter()
+                .filter_map(|b| {
+                    if let Block::Chart(c) = b {
+                        Some(c)
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            assert_eq!(charts.len(), 2);
+            assert_eq!(
+                charts[0].series[0].categories,
+                vec![
+                    first,
+                    if fixture.ends_with("1904.xlsx") {
+                        "1904-01-02"
+                    } else {
+                        "2019-01-02"
+                    },
+                    last
+                ]
+            );
+            assert_eq!(
+                charts[0].series[0].values,
+                vec![Some("71".into()), Some("53".into()), Some("58".into())]
+            );
+            assert_eq!(
+                charts[1].series[0].display_values,
+                vec![Some("25%".into()), Some("50%".into()), Some("75%".into())]
+            );
+            let options = crate::conversion::MarkdownOptions {
+                mermaid_charts: true,
+                portable_tables: true,
+                ..Default::default()
+            };
+            let (markdown, notices) = crate::conversion::render(&doc, options);
+            assert_eq!(markdown.matches("```mermaid").count(), 1);
+            assert!(markdown.contains(first) && markdown.contains(last));
+            assert!(markdown.contains("25%"));
+            assert!(markdown.contains("0.25"));
+            assert!(
+                notices
+                    .iter()
+                    .any(|d| d.code == "spreadsheet.sheetUnavailable"
+                        && d.location.as_ref().unwrap().sheet.as_deref() == Some("Missing sheet"))
+            );
+            assert!(notices.iter().any(|d| d.code == "chart.cachedData"));
+            assert!(notices.iter().any(|d| d.code == "chart.tableFallback"));
+        }
+    }
+
+    #[test]
+    fn spreadsheet_links_preserve_safe_destinations_and_explain_unavailable_ones() {
+        let wb = Wb {
+            extra: vec![(
+                "xl/worksheets/_rels/sheet1.xml.rels",
+                r#"<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="safe" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://example.org/a_(b)?q=1&amp;x=2" TargetMode="External"/><Relationship Id="unsafe" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="javascript:alert(1)" TargetMode="External"/></Relationships>"#,
+            )],
+            ..one_sheet(
+                r#"<sheetData><row r="1"><c r="A1" t="inlineStr"><is><t>Safe</t></is></c><c r="B1" t="inlineStr"><is><t>Internal</t></is></c><c r="C1" t="inlineStr"><is><t>Unsafe</t></is></c></row></sheetData><hyperlinks xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><hyperlink ref="A1" r:id="safe" location="part"/><hyperlink ref="B1" location="S!A1"/><hyperlink ref="C1" r:id="unsafe"/></hyperlinks>"#,
+            )
+        };
+        let doc = parse(&wb.build()).unwrap();
+        let output = crate::render::markdown::document_to_markdown(&doc);
+        assert!(output.contains("https://example.org/a_"));
+        assert!(output.contains("#part"));
+        assert!(!output.contains("javascript:"));
+        assert_eq!(doc.diagnostics.len(), 2);
+        assert!(
+            doc.diagnostics
+                .iter()
+                .any(|d| d.code == "anchor.targetUnavailable")
         );
     }
 

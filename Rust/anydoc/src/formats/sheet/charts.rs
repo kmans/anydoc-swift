@@ -5,8 +5,13 @@ use crate::package::relationships::{read_rels, rels_part_for};
 use crate::package::xml::{Element, ns};
 use crate::package::{Package, path};
 use std::collections::HashMap;
+use std::rc::Rc;
 
-pub(super) type WorkbookCells = HashMap<String, HashMap<(u32, u32), (Option<String>, String)>>;
+#[derive(Default)]
+pub(super) struct WorkbookCells {
+    pub sheets: HashMap<String, HashMap<(u32, u32), (Option<String>, String)>>,
+    pub date1904: bool,
+}
 
 pub(super) fn coordinate(value: &str) -> Option<(u32, u32)> {
     let value = value.replace('$', "");
@@ -37,7 +42,7 @@ fn range(formula: &str, cells: &WorkbookCells) -> Option<Vec<(Option<String>, St
     if sheet.contains('[') || refs.contains(',') {
         return None;
     }
-    let sheet = cells.get(&sheet)?;
+    let sheet = cells.sheets.get(&sheet)?;
     let (a, b) = refs.split_once(':').unwrap_or((refs, refs));
     let (r1, c1) = coordinate(a)?;
     let (r2, c2) = coordinate(b)?;
@@ -60,6 +65,7 @@ fn cached(
     parent: &Element,
     numeric: bool,
     budget: &mut u64,
+    date1904: bool,
 ) -> Result<Vec<(Option<String>, String)>, ConvertError> {
     let container = parent
         .first_descendant(ns::CHART, if numeric { "numCache" } else { "strCache" })
@@ -76,6 +82,10 @@ fn cached(
     let Some(container) = container else {
         return Ok(Vec::new());
     };
+    let numeric = numeric || matches!(container.local.as_str(), "numCache" | "numLit");
+    let format = container
+        .find(ns::CHART, "formatCode")
+        .and_then(|c| number_format(&c.text()));
     let count = container
         .find(ns::CHART, "ptCount")
         .and_then(|e| e.attr_unqualified("val"))
@@ -116,7 +126,14 @@ fn cached(
             } else {
                 None
             };
-            out[index] = (number, text);
+            let display = match (
+                format.as_ref(),
+                number.as_ref().and_then(|n| n.parse::<f64>().ok()),
+            ) {
+                (Some(fmt), Some(n)) => super::xlsx::render_number(fmt, n, date1904),
+                _ => text,
+            };
+            out[index] = (number, display);
         }
     }
     Ok(out)
@@ -129,6 +146,7 @@ fn values(
     location: &SourceLocation,
     diagnostics: &mut Vec<Diagnostic>,
     budget: &mut u64,
+    date1904: bool,
 ) -> Result<(Vec<(Option<String>, String)>, Vec<String>), ConvertError> {
     let Some(parent) = parent else {
         return Ok((Vec::new(), Vec::new()));
@@ -140,7 +158,20 @@ fn values(
         // A stale chart cache must never turn a missing source value into data.
         return Ok((resolved, formula.into_iter().collect()));
     }
-    let cache = cached(parent, numeric, budget)?;
+    let cache = cached(parent, numeric, budget, date1904)?;
+    if let Some(code) = parent
+        .first_descendant(ns::CHART, "formatCode")
+        .map(Element::text)
+    {
+        if !code.eq_ignore_ascii_case("General") && number_format(&code).is_none() {
+            diagnostics.push(Diagnostic {
+                code: "chart.numberFormatUnavailable".into(),
+                severity: "warning".into(),
+                location: Some(location.clone()),
+                arguments: vec![],
+            });
+        }
+    }
     if formula.is_some() && !cache.is_empty() {
         diagnostics.push(Diagnostic {
             code: "chart.cachedData".into(),
@@ -215,6 +246,10 @@ fn missing(part: &str, sheet: &str) -> Diagnostic {
     }
 }
 
+fn number_format(code: &str) -> Option<super::xlsx::CellFormat> {
+    super::numfmt::NumberFormat::parse(code).map(|f| super::xlsx::CellFormat::Fmt(Rc::new(f)))
+}
+
 fn parse_chart(
     root: &Element,
     part: &str,
@@ -223,6 +258,11 @@ fn parse_chart(
     diagnostics: &mut Vec<Diagnostic>,
     budget: &mut u64,
 ) -> Result<Chart, ConvertError> {
+    let date1904 = root
+        .first_descendant(ns::CHART, "date1904")
+        .and_then(|e| e.attr_unqualified("val"))
+        .map(|v| matches!(v, "1" | "true"))
+        .unwrap_or(cells.date1904);
     let chart = root.first_descendant(ns::CHART, "chart").unwrap_or(root);
     let title = chart
         .find(ns::CHART, "title")
@@ -287,6 +327,7 @@ fn parse_chart(
                 &location,
                 diagnostics,
                 budget,
+                date1904,
             )?;
             let name = name
                 .first()
@@ -307,6 +348,7 @@ fn parse_chart(
                 &location,
                 diagnostics,
                 budget,
+                date1904,
             )?;
             let (vals, val_refs) = values(
                 series
@@ -317,12 +359,20 @@ fn parse_chart(
                 &location,
                 diagnostics,
                 budget,
+                date1904,
             )?;
             refs.extend(val_refs);
             let mut additional_values = std::collections::BTreeMap::new();
             if let Some(size) = series.find(ns::CHART, "bubbleSize") {
-                let (sizes, size_refs) =
-                    values(Some(size), true, cells, &location, diagnostics, budget)?;
+                let (sizes, size_refs) = values(
+                    Some(size),
+                    true,
+                    cells,
+                    &location,
+                    diagnostics,
+                    budget,
+                    date1904,
+                )?;
                 additional_values.insert(
                     "Bubble size".into(),
                     sizes.into_iter().map(|(n, _)| n).collect(),
@@ -367,6 +417,72 @@ fn parse_chart(
                 .unwrap_or_default()
         })
         .collect();
+    // Explicit axis formats can carry units absent from worksheet/cache labels.
+    // Retain those displays; the renderer uses a table when its numeric axis
+    // cannot faithfully express them. Raw series values never change.
+    let multiple_value_axes = axes.iter().filter(|a| a.local == "valAx").count() > 1;
+    let multiple_category_axes = axes.iter().filter(|a| a.local != "valAx").count() > 1;
+    for axis in axes {
+        let Some(code) = axis
+            .find(ns::CHART, "numFmt")
+            .and_then(|n| n.attr_unqualified("formatCode"))
+            .filter(|c| !c.eq_ignore_ascii_case("General"))
+        else {
+            continue;
+        };
+        let Some(fmt) = number_format(code) else {
+            result.incompatible_axes = true;
+            diagnostics.push(Diagnostic {
+                code: "chart.numberFormatUnavailable".into(),
+                severity: "warning".into(),
+                location: Some(location.clone()),
+                arguments: vec![],
+            });
+            continue;
+        };
+        if (axis.local == "valAx" && multiple_value_axes)
+            || (axis.local != "valAx" && multiple_category_axes)
+        {
+            // Per-plot axis association is not represented. Never apply one
+            // axis's units to every series of a multi-axis fallback table.
+            diagnostics.push(Diagnostic {
+                code: "chart.numberFormatUnavailable".into(),
+                severity: "warning".into(),
+                location: Some(location.clone()),
+                arguments: vec![],
+            });
+            continue;
+        }
+        if axis.local == "valAx" {
+            for series in &mut result.series {
+                series.display_values = series
+                    .values
+                    .iter()
+                    .map(|raw| {
+                        raw.as_ref()
+                            .and_then(|n| n.parse::<f64>().ok())
+                            .map(|n| super::xlsx::render_number(&fmt, n, date1904))
+                    })
+                    .collect();
+            }
+        } else {
+            // Only numeric category labels are serial candidates; existing
+            // formatted worksheet dates and text categories remain unchanged.
+            for series in &mut result.series {
+                for label in &mut series.categories {
+                    if let Ok(n) = label.parse::<f64>() {
+                        *label = super::xlsx::render_number(&fmt, n, date1904);
+                    }
+                }
+            }
+        }
+    }
+    if diagnostics.iter().any(|d| {
+        d.code == "chart.numberFormatUnavailable"
+            && d.location.as_ref().is_some_and(|l| l.part == part)
+    }) {
+        result.incompatible_axes = true;
+    }
     Ok(result)
 }
 

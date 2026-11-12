@@ -346,6 +346,25 @@ pub fn chart_mermaid(chart: &Chart, options: MarkdownOptions) -> Option<String> 
         })
         .collect();
     let values = values?;
+    // Mermaid's numeric axes/pie labels cannot carry arbitrary spreadsheet
+    // formats. Keep exact numbers plus formatted displays in the table instead
+    // of silently turning percentages, currency or units into bare quantities.
+    if chart.series.iter().any(|s| {
+        s.display_values
+            .iter()
+            .zip(&s.values)
+            .any(
+                |(display, raw)| match (display.as_deref(), raw.as_deref()) {
+                    (Some(a), Some(b)) if a != b => match (a.parse::<f64>(), b.parse::<f64>()) {
+                        (Ok(a), Ok(b)) => a != b,
+                        _ => true,
+                    },
+                    _ => false,
+                },
+            )
+    }) {
+        return None;
+    }
     if matches!(chart.kind.as_str(), "pieChart" | "doughnutChart") {
         if chart.series.len() != 1
             || values[0].iter().any(|n| *n < 0.0)

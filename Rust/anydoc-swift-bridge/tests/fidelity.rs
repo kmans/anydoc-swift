@@ -67,7 +67,8 @@ fn workbook_preserves_titles_and_all_three_charts() {
     assert!(md.contains("## Charts\n\n### Spending by category"));
     assert!(md.contains("**Jan**") && md.contains("**Jun**"));
     assert!(md.contains("| Berths let | 11200 |") && md.contains("| Berths let | 24900 |"));
-    assert!(md.contains("line \"Net\" [14300, 16100, 16200, 26600, 44000, 52500]"));
+    assert!(md.contains("**Net**"));
+    assert!(md.contains("€14,300") && md.contains("€52,500"));
     assert!(md.contains("-0.0577489687684149"));
     assert!(md.contains("-5.8%"));
     assert_eq!(
@@ -75,7 +76,7 @@ fn workbook_preserves_titles_and_all_three_charts() {
             .iter()
             .filter(|d| d.code == "chart.tableFallback")
             .count(),
-        2
+        3
     );
     assert_eq!(
         notes[0].location.as_ref().unwrap().sheet.as_deref(),
@@ -314,7 +315,7 @@ fn table_layouts_preserve_ambiguous_rows_explicit_headers_and_formula_caches() {
         "{md}"
     );
     assert!(
-        md.contains("| Cached | Uncached |\n| --- | --- |\n| 4 |  |"),
+        md.contains("| Cached | Uncached |\n| --- | --- |\n| 4 | Formula result unavailable |"),
         "{md}"
     );
     assert!(

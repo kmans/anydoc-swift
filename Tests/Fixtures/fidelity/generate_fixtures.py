@@ -144,3 +144,31 @@ cell = next(c for c in r.iter('{%s}c'%S) if c.get('r')=='B9')
 for value in list(cell): cell.remove(value)
 missing['xl/worksheets/sheet1.xml'] = ET.tostring(r)
 archive('worksheet-chart-hole.xlsx', missing)
+
+# Number-format inheritance, safe/unsupported links, valid empty formula caches,
+# true Excel chartsheets, missing sheet parts and dynamic-range chart caches.
+P = 'http://schemas.openxmlformats.org/package/2006/relationships'
+follow = {k:v for k,v in layouts.items() if k in ['[Content_Types].xml','_rels/.rels']}
+follow['xl/workbook.xml'] = f'<workbook xmlns="{S}" xmlns:r="{R}"><sheets><sheet name="Values" sheetId="1" r:id="v"/><sheet name="Date chart" sheetId="2" r:id="d"/><sheet name="Percent chart" sheetId="3" r:id="p"/><sheet name="Missing sheet" sheetId="4" r:id="m"/></sheets></workbook>'
+follow['xl/_rels/workbook.xml.rels'] = f'<Relationships xmlns="{P}"><Relationship Id="v" Type="{R}/worksheet" Target="worksheets/values.xml"/><Relationship Id="d" Type="{R}/chartsheet" Target="chartsheets/dates.xml"/><Relationship Id="p" Type="{R}/chartsheet" Target="chartsheets/percent.xml"/><Relationship Id="m" Type="{R}/worksheet" Target="worksheets/missing.xml"/><Relationship Id="style" Type="{R}/styles" Target="styles.xml"/></Relationships>'
+follow['xl/styles.xml'] = f'<styleSheet xmlns="{S}"><numFmts><numFmt numFmtId="164" formatCode="&quot;$&quot;#,##0.00"/></numFmts><cellXfs><xf numFmtId="0"/><xf numFmtId="164"/><xf numFmtId="9"/><xf numFmtId="14"/></cellXfs></styleSheet>'
+follow['xl/worksheets/values.xml'] = f'''<worksheet xmlns="{S}" xmlns:r="{R}"><cols><col min="1" max="4" style="1"/><col min="4" max="4" style="3"/></cols><sheetData>
+<row r="1"><c r="A1"><v>1618.5</v></c><c r="B1" s="0"><v>1618.5</v></c><c r="C1" s="2"><v>0.25</v></c><c r="D1"><v>43466</v></c></row>
+<row r="2" s="2" customFormat="1"><c r="A2"><v>0.25</v></c><c r="B2" s="1"><v>-2</v></c><c r="C2" s="0"><v>0</v></c></row>
+{row(3,text_cell('A3','Website')+text_cell('B3','Internal')+text_cell('C3','Unsafe')+text_cell('D3','Broken'))}
+<row r="4"><c r="A4"><f>1+1</f></c><c r="B4" t="str"><f>IF(1,&quot;&quot;,&quot;x&quot;)</f><v/></c><c r="C4" s="0"><f>1-1</f><v>0</v></c><c r="D4" t="e"><f>1/0</f><v>#DIV/0!</v></c></row>
+</sheetData><hyperlinks><hyperlink ref="A3" r:id="safe" location="details"/><hyperlink ref="B3" location="Values!A1"/><hyperlink ref="C3" r:id="unsafe"/><hyperlink ref="D3" r:id="broken"/></hyperlinks></worksheet>'''
+follow['xl/worksheets/_rels/values.xml.rels'] = f'<Relationships xmlns="{P}"><Relationship Id="safe" Type="{R}/hyperlink" Target="https://example.org/guide_(new)?a=1&amp;b=2" TargetMode="External"/><Relationship Id="unsafe" Type="{R}/hyperlink" Target="javascript:alert(1)" TargetMode="External"/></Relationships>'
+def numeric_cache(tag, values, code):
+    return f'<c:{tag}><c:numRef><c:f>Unresolved!DynamicName</c:f><c:numCache><c:formatCode>{code}</c:formatCode><c:ptCount val="{len(values)}"/>'+''.join(f'<c:pt idx="{i}"><c:v>{v}</c:v></c:pt>' for i,v in enumerate(values))+f'</c:numCache></c:numRef></c:{tag}>'
+for stem,values,code in [('dates',[71,53,58],'General'),('percent',[0.25,0.5,0.75],'0%')]:
+    follow[f'xl/chartsheets/{stem}.xml'] = f'<chartsheet xmlns="{S}" xmlns:r="{R}"><drawing r:id="drawing"/></chartsheet>'
+    follow[f'xl/chartsheets/_rels/{stem}.xml.rels'] = f'<Relationships xmlns="{P}"><Relationship Id="drawing" Type="{R}/drawing" Target="../drawings/{stem}.xml"/></Relationships>'
+    follow[f'xl/drawings/{stem}.xml'] = f'<drawing xmlns:c="{C}" xmlns:r="{R}"><c:chart r:id="chart"/></drawing>'
+    follow[f'xl/drawings/_rels/{stem}.xml.rels'] = f'<Relationships xmlns="{P}"><Relationship Id="chart" Type="{R}/chart" Target="../charts/{stem}.xml"/></Relationships>'
+    follow[f'xl/charts/{stem}.xml'] = f'<c:chartSpace xmlns:c="{C}"><c:chart><c:plotArea><c:lineChart><c:grouping val="standard"/><c:ser><c:tx><c:v>Amount</c:v></c:tx>'+numeric_cache('cat',[43466,43467,43468],'m/d/yyyy')+numeric_cache('val',values,code)+f'</c:ser></c:lineChart><c:dateAx><c:numFmt formatCode="m/d/yyyy"/></c:dateAx><c:valAx><c:numFmt formatCode="{code}"/></c:valAx></c:plotArea></c:chart></c:chartSpace>'
+archive('spreadsheet-followups.xlsx',follow)
+epoch=dict(follow)
+epoch['xl/workbook.xml']=epoch['xl/workbook.xml'].replace('<sheets>','<workbookPr date1904="1"/><sheets>')
+epoch['xl/charts/dates.xml']=epoch['xl/charts/dates.xml'].replace('43466','0').replace('43467','1').replace('43468','2')
+archive('spreadsheet-followups-1904.xlsx',epoch)

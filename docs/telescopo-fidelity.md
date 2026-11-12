@@ -48,7 +48,21 @@ XLSX/XLSM retains worksheet order and chart-only sheets. Conservative title
 normalization lifts full-width merged titles over multi-column data. Explicit
 Excel table headers take priority; ambiguous content stays in the table. Covered
 merged cells remain empty. Values, cached formulas, and formatted display text
-are preserved; formulas are not evaluated.
+are preserved; formulas are not evaluated. Effective number formats resolve cell,
+custom row and column defaults in that order, including explicit General resets.
+Formatted numeric data rows are not inferred to be headers. A formula without a
+saved result has a plain-text unavailable marker and a source-cell diagnostic;
+valid empty-string results, zero and Excel error values remain distinct.
+
+Dedicated Excel chartsheets follow the same drawing/chart relationships as
+worksheet-hosted charts. An unreadable visible sheet produces a partial-import
+diagnostic; fatal resource-limit errors still fail the conversion. Hidden-sheet,
+row and column visibility behavior is unchanged.
+
+Safe external spreadsheet hyperlinks retain their Markdown destinations and
+fragments. Internal cell targets that portable Markdown cannot address remain
+text with a diagnostic. Unsafe, missing or unsupported destinations are reported;
+no relationship executes or fetches a remote resource.
 
 Charts retain original series, categories, axis titles, numeric strings, source
 ranges, and extra dimensions such as bubble size. Worksheet values take priority;
@@ -60,6 +74,14 @@ fall back to complete data tables. Multiple bar series also use tables: the bund
 and eight series. Source chart data has a cumulative point budget in addition to
 the parser's existing archive, XML, grid, and expansion limits. Missing values
 never become zero and negative pie values never become absolute values.
+
+Numeric chart caches honor their number-format codes and the chart/workbook date
+system. Date categories use unambiguous ISO dates, including valid day zero in
+the 1904 calendar. Axis formats are retained when they can be assigned faithfully.
+Percentage, currency and other displays a Mermaid numeric axis cannot express
+use tables containing both exact raw values and formatted displays. Unavailable
+chart formats receive a diagnostic. Multiple-axis formats are never indiscriminately
+applied to all series.
 
 Portable output contains no HTML tags. Non-heading internal anchors cannot always
 be represented in portable Markdown; affected links retain their text and produce

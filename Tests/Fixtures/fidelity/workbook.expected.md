@@ -17,7 +17,7 @@ Amounts in euros; the totals are formulas.
 | Average a month | €28,283 | Best month | Jun | Months in credit | 6 |  |  |  |
 | Largest item | €24,900 | Rounded share of fuel | 7.3% | Status | surplus |  |  |  |
 | Lookup: category | Shop | its total | €15,700 |  |  |  |  |  |
-| Link | exav.org/viewer | Note on a cell | hover me |  |  |  |  |  |
+| Link | [exav.org/viewer](https://exav.org/viewer/) | Note on a cell | hover me |  |  |  |  |  |
 
 ## Data
 
@@ -167,12 +167,18 @@ Amounts in euros; the totals are formulas.
 | Shop | 5200 | €5,200 |
 | Fuel | 4400 | €4,400 |
 
-```mermaid
-xychart-beta
-    title "Net income by month"
-    x-axis ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
-    line "Net" [14300, 16100, 16200, 26600, 44000, 52500]
-```
+### Net income by month
+
+**Net**
+
+| Category | Value | Display value |
+| --- | --- | --- |
+| Jan | 14300 | €14,300 |
+| Feb | 16100 | €16,100 |
+| Mar | 16200 | €16,200 |
+| Apr | 26600 | €26,600 |
+| May | 44000 | €44,000 |
+| Jun | 52500 | €52,500 |
 
 ### Share of the total
 
