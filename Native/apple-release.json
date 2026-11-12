@@ -139,10 +139,5 @@
     "rust-toolchain.toml": "dc6d73ec0f4bb01df9e9f541ddd866d75ac8ffcf52b5c8d02528a0a9683e09b4"
   },
   "nativeInputsAlgorithm": "SHA-256 of sorted compact JSON mapping relative paths to SHA-256 file hashes",
-  "nativeSourceRevision": "d1f052d423e4ce9385c1e0e1c23af5cb4cd0b85f",
-  "repackedFrom": {
-    "tag": "binary-0.3.0",
-    "sha256": "7d5c71ada88ab225f508bda1ee70aac013d395f098114082d282ac126e426dbe",
-    "change": "Remove AppleDouble metadata entries; all retained archive entry bytes are identical."
-  }
+  "nativeSourceRevision": "78013797d02737f2e101f9e7aa8458416eae5e7f"
 }
