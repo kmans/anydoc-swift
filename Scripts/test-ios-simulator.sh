@@ -62,6 +62,7 @@ env \
   PATH="$tool_path" \
   ${bridge_environment[@]+"${bridge_environment[@]}"} \
   xcodebuild \
+    -packageAuthorizationProvider netrc \
     -quiet \
     -scheme AnyDocSwift \
     -destination "platform=iOS Simulator,id=$udid" \

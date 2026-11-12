@@ -35,6 +35,7 @@ build_package() {
     PATH="$tool_path" \
     ${bridge_environment[@]+"${bridge_environment[@]}"} \
     xcodebuild \
+      -packageAuthorizationProvider netrc \
       -quiet \
       -scheme AnyDocSwift \
       -destination "$destination" \

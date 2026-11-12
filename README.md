@@ -1,6 +1,6 @@
 # AnyDocSwift
 
-This is the Telescopo fork. See [the conversion profile and maintenance guide](docs/telescopo-fidelity.md) for the single-pass API, DOCX/XLSX fidelity, portable output, and regression workflow. This fork’s 0.3.0 release distributes Apple-platform artifacts; Linux release instructions below describe upstream tooling.
+This is the Telescopo fork. See [the conversion profile and maintenance guide](docs/telescopo-fidelity.md) for the single-pass API, DOCX/XLSX fidelity, portable output, and regression workflow. This fork’s 0.3.1 release distributes Apple-platform artifacts; Linux release instructions below describe upstream tooling.
 
 
 [![CI](https://img.shields.io/github/actions/workflow/status/kmans/anydoc-swift/ci.yml?branch=master&event=push&label=CI)](https://github.com/kmans/anydoc-swift/actions/workflows/ci.yml)
@@ -46,7 +46,7 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/kmans/anydoc-swift.git",
-      exact: "0.3.0"
+      exact: "0.3.1"
     )
   ],
   targets: [

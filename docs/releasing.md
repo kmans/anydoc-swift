@@ -213,6 +213,7 @@ After the workflow succeeds:
 | `0.2.2` | `0.2.4` (`42bf1c5…`) | 3 | 12 |
 | `0.2.3` | `0.2.4` (`42bf1c5…`) | 3 | 12 |
 | `0.3.0` (Telescopo Apple fork) | patched `0.2.4` (`42bf1c5…`) | 4 | 13 |
+| `0.3.1` (Telescopo spreadsheet follow-ups) | patched `0.2.4` (`42bf1c5…`) | 4 | 13 |
 
 ## Immutability and interrupted releases
 
