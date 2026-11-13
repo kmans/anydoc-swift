@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kmans/anydoc-swift.git",
       "state" : {
-        "revision" : "db28e07d55433250f8203a228e08ce4680b8e5a5",
-        "version" : "0.3.1"
+        "revision" : "2ec7c2690d5907bcf900190554ea3db42229f164",
+        "version" : "0.3.2"
       }
     }
   ],
