@@ -33,7 +33,11 @@ build-rust:
 test-rust:
     cd "{{ crate }}" && cargo test --locked
 
-# Run the vendored parser unit tests with its pinned development graph.
+# Run PDF Markdown tests; the published upstream crate omits fixtures used
+# by unrelated font/vector tests. Core and bridge tests cover PDF extraction.
+test-pdf:
+    cargo test --locked --manifest-path "{{ root }}/Rust/pdf-inspector/Cargo.toml" --lib markdown::
+
 test-core:
     cargo test --locked --manifest-path "{{ root }}/Rust/anydoc/Cargo.toml" --lib
 
@@ -77,7 +81,7 @@ lint-shell:
     shellcheck "{{ memory_probe_script }}"
 
 # Run every Rust and native-tooling check used by continuous integration.
-ci-rust: check-vendored-source lint-rust lint-shell build-rust test-rust test-core check-licenses
+ci-rust: check-vendored-source lint-rust lint-shell build-rust test-rust test-core test-pdf check-licenses
 
 # Check Swift formatting without modifying sources.
 lint-swift:
@@ -244,4 +248,5 @@ run-example:
 
 # Verify that parser source and the reviewed patch agree, without network access.
 check-vendored-source:
-    python3 "{{ root }}/Scripts/check-vendored-anydoc.py"
+    python3 "{{ root }}/Scripts/check-vendored-source.py"
+    python3 "{{ root }}/Scripts/check-vendored-source.py" --crate pdf-inspector

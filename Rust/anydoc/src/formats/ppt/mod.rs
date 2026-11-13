@@ -6,10 +6,16 @@
 //! files whose persist directory is unusable. Speaker notes are included
 //! (fixed policy), rendered as a quote after their slide.
 
+mod drawing;
 mod styletext;
+#[cfg(test)]
+mod tests;
 
 use crate::error::ConvertError;
-use crate::model::{Block, Document, Inline, Style, inlines_are_empty};
+use crate::model::{
+    Block, Cell, Diagnostic, Document, GridBuilder, Inline, LinkTarget, SourceLocation, Style,
+    TableKind, inlines_are_empty,
+};
 use crate::package::limits;
 use crate::shared::binary::{get_u32, read_ole_stream, utf16le_units};
 use crate::shared::delta::{StyleDelta, rebase_emphasis};
@@ -48,11 +54,12 @@ pub fn parse(bytes: &[u8]) -> Result<Document, ConvertError> {
         return Err(ConvertError::Encrypted);
     }
     let assets = collect_pictures(&mut ole)?;
+    let diagnostics = std::mem::take(&mut ex.diagnostics);
     Ok(Document {
         blocks: ex.into_blocks(),
         notes: Vec::new(),
         assets,
-        diagnostics: Vec::new(),
+        diagnostics,
     })
 }
 
@@ -104,11 +111,34 @@ fn children(data: &[u8]) -> impl Iterator<Item = (u16, u16, &[u8])> {
     })
 }
 
+fn push_run(inlines: &mut Vec<Inline>, text: String, style: Style, target: Option<LinkTarget>) {
+    let text = Inline::Text { text, style };
+    if let Some(target) = target {
+        if let Some(Inline::Link {
+            content,
+            target: previous,
+        }) = inlines.last_mut()
+            && *previous == target
+        {
+            content.push(text);
+            return;
+        }
+        inlines.push(Inline::Link {
+            content: vec![text],
+            target,
+        });
+    } else {
+        inlines.push(text);
+    }
+}
+
 /// A text shape being accumulated: header type, text, then styling.
 struct PendingShape {
     tx_type: u8,
     text: String,
     styles: Option<StyleRuns>,
+    links: Vec<(usize, usize, Option<LinkTarget>)>,
+    interactive: Option<Option<LinkTarget>>,
 }
 
 #[derive(Default)]
@@ -129,11 +159,15 @@ struct Extractor {
     recovering: bool,
     /// Records visited across the whole extraction, capped.
     records: u64,
+    walk_depth: usize,
+    hyperlinks: HashMap<u32, Option<LinkTarget>>,
+    diagnostics: Vec<Diagnostic>,
 }
 
 /// The persist-resolved layout of the presentation: slide/notes lists from
 /// the current DocumentContainer, persist id -> offset for every container.
 struct DocLayout<'a> {
+    document: &'a [u8],
     persist: HashMap<u32, usize>,
     slide_list: &'a [u8],
     notes_list: Option<&'a [u8]>,
@@ -195,6 +229,7 @@ fn locate_document<'a>(data: &'a [u8], current_user: &[u8]) -> Option<DocLayout<
         .find(|&(ver_inst, rec_type, _)| rec_type == 0x0FF0 && ver_inst >> 4 == 1)
         .map(|(.., body)| body);
     Some(DocLayout {
+        document: doc,
         persist,
         slide_list,
         notes_list,
@@ -253,6 +288,92 @@ fn collect_masters(
 }
 
 impl Extractor {
+    fn notice(&mut self, code: &str) {
+        // One notice per kind/slide keeps adversarial shapes from producing
+        // unbounded diagnostic output, while retaining a useful location.
+        let object = format!("segment-{}", self.segments.len() + 1);
+        if !self
+            .diagnostics
+            .iter()
+            .rev()
+            .take_while(|d| d.location.as_ref().and_then(|l| l.object.as_ref()) == Some(&object))
+            .any(|d| d.code == code)
+        {
+            self.diagnostics.push(Diagnostic {
+                code: code.into(),
+                severity: "warning".into(),
+                location: Some(SourceLocation {
+                    part: "PowerPoint Document".into(),
+                    sheet: None,
+                    object: Some(object),
+                }),
+                arguments: Vec::new(),
+            });
+        }
+    }
+
+    fn interactive(&mut self, ver_inst: u16, body: &[u8]) {
+        // Click actions only. Mouseover actions cannot be represented by a
+        // Markdown link and must not overwrite a click target.
+        if ver_inst >> 4 != 0 {
+            self.notice("presentation.linkUnavailable");
+            return;
+        }
+        let action = children(body)
+            .find(|&(_, t, _)| t == 0x0FF3)
+            .map(|(.., b)| b);
+        let target = action
+            .filter(|b| b.get(8) == Some(&4) && b.get(12) == Some(&8))
+            .and_then(|b| get_u32(b, 4))
+            .and_then(|id| self.hyperlinks.get(&id))
+            .cloned()
+            .flatten();
+        if let Some(shape) = &mut self.pending {
+            // An action with no text range is reported when the shape ends.
+            shape.interactive = Some(target);
+        } else {
+            self.notice("presentation.linkUnavailable");
+        }
+    }
+
+    fn table(&mut self, body: &[u8]) -> Result<bool, ConvertError> {
+        let Some(layout) = drawing::table_layout(body) else {
+            return Ok(false);
+        };
+        self.flush_shape();
+        flush_list(&mut self.current, &mut self.list_run);
+        let parent = std::mem::take(&mut self.current);
+        let mut contents = Vec::with_capacity(layout.shapes.len());
+        for shape in &layout.shapes {
+            self.walk(shape)?;
+            self.flush_shape();
+            flush_list(&mut self.current, &mut self.list_run);
+            contents.push(std::mem::take(&mut self.current));
+        }
+        self.current = parent;
+        let mut grid = GridBuilder::new();
+        for row in 0..layout.rows {
+            grid.next_row();
+            for col in 0..layout.cols {
+                let index = layout.slots[row * layout.cols + col];
+                let (top, left, height, width) = layout.positions[index];
+                if (row, col) == (top, left) {
+                    grid.place(Cell::spanning(
+                        std::mem::take(&mut contents[index]),
+                        width as u32,
+                        height as u32,
+                    ))?;
+                } else {
+                    grid.covered();
+                }
+            }
+        }
+        let mut table = grid.finish(TableKind::Data);
+        table.header_rows = crate::shared::header::resolve_header_rows(&table, 0);
+        self.current.push(Block::Table(table));
+        Ok(true)
+    }
+
     /// Walk slides in presentation order: the UserEditAtom chain yields the
     /// persist directory, the DocumentContainer's SlideListWithText yields
     /// slide order and outline text, each slide container its own textboxes.
@@ -262,6 +383,7 @@ impl Extractor {
             return Ok(false);
         };
         self.masters = collect_masters(layout.master_list, &layout.persist, data);
+        self.hyperlinks = drawing::hyperlinks(layout.document);
         self.walk_slide_list(layout.slide_list, &layout.persist, data, false, 0x03EE)?;
         if let Some(notes_list) = layout.notes_list {
             self.walk_slide_list(notes_list, &layout.persist, data, true, 0x03F0)?;
@@ -395,6 +517,13 @@ impl Extractor {
     /// record-count bounds — nesting or record counts beyond any real
     /// presentation are attack shapes and hard-fail.
     fn walk(&mut self, data: &[u8]) -> Result<(), ConvertError> {
+        self.walk_depth += 1;
+        if self.walk_depth > limits::MAX_RECORD_DEPTH {
+            return Err(ConvertError::ResourceLimit {
+                limit: "max_record_depth",
+                detail: "nested drawing tables".into(),
+            });
+        }
         let mut stack: Vec<(&[u8], usize)> = vec![(data, 0)];
         while let Some((buf, pos)) = stack.last_mut() {
             let Some((ver_inst, rec_type, body)) = record_at(buf, *pos) else {
@@ -407,7 +536,25 @@ impl Extractor {
                 self.atom(rec_type, body);
                 continue;
             }
+            if rec_type == 0xF004 {
+                self.flush_shape();
+                flush_list(&mut self.current, &mut self.list_run);
+            }
             match rec_type {
+                0xF003 if drawing::is_table(body) => {
+                    if self.table(body)? {
+                        continue;
+                    }
+                    self.notice("presentation.tableFlattened");
+                    if stack.len() >= limits::MAX_RECORD_DEPTH {
+                        return Err(ConvertError::ResourceLimit {
+                            limit: "max_record_depth",
+                            detail: "table group nesting".into(),
+                        });
+                    }
+                    stack.push((body, 0));
+                }
+                0x0FF2 => self.interactive(ver_inst, body),
                 // CryptSession10Container: the stream is encrypted.
                 0x2F14 => self.encrypted = true,
                 // Notes containers are walked via the notes list; recovery
@@ -443,6 +590,7 @@ impl Extractor {
                 }
             }
         }
+        self.walk_depth -= 1;
         Ok(())
     }
 
@@ -452,6 +600,7 @@ impl Extractor {
         self.charge_record()?;
         if ver_inst & 0xF == 0xF {
             match rec_type {
+                0x0FF2 => self.interactive(ver_inst, body),
                 0x2F14 => self.encrypted = true,
                 0x03F0 | 0x03F8 | 0x0FC9 => {}
                 0x0FF0 if ver_inst >> 4 != 0 => {}
@@ -483,6 +632,8 @@ impl Extractor {
                     tx_type: body.first().copied().unwrap_or(1),
                     text: String::new(),
                     styles: None,
+                    links: Vec::new(),
+                    interactive: None,
                 });
             }
             // TextCharsAtom: UTF-16LE.
@@ -505,10 +656,16 @@ impl Extractor {
                     pending.styles = Some(styletext::parse_style_text(body, len));
                 }
             }
-            // ExHyperlinkAtom: explicit degradation — hyperlink targets in
-            // the legacy record stream are not resolved to link inlines.
-            0x0FD3 => {
-                log::debug!("ppt hyperlink records present; targets are not resolved");
+            0x0FDF => {
+                if let Some(pending) = &mut self.pending {
+                    if let Some(target) = pending.interactive.take() {
+                        pending.links.push((
+                            get_u32(body, 0).unwrap_or(u32::MAX) as usize,
+                            get_u32(body, 4).unwrap_or(0) as usize,
+                            target,
+                        ));
+                    }
+                }
             }
             _ => {}
         }
@@ -522,6 +679,8 @@ impl Extractor {
                     tx_type: 1,
                     text,
                     styles: None,
+                    links: Vec::new(),
+                    interactive: None,
                 });
             }
         }
@@ -530,11 +689,38 @@ impl Extractor {
     /// Emit the pending shape: paragraphs split on CR, styled by the
     /// character runs, listed by paragraph depth/bullet with master defaults.
     fn flush_shape(&mut self) {
-        let Some(shape) = self.pending.take() else {
+        let Some(mut shape) = self.pending.take() else {
             return;
         };
         if shape.text.is_empty() {
             return;
+        }
+        // Ranges use the original UTF-16 text, including CR paragraph
+        // separators. Reject boundaries inside surrogate pairs and overlaps.
+        let mut boundaries = vec![0];
+        let mut offset = 0;
+        for c in shape.text.chars() {
+            offset += c.len_utf16();
+            boundaries.push(offset);
+        }
+        shape.links.sort_by_key(|&(start, end, _)| (start, end));
+        let mut end = 0;
+        let mut unavailable = shape.interactive.is_some();
+        shape.links.retain(|(start, stop, target)| {
+            let valid = *start < *stop
+                && *start >= end
+                && boundaries.binary_search(start).is_ok()
+                && boundaries.binary_search(stop).is_ok()
+                && target.is_some();
+            if valid {
+                end = *stop;
+            } else {
+                unavailable = true;
+            }
+            valid
+        });
+        if unavailable {
+            self.notice("presentation.linkUnavailable");
         }
         self.shape_counter += 1;
         let shape_id = self.shape_counter;
@@ -567,12 +753,27 @@ impl Extractor {
         let mut inlines: Vec<Inline> = Vec::new();
         let mut run_text = String::new();
         let mut run_style = Style::PLAIN;
+        let mut run_link = None;
+        let mut text_offset = 0;
+        let mut link_cursor = 0;
         let para_props = |r: Option<&styletext::ParaProps>| match r {
             Some(p) => (p.depth, p.bullet),
             None => (0, None),
         };
 
         for c in shape.text.chars() {
+            while shape
+                .links
+                .get(link_cursor)
+                .is_some_and(|(_, end, _)| *end <= text_offset)
+            {
+                link_cursor += 1;
+            }
+            let link = shape
+                .links
+                .get(link_cursor)
+                .filter(|(start, _, _)| *start <= text_offset)
+                .map(|_| link_cursor);
             let d = level_default(para_props(para_run).0);
             let style = Style {
                 script: crate::model::Script::Baseline,
@@ -588,10 +789,12 @@ impl Extractor {
                 if !run_text.is_empty() {
                     let text = clean_text(&std::mem::take(&mut run_text));
                     if !text.is_empty() {
-                        inlines.push(Inline::Text {
+                        push_run(
+                            &mut inlines,
                             text,
-                            style: run_style,
-                        });
+                            run_style,
+                            run_link.and_then(|i: usize| shape.links[i].2.clone()),
+                        );
                     }
                 }
                 let (depth, bullet) = para_props(para_run);
@@ -600,28 +803,34 @@ impl Extractor {
                 if !run_text.is_empty() {
                     let text = clean_text(&std::mem::take(&mut run_text));
                     if !text.is_empty() {
-                        inlines.push(Inline::Text {
+                        push_run(
+                            &mut inlines,
                             text,
-                            style: run_style,
-                        });
+                            run_style,
+                            run_link.and_then(|i: usize| shape.links[i].2.clone()),
+                        );
                     }
                 }
                 inlines.push(Inline::LineBreak);
             } else {
-                if style != run_style && !run_text.is_empty() {
+                if (style != run_style || link != run_link) && !run_text.is_empty() {
                     let text = clean_text(&std::mem::take(&mut run_text));
                     if !text.is_empty() {
-                        inlines.push(Inline::Text {
+                        push_run(
+                            &mut inlines,
                             text,
-                            style: run_style,
-                        });
+                            run_style,
+                            run_link.and_then(|i: usize| shape.links[i].2.clone()),
+                        );
                     }
                 }
                 run_style = style;
+                run_link = link;
                 run_text.push(c);
             }
             // Advance run cursors by the character's UTF-16 width.
             let width = c.len_utf16();
+            text_offset += width;
             char_left = char_left.saturating_sub(width);
             if char_left == 0 {
                 char_run = char_runs.next();
@@ -636,10 +845,12 @@ impl Extractor {
         if !run_text.is_empty() {
             let text = clean_text(&run_text);
             if !text.is_empty() {
-                inlines.push(Inline::Text {
+                push_run(
+                    &mut inlines,
                     text,
-                    style: run_style,
-                });
+                    run_style,
+                    run_link.and_then(|i: usize| shape.links[i].2.clone()),
+                );
             }
         }
         if !inlines.is_empty() {

@@ -16,7 +16,6 @@ esac
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 crate="$root/Rust/anydoc-swift-bridge"
-source_root="$root/.build/artifact/ios-source"
 sysroot="$(rustc --print sysroot)"
 std_lock="$sysroot/lib/rustlib/src/rust/library/Cargo.lock"
 
@@ -30,21 +29,22 @@ cd "$crate"
 lock_before="$(shasum -a 256 Cargo.lock | awk '{ print $1 }')"
 pdf_manifest="$(cargo metadata --locked --offline --format-version 1 | jq -er '
   [.packages[] | select(.name == "pdf-inspector" and .version == "1.24.0"
-    and .source == "registry+https://github.com/rust-lang/crates.io-index")]
-  | if length == 1 then .[0].manifest_path else error("expected registry pdf-inspector 1.24.0") end
+    and .source == null)]
+  | if length == 1 then .[0].manifest_path else error("expected pinned local pdf-inspector 1.24.0") end
 ')"
-config="$(python3 "$root/Scripts/prepare-ios-pdf-inspector.py" "$pdf_manifest" "$source_root")"
+test "$pdf_manifest" = "$root/Rust/pdf-inspector/Cargo.toml"
+python3 "$root/Scripts/check-vendored-source.py" --crate pdf-inspector
 
 # fetch includes the std graph, which ordinary cargo fetch/license generation
 # does not populate. Compilation and all runtime tests remain offline.
 env RUSTC_BOOTSTRAP=1 cargo fetch --locked --target "$target" \
-  --config "$config" -Zbuild-std=std,panic_unwind \
+  -Zbuild-std=std,panic_unwind \
   -Zbuild-std-features=panic-unwind
 
 # Cargo injects unused std extern crates under build-std. Relax only this lint
 # for this producer invocation; normal ci-rust still denies unused dependencies.
 env RUSTC_BOOTSTRAP=1 cargo rustc --release --offline --locked --target "$target" \
-  --config "$config" -Zbuild-std=std,panic_unwind \
+  -Zbuild-std=std,panic_unwind \
   -Zbuild-std-features=panic-unwind -- \
   -A unused-crate-dependencies --print=native-static-libs
 

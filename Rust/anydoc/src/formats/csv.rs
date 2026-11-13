@@ -9,7 +9,7 @@
 //! first record is one.
 
 use crate::error::ConvertError;
-use crate::model::{Block, Cell, Document, Inline, Table, TableKind};
+use crate::model::{Block, Cell, Diagnostic, Document, Inline, SourceLocation, Table, TableKind};
 use crate::shared::header::resolve_header_rows;
 use crate::shared::text::clean_text;
 use csv::ReaderBuilder;
@@ -26,7 +26,8 @@ pub fn parse(bytes: &[u8]) -> Result<Document, ConvertError> {
         .from_reader(text.as_bytes());
 
     let mut rows: Vec<Vec<Cell>> = Vec::new();
-    for record in reader.records() {
+    let mut first_multiline_cell = None;
+    for (row, record) in reader.records().enumerate() {
         let record = match record {
             Ok(r) => r,
             Err(e) => {
@@ -36,12 +37,32 @@ pub fn parse(bytes: &[u8]) -> Result<Document, ConvertError> {
         };
         let cells: Vec<Cell> = record
             .iter()
-            .map(|f| Cell::from_inlines(vec![Inline::plain(clean_text(f))]))
+            .enumerate()
+            .map(|(column, f)| {
+                if first_multiline_cell.is_none() && f.contains(['\n', '\r']) {
+                    first_multiline_cell = Some(format!("R{}C{}", row + 1, column + 1));
+                }
+                Cell::from_inlines(vec![Inline::plain(clean_text(f))])
+            })
             .collect();
         rows.push(cells);
     }
 
     let mut doc = Document::default();
+    // One bounded notice identifies the first affected source cell before
+    // clean_text flattens its line breaks. Notice count cannot grow per cell.
+    if let Some(object) = first_multiline_cell {
+        doc.diagnostics.push(Diagnostic {
+            code: "table.cellLineBreakFlattened".into(),
+            severity: "information".into(),
+            location: Some(SourceLocation {
+                part: "csv".into(),
+                object: Some(object),
+                ..Default::default()
+            }),
+            arguments: vec![],
+        });
+    }
     let mut table = Table::from_rows(rows, 0, TableKind::Data);
     table.header_rows = resolve_header_rows(&table, 0);
     if !table.grid.is_empty() {
@@ -156,6 +177,22 @@ mod tests {
         let long_field = format!("\"{}\"", vec!["line"; 30].join("\n"));
         let text = format!("a;b;c\n{long_field};2;3\nx;y;z\n");
         assert_eq!(sniff_delimiter(&text), b';');
+    }
+
+    #[test]
+    fn multiline_cells_have_one_source_aware_notice() {
+        let doc = parse(b"name,notes\nAlice,\"one\ntwo\"\nBob,\"three\r\nfour\"\n").unwrap();
+        assert_eq!(doc.diagnostics.len(), 1);
+        let notice = &doc.diagnostics[0];
+        assert_eq!(notice.code, "table.cellLineBreakFlattened");
+        assert_eq!(
+            notice.location.as_ref().unwrap().object.as_deref(),
+            Some("R2C2")
+        );
+        let markdown = crate::render::markdown::document_to_markdown(&doc);
+        assert!(markdown.contains("| Alice | one two |"));
+        assert!(markdown.contains("| Bob | three four |"));
+        assert!(parse(b"a,b\nx,y\n").unwrap().diagnostics.is_empty());
     }
 
     #[test]

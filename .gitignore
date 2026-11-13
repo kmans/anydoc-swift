@@ -10,3 +10,5 @@ DerivedData/
 .netrc
 
 /Rust/anydoc/target
+
+/Rust/pdf-inspector/target

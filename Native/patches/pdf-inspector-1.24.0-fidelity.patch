@@ -1,0 +1,253 @@
+--- a/src/markdown/classify.rs
++++ b/src/markdown/classify.rs
+@@ -72,12 +72,32 @@
+ /// also demoting numbered headings.
+ pub(crate) fn starts_with_bullet_marker(text: &str) -> bool {
+     let trimmed = text.trim_start();
+-    trimmed.starts_with("• ")
+-        || trimmed.starts_with("● ")
+-        || trimmed.starts_with("○ ")
+-        || trimmed.starts_with("◦ ")
++    // PDF extraction can paint the marker separately from the following text
++    // without inserting a space. These Unicode markers remain unambiguous.
++    trimmed
++        .chars()
++        .next()
++        .is_some_and(|c| matches!(c, '•' | '●' | '○' | '◦'))
+         || trimmed.starts_with("- ")
+         || trimmed.starts_with("* ")
++}
++
++#[cfg(test)]
++mod marker_tests {
++    use super::*;
++    #[test]
++    fn only_unambiguous_unicode_markers_allow_a_missing_space() {
++        for text in [
++            "•Item", "●Item", "○Item", "◦Item", "• Item", "- Item", "* Item",
++        ] {
++            assert!(starts_with_bullet_marker(text));
++            assert!(is_list_item(text));
++        }
++        for text in ["-12", "*pointer", "Plain text"] {
++            assert!(!starts_with_bullet_marker(text));
++            assert!(!is_list_item(text));
++        }
++    }
+ }
+ 
+ /// Check if text looks like a list item
+@@ -85,13 +105,7 @@
+     let trimmed = text.trim_start();
+ 
+     // Bullet patterns
+-    if trimmed.starts_with("• ")
+-        || trimmed.starts_with("- ")
+-        || trimmed.starts_with("* ")
+-        || trimmed.starts_with("○ ")
+-        || trimmed.starts_with("● ")
+-        || trimmed.starts_with("◦ ")
+-    {
++    if starts_with_bullet_marker(trimmed) {
+         return true;
+     }
+ 
+@@ -119,6 +133,16 @@
+     }
+ 
+     false
++}
++
++/// A body-size, non-bold reference is not evidence of a visual heading merely
++/// because it is short and isolated. Tagged or clearly larger headings still
++/// take priority in the converter.
++pub(crate) fn contains_reference_url(text: &str) -> bool {
++    text.split_whitespace().any(|word| {
++        let word = word.trim_start_matches(['(', '[', '<']);
++        word.starts_with("https://") || word.starts_with("http://") || word.starts_with("mailto:")
++    })
+ }
+ 
+ /// Format list item to markdown
+--- a/src/markdown/convert.rs
++++ b/src/markdown/convert.rs
+@@ -1160,6 +1160,9 @@
+                 }
+                 let rarity = font_size_rarity(line_font_size, &font_stats);
+                 let all_bold = !line.items.is_empty() && line.items.iter().all(|i| i.is_bold);
++                if !all_bold && super::classify::contains_reference_url(plain_trimmed) {
++                    return None;
++                }
+                 let standalone = !in_paragraph;
+                 let isolated = isolated_lines.contains(&line_idx);
+ 
+@@ -1577,6 +1580,7 @@
+             && !wrapped_quoted_paragraph_lines.contains(&line_idx)
+             && plain_trimmed.len() > 3
+             && plain_trimmed.split_whitespace().count() <= 15
++            && !starts_with_bullet_marker(plain_trimmed)
+             && !is_toc_entry_line(plain_trimmed)
+             && !is_heading_fragment(plain_trimmed)
+             && toc_suppress_page != Some(line.page)
+@@ -1602,6 +1606,9 @@
+                 }
+                 let rarity = font_size_rarity(line_font_size, &font_stats);
+                 let all_bold = !line.items.is_empty() && line.items.iter().all(|i| i.is_bold);
++                if !all_bold && super::classify::contains_reference_url(plain_trimmed) {
++                    return None;
++                }
+                 let standalone = !in_paragraph;
+                 let isolated = isolated_lines.contains(&line_idx);
+                 let score = rarity * 0.5
+@@ -1784,6 +1791,60 @@
+         let mut item = make_item(text, page, None);
+         item.y = y;
+         make_line(vec![item])
++    }
++
++    #[test]
++    fn unicode_bullets_without_spaces_are_lists_and_body_references_are_not_headings() {
++        let mut lines = vec![
++            line_at("Coastal field notes", 1, 750.0),
++            line_at(
++                "A normal paragraph with observations about the survey.",
++                1,
++                715.0,
++            ),
++            line_at("•Check the tide gauge.", 1, 680.0),
++            line_at("•Record the water temperature.", 1, 662.0),
++            line_at("•Share the summary with the team.", 1, 644.0),
++            line_at("Another ordinary paragraph follows the list.", 1, 500.0),
++            line_at("Project guide: https://example.org/guide", 1, 350.0),
++        ];
++        for line in &mut lines {
++            line.items[0].font_size = 10.0;
++        }
++        lines[0].items[0].font_size = 18.0;
++        for line in &mut lines[2..5] {
++            let text = line.items[0].text.trim_start_matches('•').to_owned();
++            let mut marker = line.items[0].clone();
++            marker.text = "•".into();
++            marker.font_size = 12.0;
++            marker.width = 8.0;
++            line.items[0].text = text;
++            line.items[0].x += 8.0;
++            line.items.insert(0, marker);
++        }
++        let markdown = to_markdown_from_lines(lines, MarkdownOptions::default());
++        for item in [
++            "Check the tide gauge.",
++            "Record the water temperature.",
++            "Share the summary with the team.",
++        ] {
++            assert!(
++                markdown.lines().any(|line| line == format!("- {item}")),
++                "{markdown}"
++            );
++        }
++        assert!(
++            !markdown
++                .lines()
++                .any(|line| line.starts_with('#') && line.contains("Project guide")),
++            "{markdown}"
++        );
++        assert!(
++            markdown
++                .lines()
++                .any(|line| line.starts_with('#') && line.contains("Coastal field notes")),
++            "{markdown}"
++        );
+     }
+ 
+     #[test]
+--- a/src/markdown/heading.rs
++++ b/src/markdown/heading.rs
+@@ -278,7 +278,8 @@
+     {
+         return false;
+     }
+-    if starts_with_bullet_marker(trimmed)
++    if (!bold && super::classify::contains_reference_url(trimmed))
++        || starts_with_bullet_marker(trimmed)
+         || is_caption_line(trimmed)
+         || is_toc_entry_line(trimmed)
+         || is_heading_fragment(trimmed)
+--- a/src/markdown/preprocess.rs
++++ b/src/markdown/preprocess.rs
+@@ -6,6 +6,7 @@
+ use crate::types::{TextItem, TextLine};
+ 
+ use super::analysis::detect_header_level;
++use super::classify::starts_with_bullet_marker;
+ 
+ /// Resolve a heading level for a line, considering both struct-tree roles and font heuristics.
+ /// Struct-tree headings take priority.
+@@ -40,6 +41,11 @@
+         }
+     }
+ 
++    // A larger marker glyph must not turn an ordinary list item into a heading
++    // or merge distinct items before list classification gets to see them.
++    if starts_with_bullet_marker(&line.text()) {
++        return None;
++    }
+     // Fall back to font-size heuristic
+     let font = line.items.first().map(|i| i.font_size).unwrap_or(base_size);
+     detect_header_level(
+@@ -112,6 +118,8 @@
+                 // Both lines must be tier-less: a tiered/tagged bold heading
+                 // followed by bold body text must not absorb it.
+                 line_level.is_none()
++                    && !starts_with_bullet_marker(prev_trim)
++                    && !starts_with_bullet_marker(curr_trim)
+                     && effective_heading_level(prev, base_size, heading_tiers, struct_roles)
+                         .is_none()
+                     && prev.page == line.page
+@@ -276,6 +284,19 @@
+     }
+ 
+     #[test]
++    fn larger_bullet_markers_do_not_merge_distinct_items() {
++        let lines = vec![
++            make_line("•First item", 12.0, 1, 700.0, None),
++            make_line("•Second item", 12.0, 1, 682.0, None),
++            make_line("•Third item", 12.0, 1, 664.0, None),
++        ];
++        let result = merge_heading_lines(lines, 10.0, &[18.0, 14.0, 12.0], None);
++        assert_eq!(result.len(), 3);
++        assert_eq!(result[0].text(), "•First item");
++        assert_eq!(result[1].text(), "•Second item");
++    }
++
++    #[test]
+     fn drop_cap_merge_preserves_evidence_from_either_source() {
+         for (body_marked, cap_marked) in [(false, false), (true, false), (false, true)] {
+             let mut body = make_line("elcome", 12.0, 1, 700.0, None);
+--- a/src/tounicode.rs
++++ b/src/tounicode.rs
+@@ -6,7 +6,7 @@
+ use lopdf::{Document, Object, ObjectId};
+ use std::borrow::Cow;
+ use std::collections::{HashMap, HashSet};
+-#[cfg(not(target_arch = "wasm32"))]
++#[cfg(not(any(target_arch = "wasm32", target_os = "ios")))]
+ use std::path::PathBuf;
+ 
+ use crate::glyph_names::glyph_name_to_string;
+@@ -2235,14 +2235,14 @@
+ /// Replacement directory for the embedded CMaps. Unset means the copy
+ /// compiled into the binary is used, which is what `cargo install` and the
+ /// published wheels have at runtime.
+-#[cfg(not(target_arch = "wasm32"))]
++#[cfg(not(any(target_arch = "wasm32", target_os = "ios")))]
+ fn read_bcmap_override(name: &str) -> Option<Vec<u8>> {
+     let dir = std::env::var_os("PDF_INSPECTOR_BCMAPS_DIR")?;
+     std::fs::read(PathBuf::from(dir).join(name)).ok()
+ }
+ 
+ fn read_builtin_cmap_file(name: &str) -> Option<Cow<'static, [u8]>> {
+-    #[cfg(not(target_arch = "wasm32"))]
++    #[cfg(not(any(target_arch = "wasm32", target_os = "ios")))]
+     if let Some(bytes) = read_bcmap_override(name) {
+         return Some(Cow::Owned(bytes));
+     }

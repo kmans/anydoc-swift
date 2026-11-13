@@ -63,3 +63,4 @@ strip = "none"
 
 [patch.crates-io]
 anydoc = { path = "../anydoc" }
+pdf-inspector = { path = "../pdf-inspector" }

@@ -2,7 +2,9 @@
 //! chapter-scoped anchors so intra-book navigation survives.
 
 use crate::error::ConvertError;
-use crate::model::{AnchorId, Block, Document, ImageSource, Inline, LinkTarget};
+use crate::model::{
+    AnchorId, Block, Document, ImageSource, Inline, LinkTarget, inlines_to_plain_text,
+};
 use crate::package::xml::Element;
 use crate::package::{Package, path};
 use crate::shared::assets::{AssetSink, media_type_for};
@@ -27,13 +29,13 @@ pub fn parse(bytes: &[u8]) -> Result<Document, ConvertError> {
     let opf = pkg.borrow_mut().required_xml_part(&opf_path)?;
 
     let mut doc = Document::default();
-    if let Some(title) = opf.descendants_any("title").next().map(|t| t.text()) {
-        let title = title.trim().to_string();
-        if !title.is_empty() {
-            doc.blocks
-                .push(Block::heading(1, vec![Inline::plain(title)]));
-        }
-    }
+    let title = opf
+        .descendants_any("title")
+        .next()
+        .map(|t| t.text())
+        .map(|t| t.trim().to_string())
+        .filter(|t| !t.is_empty());
+    let mut title_in_opening_chapter = false;
 
     let mut manifest: HashMap<String, (String, String)> = HashMap::new();
     for item in opf.descendants_any("item") {
@@ -97,8 +99,31 @@ pub fn parse(bytes: &[u8]) -> Result<Document, ConvertError> {
         // Chapter-start anchor: renders only when a link targets this chapter.
         doc.blocks
             .push(Block::Paragraph(vec![Inline::Anchor(chapter_path.clone())]));
-        doc.blocks
-            .extend(crate::shared::html::to_blocks(body, &css, &ctx)?);
+        let blocks = crate::shared::html::to_blocks(body, &css, &ctx)?;
+        if converted == 0 {
+            // Ignore cover images and chapter anchors, but inspect only the first
+            // readable chapter's first heading. A later chapter may legitimately
+            // repeat the book title and must never remove the opening title.
+            let heading = blocks.iter().find_map(|block| match block {
+                Block::Heading { level, content, .. } => {
+                    Some((*level, inlines_to_plain_text(content)))
+                }
+                _ => None,
+            });
+            title_in_opening_chapter = match (&title, heading) {
+                (Some(title), Some((1, heading))) => {
+                    let normalized = |s: &str| {
+                        s.split_whitespace()
+                            .collect::<Vec<_>>()
+                            .join(" ")
+                            .to_lowercase()
+                    };
+                    normalized(title) == normalized(&heading)
+                }
+                _ => false,
+            };
+        }
+        doc.blocks.extend(blocks);
         converted += 1;
     }
     if spine_entries > 0 && converted == 0 {
@@ -107,6 +132,10 @@ pub fn parse(bytes: &[u8]) -> Result<Document, ConvertError> {
         ));
     }
 
+    if !title_in_opening_chapter && let Some(title) = title {
+        doc.blocks
+            .insert(0, Block::heading(1, vec![Inline::plain(title)]));
+    }
     doc.assets = std::mem::take(&mut assets.borrow_mut().assets);
     Ok(doc)
 }
@@ -227,6 +256,104 @@ fn scoped(chapter_path: &str, fragment: Option<&str>) -> AnchorId {
 mod tests {
     use super::*;
     use std::io::{Cursor, Write};
+
+    fn title_fixture(title: &str, chapters: &[&str]) -> Vec<u8> {
+        let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
+        let items = chapters
+            .iter()
+            .enumerate()
+            .map(|(i, _)| {
+                format!(r#"<item id="c{i}" href="c{i}.xhtml" media-type="application/xhtml+xml"/>"#)
+            })
+            .collect::<String>();
+        let spine = chapters
+            .iter()
+            .enumerate()
+            .map(|(i, _)| format!(r#"<itemref idref="c{i}"/>"#))
+            .collect::<String>();
+        let parts = [
+            ("META-INF/container.xml".to_string(), r#"<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="book.opf"/></rootfiles></container>"#.to_string()),
+            ("book.opf".to_string(), format!(r#"<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/"><metadata><dc:title>{title}</dc:title></metadata><manifest>{items}</manifest><spine>{spine}</spine></package>"#)),
+        ];
+        for (name, text) in parts
+            .into_iter()
+            .chain(chapters.iter().enumerate().map(|(i, body)| {
+                (
+                    format!("c{i}.xhtml"),
+                    format!(
+                        r#"<html xmlns="http://www.w3.org/1999/xhtml"><body>{body}</body></html>"#
+                    ),
+                )
+            }))
+        {
+            writer
+                .start_file(name, zip::write::SimpleFileOptions::default())
+                .unwrap();
+            writer.write_all(text.as_bytes()).unwrap();
+        }
+        writer.finish().unwrap().into_inner()
+    }
+
+    #[test]
+    fn opening_title_is_not_duplicated_but_body_headings_survive() {
+        for (title, body, expected) in [
+            (
+                "Coastal field guide",
+                "<h1>Coastal <em>field</em> guide</h1><p>Introduction.</p>",
+                vec!["Coastal field guide"],
+            ),
+            (
+                "Coastal field guide",
+                "<h1>  COASTAL   field guide </h1><p>Introduction.</p>",
+                vec!["COASTAL field guide"],
+            ),
+            (
+                "Coastal field guide",
+                "<h1>Before the survey</h1>",
+                vec!["Coastal field guide", "Before the survey"],
+            ),
+            (
+                "Coastal field guide",
+                "<p>A book without a visible title.</p>",
+                vec!["Coastal field guide"],
+            ),
+            ("", "<h1>Visible title</h1>", vec!["Visible title"]),
+        ] {
+            let doc = parse(&title_fixture(title, &[body])).unwrap();
+            let titles = doc
+                .blocks
+                .iter()
+                .filter_map(|b| match b {
+                    Block::Heading {
+                        level: 1, content, ..
+                    } => Some(
+                        inlines_to_plain_text(content)
+                            .split_whitespace()
+                            .collect::<Vec<_>>()
+                            .join(" "),
+                    ),
+                    _ => None,
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(titles, expected);
+        }
+        let doc = parse(&title_fixture(
+            "Book",
+            &[
+                "<h2>Introduction</h2><p>First chapter.</p>",
+                "<h1>Book</h1><p>Later chapter.</p>",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(
+            doc.blocks
+                .iter()
+                .filter(|b| matches!(b, Block::Heading { level: 1, .. }))
+                .count(),
+            2,
+            "a later chapter's heading must not suppress the opening metadata title"
+        );
+    }
 
     #[test]
     fn a_part_repeated_across_the_spine_is_read_once() {

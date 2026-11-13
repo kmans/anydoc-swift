@@ -12,7 +12,7 @@ root = Path(__file__).resolve().parent.parent
 record = root / 'Native/apple-release.json'
 archive = root / '.build/artifacts/AnyDocSwiftBridge.xcframework.zip'
 paths = []
-for base in ['Rust/anydoc', 'Rust/anydoc-swift-bridge/src', 'Native/include', 'Native/framework', 'Native/licenses', 'Native/patches']:
+for base in ['Rust/anydoc', 'Rust/pdf-inspector', 'Rust/anydoc-swift-bridge/src', 'Native/include', 'Native/framework', 'Native/licenses', 'Native/patches']:
     paths += [p for p in (root/base).rglob('*') if p.is_file() and 'target' not in p.parts]
 for name in ['Rust/anydoc-swift-bridge/Cargo.toml', 'Rust/anydoc-swift-bridge/Cargo.lock', 'rust-toolchain.toml', 'LICENSE', 'THIRD_PARTY_NOTICES.txt']:
     paths.append(root/name)

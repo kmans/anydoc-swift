@@ -1,0 +1,7 @@
+﻿Project,Owner,Notes,Value,Reference
+Coastal survey,Zoë,"Calm water, clear visibility",0,0017
+Harbour report,Renée,"She said ""ready"" before the survey.",-12.50,A|B
+Field notebook,李,"First observation
+Second observation",25%,folder\note
+Empty result,,,,
+Markdown symbols,Sam,*literal* and _literal_ and [label](target),=1+1,`code`

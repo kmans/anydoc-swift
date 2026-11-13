@@ -89,3 +89,6 @@ strip = "symbols"
 [dependencies.serde]
 version = "1"
 features = ["derive"]
+
+[patch.crates-io]
+pdf-inspector = { path = "../pdf-inspector" }

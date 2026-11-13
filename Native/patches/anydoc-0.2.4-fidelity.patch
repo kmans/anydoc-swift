@@ -1,14 +1,470 @@
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -99,6 +99,7 @@
+@@ -10,13 +10,13 @@
+ 
+ [[package]]
+ name = "aes"
+-version = "0.8.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "b169f7a6d4742236a0a00c541b845991d0ac43e546831af1249753ab4c3aa3a0"
+-dependencies = [
+- "cfg-if",
++version = "0.9.2"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "f8eb277bec05f56a0e0591f155a484cbd0f4f07ff2905051a48c72f004f7ed58"
++dependencies = [
+  "cipher",
+- "cpufeatures 0.2.17",
++ "cpubits",
++ "cpufeatures",
+ ]
+ 
+ [[package]]
+@@ -29,10 +29,25 @@
+ ]
+ 
+ [[package]]
++name = "alloc-no-stdlib"
++version = "2.0.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "cc7bb162ec39d46ab1ca8c77bf72e890535becd1751bb45f64c597edb4c8c6b3"
++
++[[package]]
++name = "alloc-stdlib"
++version = "0.2.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "0e76a019e91224d279006ff972f1e984179a6e9feb050adba6ce8274aef23195"
++dependencies = [
++ "alloc-no-stdlib",
++]
++
++[[package]]
+ name = "android_system_properties"
+-version = "0.1.5"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "819e7219dbd41043ac279b19830f2efc897156490d7fd6ea916720117ee66311"
++version = "0.1.6"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "ae221649c9976a6f6c56ae1facf410f3ddb33cc661c4b7b61020a912d4237fbc"
+ dependencies = [
+  "libc",
+ ]
+@@ -99,7 +114,8 @@
   "log",
   "pdf-inspector",
   "quick-xml",
+- "sha2 0.11.0",
 + "serde",
-  "sha2 0.11.0",
++ "sha2",
   "zip",
  ]
-@@ -1000,6 +1001,16 @@
+ 
+@@ -123,15 +139,6 @@
+ 
+ [[package]]
+ name = "block-buffer"
+-version = "0.10.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
+-dependencies = [
+- "generic-array",
+-]
+-
+-[[package]]
+-name = "block-buffer"
+ version = "0.12.1"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "d2f6c7dbe95a6ed67ad9f18e57daf93a2f034c524b99fd2b76d18fdfeb6660aa"
+@@ -141,11 +148,21 @@
+ 
+ [[package]]
+ name = "block-padding"
+-version = "0.3.3"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "a8894febbff9f758034a5b8e12d87918f56dfc64a8e1fe757d65e29041538d93"
+-dependencies = [
+- "generic-array",
++version = "0.4.2"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "710f1dd022ef4e93f8a438b4ba958de7f64308434fa6a87104481645cc30068b"
++dependencies = [
++ "hybrid-array",
++]
++
++[[package]]
++name = "brotli-decompressor"
++version = "5.0.3"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "3a32acac15fe1967bc3986b2a6347dffc965602354ea6f450ad07e8bfd253583"
++dependencies = [
++ "alloc-no-stdlib",
++ "alloc-stdlib",
+ ]
+ 
+ [[package]]
+@@ -156,18 +173,18 @@
+ 
+ [[package]]
+ name = "cbc"
+-version = "0.1.2"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "26b52a9543ae338f279b96b0b9fed9c8093744685043739079ce85cd58f289a6"
++version = "0.2.1"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "ce2dc9ee5f88d11e0beb842c88b33c8a5cf0d1329c4b19494af42b07dbfe8896"
+ dependencies = [
+  "cipher",
+ ]
+ 
+ [[package]]
+ name = "cc"
+-version = "1.4.0"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "5add81bb678e6cb321aff7fa0dc7689ad82b112dbc032cea19f91d6b8e3582b9"
++version = "1.11.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "375989decec1a0fa424442bed520fa12ede43a48475ce8c7417d2c69b32b5f6b"
+ dependencies = [
+  "find-msvc-tools",
+  "shlex",
+@@ -197,7 +214,7 @@
+ checksum = "d524456ba66e72eb8b115ff89e01e497f8e6d11d78b70b1aa13c0fbd97540a81"
+ dependencies = [
+  "cfg-if",
+- "cpufeatures 0.3.0",
++ "cpufeatures",
+  "rand_core",
+ ]
+ 
+@@ -214,11 +231,11 @@
+ 
+ [[package]]
+ name = "cipher"
+-version = "0.4.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "773f3b9af64447d2ce9850330c473515014aa235e6a783b02db81ff39e4a3dad"
+-dependencies = [
+- "crypto-common 0.1.7",
++version = "0.5.2"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "e8cf2a2c93cd704877c0858356ed03480ff301ee950b43f1cbe4573b088bfa6c"
++dependencies = [
++ "crypto-common",
+  "inout",
+ ]
+ 
+@@ -252,13 +269,10 @@
+ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
+ 
+ [[package]]
+-name = "cpufeatures"
+-version = "0.2.17"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280"
+-dependencies = [
+- "libc",
+-]
++name = "cpubits"
++version = "0.1.1"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "15b85f9c39137c3a891689859392b1bd49812121d0d61c9caf00d46ed5ce06ae"
+ 
+ [[package]]
+ name = "cpufeatures"
+@@ -302,16 +316,6 @@
+ version = "0.8.22"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "61803da095bee82a81bb1a452ecc25d3b2f1416d1897eb86430c6159ef717c17"
+-
+-[[package]]
+-name = "crypto-common"
+-version = "0.1.7"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a"
+-dependencies = [
+- "generic-array",
+- "typenum",
+-]
+ 
+ [[package]]
+ name = "crypto-common"
+@@ -375,37 +379,21 @@
+ ]
+ 
+ [[package]]
+-name = "deranged"
+-version = "0.5.8"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "7cd812cc2bc1d69d4764bd80df88b4317eaef9e773c75226407d9bc0876b211c"
+-
+-[[package]]
+-name = "digest"
+-version = "0.10.7"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292"
+-dependencies = [
+- "block-buffer 0.10.4",
+- "crypto-common 0.1.7",
+-]
+-
+-[[package]]
+ name = "digest"
+ version = "0.11.3"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "f1dd6dbb5841937940781866fa1281a1ff7bd3bf827091440879f9994983d5c2"
+ dependencies = [
+- "block-buffer 0.12.1",
++ "block-buffer",
+  "const-oid",
+- "crypto-common 0.2.2",
++ "crypto-common",
+ ]
+ 
+ [[package]]
+ name = "ecb"
+-version = "0.1.2"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "1a8bfa975b1aec2145850fcaa1c6fe269a16578c44705a532ae3edc92b8881c7"
++version = "0.2.1"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "26f2a8b3e564eba0877223dc343703ad0385794e882e6d13f3a4dd5c6b1f41ac"
+ dependencies = [
+  "cipher",
+ ]
+@@ -478,9 +466,9 @@
+ 
+ [[package]]
+ name = "find-msvc-tools"
+-version = "0.1.9"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "5baebc0774151f905a1a2cc41989300b1e6fbb29aff0ceffa1064fdd3088d582"
++version = "0.1.15"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "1c66915cc5391097de7a2b0b972e8505aa33c0df401fd3a6811dbdb32881ba48"
+ 
+ [[package]]
+ name = "flate2"
+@@ -501,36 +489,26 @@
+ 
+ [[package]]
+ name = "futures-core"
+-version = "0.3.33"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "2cd50c473c80f6d7c3670a752354b8e569b1a7cbfdc0419ec88e5edad85e0dc7"
++version = "0.3.34"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "92d699e522242e69e3003b94ecc1f960f3a5e015aa7c5d7486e65ad01dd94f5e"
+ 
+ [[package]]
+ name = "futures-task"
+-version = "0.3.33"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "b231ed28831efb4a61a08580c4bc233ec56bc009f4cd8f52da2c3cb97df0c109"
++version = "0.3.34"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "cd417de3d1d015fc3bfd2b1ea46dfc7bab72ef86f1cc7cc9c78e728b34a6d1fd"
+ 
+ [[package]]
+ name = "futures-util"
+-version = "0.3.33"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "a77a90a256fce34da66415271e30f94ee91c57b04b8a2c042d9cf3220179deaa"
++version = "0.3.34"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "0d50a92467f8ba5dd6e3ee5d4bd04d73ab2e4e1c44474a0674821dfce14b79bc"
+ dependencies = [
+  "futures-core",
+  "futures-task",
+  "pin-project-lite",
+  "slab",
+-]
+-
+-[[package]]
+-name = "generic-array"
+-version = "0.14.7"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a"
+-dependencies = [
+- "typenum",
+- "version_check",
+ ]
+ 
+ [[package]]
+@@ -617,12 +595,12 @@
+ 
+ [[package]]
+ name = "inout"
+-version = "0.1.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "879f10e63c20629ecabbb64a8010319738c66a5cd0c29b02d63d272b03751d01"
++version = "0.2.5"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "3b5cf4372d022092674a83b8febf5865f7a573cc0c5baec5e49c879b6a20978f"
+ dependencies = [
+  "block-padding",
+- "generic-array",
++ "hybrid-array",
+ ]
+ 
+ [[package]]
+@@ -658,12 +636,10 @@
+  "defmt",
+  "jiff-core",
+  "jiff-static",
+- "jiff-tzdb-platform",
+  "log",
+  "portable-atomic",
+  "portable-atomic-util",
+  "serde_core",
+- "windows-link",
+ ]
+ 
+ [[package]]
+@@ -688,25 +664,10 @@
+ ]
+ 
+ [[package]]
+-name = "jiff-tzdb"
+-version = "0.1.8"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "142bd39932ad231f10513df9ab62661fead8719872150b7ad02a2df79f4e141e"
+-
+-[[package]]
+-name = "jiff-tzdb-platform"
+-version = "0.1.3"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "875a5a69ac2bab1a891711cf5eccbec1ce0341ea805560dcd90b7a2e925132e8"
+-dependencies = [
+- "jiff-tzdb",
+-]
+-
+-[[package]]
+ name = "js-sys"
+-version = "0.3.103"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "53b44bfcdb3f8d5837a46dae1ca9660a837176eee74a28b229bc626816589102"
++version = "0.3.107"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "8dc09d2154098bbf4ef54eab6b117a3c24cbbffe94046b16ee6d6d4510584d3a"
+ dependencies = [
+  "cfg-if",
+  "futures-util",
+@@ -733,12 +694,13 @@
+ 
+ [[package]]
+ name = "lopdf"
+-version = "0.42.0"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "25aab26d99567469098e64a02f42679f8965c6401263eefa31d8f2dcc37a221c"
++version = "0.45.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "bfffda0fe1ab0157e1a13c14bebd3f28671f2fccb7922f0722ec53926e6922d3"
+ dependencies = [
+  "aes",
+  "bitflags 2.13.1",
++ "brotli-decompressor",
+  "cbc",
+  "chrono",
+  "ecb",
+@@ -747,29 +709,26 @@
+  "getrandom",
+  "indexmap",
+  "itoa",
+- "jiff",
+  "log",
+  "md-5",
+  "nom",
+  "rand",
+  "rangemap",
+  "rayon",
+- "sha2 0.10.9",
++ "sha2",
+  "stringprep",
+  "thiserror",
+- "time",
+- "ttf-parser",
+  "weezl",
+ ]
+ 
+ [[package]]
+ name = "md-5"
+-version = "0.10.6"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "d89e7ee0cfbedfc4da3340218492196241d89eefb6dab27de5df917a6d2e78cf"
++version = "0.11.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "69b6441f590336821bb897fb28fc622898ccceb1d6cea3fde5ea86b090c4de98"
+ dependencies = [
+  "cfg-if",
+- "digest 0.10.7",
++ "digest",
+ ]
+ 
+ [[package]]
+@@ -798,12 +757,6 @@
+ ]
+ 
+ [[package]]
+-name = "num-conv"
+-version = "0.2.2"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "521739c6d2bac4aa25192232afe6841231376b2b26d4d9fae5ecf8ca5772e441"
+-
+-[[package]]
+ name = "num-traits"
+ version = "0.2.19"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -826,9 +779,7 @@
+ 
+ [[package]]
+ name = "pdf-inspector"
+-version = "1.14.2"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "1e024ae242c514e2adf6aee186678e0eabdc2e5ecfbb2159186881b4498593cb"
++version = "1.24.0"
+ dependencies = [
+  "env_logger",
+  "include_dir",
+@@ -839,6 +790,7 @@
+  "regex",
+  "thiserror",
+  "ttf-parser",
++ "unicode-bidi",
+  "unicode-normalization",
+ ]
+ 
+@@ -850,24 +802,18 @@
+ 
+ [[package]]
+ name = "portable-atomic"
+-version = "1.14.0"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "3d20d5497ef88037a52ff98267d066e7f11fcc5e99bbfbd58a42336193aacec3"
++version = "1.15.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "05c8b63e8d9609db387f0324918f81d68fe27748f084ef092fb35954d0539a85"
+ 
+ [[package]]
+ name = "portable-atomic-util"
+-version = "0.2.7"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "c2a106d1259c23fac8e543272398ae0e3c0b8d33c88ed73d0cc71b0f1d902618"
++version = "0.2.8"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "10ab3eb7f3becc3a1cbc4f2c6f20267996cfc1a6467a873763411b136a122715"
+ dependencies = [
+  "portable-atomic",
+ ]
+-
+-[[package]]
+-name = "powerfmt"
+-version = "0.2.0"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "439ee305def115ba05938db6eb1644ff94165c5ab5e9420d1c1bcedbba909391"
+ 
+ [[package]]
+ name = "proc-macro2"
+@@ -1000,6 +946,16 @@
  checksum = "9774ba4a74de5f7b1c1451ed6cd5285a32eddb5cccb8cc655a4e50009e06477f"
  
  [[package]]
@@ -25,9 +481,155 @@
  name = "serde_core"
  version = "1.0.229"
  source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -1021,24 +977,13 @@
+ 
+ [[package]]
+ name = "sha2"
+-version = "0.10.9"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283"
++version = "0.11.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "446ba717509524cb3f22f17ecc096f10f4822d76ab5c0b9822c5f9c284e825f4"
+ dependencies = [
+  "cfg-if",
+- "cpufeatures 0.2.17",
+- "digest 0.10.7",
+-]
+-
+-[[package]]
+-name = "sha2"
+-version = "0.11.0"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "446ba717509524cb3f22f17ecc096f10f4822d76ab5c0b9822c5f9c284e825f4"
+-dependencies = [
+- "cfg-if",
+- "cpufeatures 0.3.0",
+- "digest 0.11.3",
++ "cpufeatures",
++ "digest",
+ ]
+ 
+ [[package]]
+@@ -1132,36 +1077,6 @@
+ ]
+ 
+ [[package]]
+-name = "time"
+-version = "0.3.55"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "cdb87b95ec50ddfa440816d227a17b2ccbdda963a316a727fda0fc4334f7d134"
+-dependencies = [
+- "deranged",
+- "num-conv",
+- "powerfmt",
+- "serde_core",
+- "time-core",
+- "time-macros",
+-]
+-
+-[[package]]
+-name = "time-core"
+-version = "0.1.9"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "9e1c906769ad99c88eaa54e728060edef082f8e358ff32030cb7c7d315e81109"
+-
+-[[package]]
+-name = "time-macros"
+-version = "0.2.32"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "7e689342a48d2ea927c87ea50cabf8594854bf940e9310208848d680d668ed85"
+-dependencies = [
+- "num-conv",
+- "time-core",
+-]
+-
+-[[package]]
+ name = "tinyvec"
+ version = "1.12.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -1238,19 +1153,12 @@
+ ]
+ 
+ [[package]]
+-name = "version_check"
+-version = "0.9.5"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+-
+-[[package]]
+ name = "wasm-bindgen"
+-version = "0.2.126"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "4b067c0c11094aef6b7a801c1e34a26affafdf3d051dba08456b868789aaf9a4"
++version = "0.2.130"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "a0181c14ddd6c7b8b0b0132a5f1ea2f32be0d893cd3ea97b6e3b28886b8a3d1c"
+ dependencies = [
+  "cfg-if",
+- "once_cell",
+  "rustversion",
+  "wasm-bindgen-macro",
+  "wasm-bindgen-shared",
+@@ -1258,9 +1166,9 @@
+ 
+ [[package]]
+ name = "wasm-bindgen-macro"
+-version = "0.2.126"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "167ce5e579f6bcf889c4f7175a8a5a585de84e8ff93976ce393efa5f2837aab1"
++version = "0.2.130"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "6e931a02a39abdbf66966fc35902b5ed58344750a70885bed4ebb3d8eaf28ed9"
+ dependencies = [
+  "quote",
+  "wasm-bindgen-macro-support",
+@@ -1268,22 +1176,22 @@
+ 
+ [[package]]
+ name = "wasm-bindgen-macro-support"
+-version = "0.2.126"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "f3997c7839262f4ef12cf90b818d6340c18e80f263f1a94bf157d0ec4420380e"
++version = "0.2.130"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "2ca4b54280e455bd831e33a6b8e734baf432fe63fbc35c42ac14ce67a043a53a"
+ dependencies = [
+  "bumpalo",
+  "proc-macro2",
+  "quote",
+- "syn 2.0.119",
++ "syn 3.0.3",
+  "wasm-bindgen-shared",
+ ]
+ 
+ [[package]]
+ name = "wasm-bindgen-shared"
+-version = "0.2.126"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "dc1b4cb0cc549fcf58d7dfc081778139b3d283a081644e833e84682ad71cea24"
++version = "0.2.130"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "3b1f9c3798725016c6ee5f2f57869ec0831e8bbc0ab0310a86e787e97f41389e"
+ dependencies = [
+  "unicode-ident",
+ ]
+@@ -1300,9 +1208,9 @@
+ 
+ [[package]]
+ name = "weezl"
+-version = "0.1.12"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "a28ac98ddc8b9274cb41bb4d9d4d5c425b6020c50c46f25559911905610b4a88"
++version = "0.2.1"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "d4ca08e5ef825b65b056d9efbd95c8750683f0a6d0466d02e96dc2e4e360f3d2"
+ 
+ [[package]]
+ name = "windows-core"
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -85,3 +85,7 @@
+@@ -85,3 +85,10 @@
  [profile.release]
  lto = "thin"
  strip = "symbols"
@@ -35,6 +637,9 @@
 +[dependencies.serde]
 +version = "1"
 +features = ["derive"]
++
++[patch.crates-io]
++pdf-inspector = { path = "../pdf-inspector" }
 --- /dev/null
 +++ b/src/conversion.rs
 @@ -0,0 +1,651 @@
@@ -804,7 +1409,26 @@
 +}
 --- a/src/formats/csv.rs
 +++ b/src/formats/csv.rs
-@@ -34,8 +34,10 @@
+@@ -9,7 +9,7 @@
+ //! first record is one.
+ 
+ use crate::error::ConvertError;
+-use crate::model::{Block, Cell, Document, Inline, Table, TableKind};
++use crate::model::{Block, Cell, Diagnostic, Document, Inline, SourceLocation, Table, TableKind};
+ use crate::shared::header::resolve_header_rows;
+ use crate::shared::text::clean_text;
+ use csv::ReaderBuilder;
+@@ -26,7 +26,8 @@
+         .from_reader(text.as_bytes());
+ 
+     let mut rows: Vec<Vec<Cell>> = Vec::new();
+-    for record in reader.records() {
++    let mut first_multiline_cell = None;
++    for (row, record) in reader.records().enumerate() {
+         let record = match record {
+             Ok(r) => r,
+             Err(e) => {
+@@ -34,12 +35,34 @@
                  continue;
              }
          };
@@ -812,12 +1436,36 @@
 -            record.iter().map(|f| Cell::from_inlines(vec![Inline::plain(clean_text(f))])).collect();
 +        let cells: Vec<Cell> = record
 +            .iter()
-+            .map(|f| Cell::from_inlines(vec![Inline::plain(clean_text(f))]))
++            .enumerate()
++            .map(|(column, f)| {
++                if first_multiline_cell.is_none() && f.contains(['\n', '\r']) {
++                    first_multiline_cell = Some(format!("R{}C{}", row + 1, column + 1));
++                }
++                Cell::from_inlines(vec![Inline::plain(clean_text(f))])
++            })
 +            .collect();
          rows.push(cells);
      }
  
-@@ -85,8 +87,12 @@
+     let mut doc = Document::default();
++    // One bounded notice identifies the first affected source cell before
++    // clean_text flattens its line breaks. Notice count cannot grow per cell.
++    if let Some(object) = first_multiline_cell {
++        doc.diagnostics.push(Diagnostic {
++            code: "table.cellLineBreakFlattened".into(),
++            severity: "information".into(),
++            location: Some(SourceLocation {
++                part: "csv".into(),
++                object: Some(object),
++                ..Default::default()
++            }),
++            arguments: vec![],
++        });
++    }
+     let mut table = Table::from_rows(rows, 0, TableKind::Data);
+     table.header_rows = resolve_header_rows(&table, 0);
+     if !table.grid.is_empty() {
+@@ -85,8 +108,12 @@
          // Sample complete records (the reader is streaming, so this reads
          // only as much input as the records span): sampling physical lines
          // would cut a quoted multiline field in half.
@@ -832,7 +1480,7 @@
          if counts.is_empty() {
              continue;
          }
-@@ -117,17 +123,28 @@
+@@ -117,17 +144,28 @@
      #[test]
      fn quoted_fields_keep_padding() {
          let doc = parse(b"a,b\n\"  padded  \",x\n").unwrap();
@@ -866,6 +1514,29 @@
          assert_eq!(sniff_delimiter("a,b,c\n1,2,3\n"), b',');
          assert_eq!(sniff_delimiter("a\tb\n1\t2\n"), b'\t');
      }
+@@ -142,6 +180,22 @@
+     }
+ 
+     #[test]
++    fn multiline_cells_have_one_source_aware_notice() {
++        let doc = parse(b"name,notes\nAlice,\"one\ntwo\"\nBob,\"three\r\nfour\"\n").unwrap();
++        assert_eq!(doc.diagnostics.len(), 1);
++        let notice = &doc.diagnostics[0];
++        assert_eq!(notice.code, "table.cellLineBreakFlattened");
++        assert_eq!(
++            notice.location.as_ref().unwrap().object.as_deref(),
++            Some("R2C2")
++        );
++        let markdown = crate::render::markdown::document_to_markdown(&doc);
++        assert!(markdown.contains("| Alice | one two |"));
++        assert!(markdown.contains("| Bob | three four |"));
++        assert!(parse(b"a,b\nx,y\n").unwrap().diagnostics.is_empty());
++    }
++
++    #[test]
+     fn utf16_bom_decodes() {
+         let mut bytes = vec![0xFF, 0xFE];
+         for u in "x,y\ncafé,90\n".encode_utf16() {
 --- a/src/formats/detect.rs
 +++ b/src/formats/detect.rs
 @@ -41,7 +41,10 @@
@@ -2228,7 +2899,18 @@
 +}
 --- a/src/formats/epub/mod.rs
 +++ b/src/formats/epub/mod.rs
-@@ -14,7 +14,9 @@
+@@ -2,7 +2,9 @@
+ //! chapter-scoped anchors so intra-book navigation survives.
+ 
+ use crate::error::ConvertError;
+-use crate::model::{AnchorId, Block, Document, ImageSource, Inline, LinkTarget};
++use crate::model::{
++    AnchorId, Block, Document, ImageSource, Inline, LinkTarget, inlines_to_plain_text,
++};
+ use crate::package::xml::Element;
+ use crate::package::{Package, path};
+ use crate::shared::assets::{AssetSink, media_type_for};
+@@ -14,7 +16,9 @@
  pub fn parse(bytes: &[u8]) -> Result<Document, ConvertError> {
      let pkg = RefCell::new(Package::open(bytes)?);
  
@@ -2239,17 +2921,27 @@
      let opf_path = container
          .descendants_any("rootfile")
          .next()
-@@ -28,7 +30,8 @@
-     if let Some(title) = opf.descendants_any("title").next().map(|t| t.text()) {
-         let title = title.trim().to_string();
-         if !title.is_empty() {
--            doc.blocks.push(Block::heading(1, vec![Inline::plain(title)]));
-+            doc.blocks
-+                .push(Block::heading(1, vec![Inline::plain(title)]));
-         }
-     }
+@@ -25,12 +29,13 @@
+     let opf = pkg.borrow_mut().required_xml_part(&opf_path)?;
  
-@@ -92,12 +95,16 @@
+     let mut doc = Document::default();
+-    if let Some(title) = opf.descendants_any("title").next().map(|t| t.text()) {
+-        let title = title.trim().to_string();
+-        if !title.is_empty() {
+-            doc.blocks.push(Block::heading(1, vec![Inline::plain(title)]));
+-        }
+-    }
++    let title = opf
++        .descendants_any("title")
++        .next()
++        .map(|t| t.text())
++        .map(|t| t.trim().to_string())
++        .filter(|t| !t.is_empty());
++    let mut title_in_opening_chapter = false;
+ 
+     let mut manifest: HashMap<String, (String, String)> = HashMap::new();
+     for item in opf.descendants_any("item") {
+@@ -92,14 +97,45 @@
              spine_parts: &spine_parts,
          };
          // Chapter-start anchor: renders only when a link targets this chapter.
@@ -2257,19 +2949,50 @@
 -        doc.blocks.extend(crate::shared::html::to_blocks(body, &css, &ctx)?);
 +        doc.blocks
 +            .push(Block::Paragraph(vec![Inline::Anchor(chapter_path.clone())]));
-+        doc.blocks
-+            .extend(crate::shared::html::to_blocks(body, &css, &ctx)?);
++        let blocks = crate::shared::html::to_blocks(body, &css, &ctx)?;
++        if converted == 0 {
++            // Ignore cover images and chapter anchors, but inspect only the first
++            // readable chapter's first heading. A later chapter may legitimately
++            // repeat the book title and must never remove the opening title.
++            let heading = blocks.iter().find_map(|block| match block {
++                Block::Heading { level, content, .. } => {
++                    Some((*level, inlines_to_plain_text(content)))
++                }
++                _ => None,
++            });
++            title_in_opening_chapter = match (&title, heading) {
++                (Some(title), Some((1, heading))) => {
++                    let normalized = |s: &str| {
++                        s.split_whitespace()
++                            .collect::<Vec<_>>()
++                            .join(" ")
++                            .to_lowercase()
++                    };
++                    normalized(title) == normalized(&heading)
++                }
++                _ => false,
++            };
++        }
++        doc.blocks.extend(blocks);
          converted += 1;
      }
      if spine_entries > 0 && converted == 0 {
 -        return Err(ConvertError::malformed("no chapter in the book could be read"));
+-    }
+-
 +        return Err(ConvertError::malformed(
 +            "no chapter in the book could be read",
 +        ));
-     }
- 
++    }
++
++    if !title_in_opening_chapter && let Some(title) = title {
++        doc.blocks
++            .insert(0, Block::heading(1, vec![Inline::plain(title)]));
++    }
      doc.assets = std::mem::take(&mut assets.borrow_mut().assets);
-@@ -119,7 +126,9 @@
+     Ok(doc)
+ }
+@@ -119,7 +155,9 @@
          match elem.local.as_str() {
              "link" => {
                  let rel = elem.attr_any("rel").unwrap_or("");
@@ -2280,7 +3003,7 @@
                  if is_sheet && let Some(href) = elem.attr_any("href") {
                      let Ok(target) = path::resolve(chapter_path, href) else {
                          continue;
-@@ -161,7 +170,10 @@
+@@ -161,7 +199,10 @@
          }
          if let Some(fragment) = href.strip_prefix('#') {
              let fragment = path::decode_fragment(fragment);
@@ -2292,7 +3015,7 @@
          }
          if is_absolute_uri(href) {
              return Some(LinkTarget::External(href.to_string()));
-@@ -170,9 +182,9 @@
+@@ -170,9 +211,9 @@
          // package resource (images, downloads, non-linear content) keep
          // their relative form.
          match path::resolve(&self.chapter_path, href) {
@@ -2305,7 +3028,112 @@
              _ => Some(LinkTarget::Relative(href.to_string())),
          }
      }
-@@ -223,7 +235,9 @@
+@@ -216,6 +257,104 @@
+     use super::*;
+     use std::io::{Cursor, Write};
+ 
++    fn title_fixture(title: &str, chapters: &[&str]) -> Vec<u8> {
++        let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
++        let items = chapters
++            .iter()
++            .enumerate()
++            .map(|(i, _)| {
++                format!(r#"<item id="c{i}" href="c{i}.xhtml" media-type="application/xhtml+xml"/>"#)
++            })
++            .collect::<String>();
++        let spine = chapters
++            .iter()
++            .enumerate()
++            .map(|(i, _)| format!(r#"<itemref idref="c{i}"/>"#))
++            .collect::<String>();
++        let parts = [
++            ("META-INF/container.xml".to_string(), r#"<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="book.opf"/></rootfiles></container>"#.to_string()),
++            ("book.opf".to_string(), format!(r#"<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/"><metadata><dc:title>{title}</dc:title></metadata><manifest>{items}</manifest><spine>{spine}</spine></package>"#)),
++        ];
++        for (name, text) in parts
++            .into_iter()
++            .chain(chapters.iter().enumerate().map(|(i, body)| {
++                (
++                    format!("c{i}.xhtml"),
++                    format!(
++                        r#"<html xmlns="http://www.w3.org/1999/xhtml"><body>{body}</body></html>"#
++                    ),
++                )
++            }))
++        {
++            writer
++                .start_file(name, zip::write::SimpleFileOptions::default())
++                .unwrap();
++            writer.write_all(text.as_bytes()).unwrap();
++        }
++        writer.finish().unwrap().into_inner()
++    }
++
++    #[test]
++    fn opening_title_is_not_duplicated_but_body_headings_survive() {
++        for (title, body, expected) in [
++            (
++                "Coastal field guide",
++                "<h1>Coastal <em>field</em> guide</h1><p>Introduction.</p>",
++                vec!["Coastal field guide"],
++            ),
++            (
++                "Coastal field guide",
++                "<h1>  COASTAL   field guide </h1><p>Introduction.</p>",
++                vec!["COASTAL field guide"],
++            ),
++            (
++                "Coastal field guide",
++                "<h1>Before the survey</h1>",
++                vec!["Coastal field guide", "Before the survey"],
++            ),
++            (
++                "Coastal field guide",
++                "<p>A book without a visible title.</p>",
++                vec!["Coastal field guide"],
++            ),
++            ("", "<h1>Visible title</h1>", vec!["Visible title"]),
++        ] {
++            let doc = parse(&title_fixture(title, &[body])).unwrap();
++            let titles = doc
++                .blocks
++                .iter()
++                .filter_map(|b| match b {
++                    Block::Heading {
++                        level: 1, content, ..
++                    } => Some(
++                        inlines_to_plain_text(content)
++                            .split_whitespace()
++                            .collect::<Vec<_>>()
++                            .join(" "),
++                    ),
++                    _ => None,
++                })
++                .collect::<Vec<_>>();
++            assert_eq!(titles, expected);
++        }
++        let doc = parse(&title_fixture(
++            "Book",
++            &[
++                "<h2>Introduction</h2><p>First chapter.</p>",
++                "<h1>Book</h1><p>Later chapter.</p>",
++            ],
++        ))
++        .unwrap();
++        assert_eq!(
++            doc.blocks
++                .iter()
++                .filter(|b| matches!(b, Block::Heading { level: 1, .. }))
++                .count(),
++            2,
++            "a later chapter's heading must not suppress the opening metadata title"
++        );
++    }
++
+     #[test]
+     fn a_part_repeated_across_the_spine_is_read_once() {
+         let items: String = (0..64)
+@@ -223,7 +362,9 @@
                  format!(r#"<item id="i{i}" href="ch.xhtml" media-type="application/xhtml+xml"/>"#)
              })
              .collect();
@@ -2316,7 +3144,7 @@
          let parts = [
              (
                  "META-INF/container.xml",
-@@ -250,7 +264,8 @@
+@@ -250,7 +391,8 @@
          ];
          let mut w = zip::ZipWriter::new(Cursor::new(Vec::new()));
          for (name, body) in &parts {
@@ -2918,23 +3746,238 @@
          }
      }
      if result.has_encoding_issues {
+--- /dev/null
++++ b/src/formats/ppt/drawing.rs
+@@ -0,0 +1,142 @@
++//! Explicit OfficeArt table geometry and current-document hyperlink records.
++//! Never infer a table from arbitrary aligned text boxes.
++use super::children;
++use crate::{
++    model::LinkTarget,
++    package::limits,
++    shared::binary::{get_u32, utf16le_units},
++};
++use std::collections::HashMap;
++
++pub(super) fn hyperlinks(document: &[u8]) -> HashMap<u32, Option<LinkTarget>> {
++    let mut links = HashMap::new();
++    for (_, _, objects) in children(document).filter(|&(_, t, _)| t == 0x0409) {
++        for (_, _, link) in children(objects).filter(|&(_, t, _)| t == 0x0FD7) {
++            let id = children(link)
++                .find(|&(_, t, _)| t == 0x0FD3)
++                .and_then(|(.., b)| get_u32(b, 0));
++            let target = children(link)
++                .find(|&(v, t, _)| t == 0x0FBA && v >> 4 == 1)
++                .and_then(|(.., b)| String::from_utf16(&utf16le_units(b).collect::<Vec<_>>()).ok());
++            if let Some(id) = id {
++                let target = target
++                    .filter(|s| {
++                        !s.chars().any(char::is_control)
++                            && s.split_once(':').is_some_and(|(scheme, rest)| {
++                                !rest.is_empty()
++                                    && ["http", "https", "mailto"]
++                                        .iter()
++                                        .any(|v| scheme.eq_ignore_ascii_case(v))
++                            })
++                    })
++                    .map(LinkTarget::External);
++                // Conflicting IDs are ambiguous; preserve their text without a link.
++                if links.contains_key(&id) {
++                    links.insert(id, None);
++                } else {
++                    links.insert(id, target);
++                }
++            }
++        }
++    }
++    links
++}
++
++/// A flagged table's text-bearing shapes, in source order, plus a rectangular
++/// grid mapping each covered position to its originating shape.
++pub(super) struct TableLayout<'a> {
++    pub shapes: Vec<&'a [u8]>,
++    pub positions: Vec<(usize, usize, usize, usize)>,
++    pub slots: Vec<usize>,
++    pub rows: usize,
++    pub cols: usize,
++}
++
++fn table_flag(shape: &[u8]) -> bool {
++    children(shape)
++        .filter(|&(_, t, _)| matches!(t, 0xF00B | 0xF121 | 0xF122))
++        .any(|(v, _, props)| {
++            (0..((v >> 4) as usize).min(props.len() / 6)).any(|i| {
++                let at = i * 6;
++                props
++                    .get(at..at + 2)
++                    .is_some_and(|b| u16::from_le_bytes([b[0], b[1]]) == 0x039F)
++                    && get_u32(props, at + 2).is_some_and(|value| value & 1 != 0)
++            })
++        })
++}
++
++pub(super) fn is_table(group: &[u8]) -> bool {
++    children(group)
++        .next()
++        .is_some_and(|(_, t, b)| t == 0xF004 && table_flag(b))
++}
++
++pub(super) fn table_layout(group: &[u8]) -> Option<TableLayout<'_>> {
++    let mut shapes = Vec::new();
++    let mut bounds = Vec::new();
++    for (_, t, shape) in children(group).skip(1) {
++        if t != 0xF004 {
++            return None;
++        }
++        if !children(shape).any(|(_, t, _)| t == 0xF00D) {
++            continue;
++        }
++        let (_, _, anchor) = children(shape).find(|&(_, t, _)| t == 0xF00F)?;
++        let coord = |at| get_u32(anchor, at).map(|v| v as i32);
++        let rect = [coord(0)?, coord(4)?, coord(8)?, coord(12)?];
++        if rect[0] >= rect[2] || rect[1] >= rect[3] {
++            return None;
++        }
++        // Nested groups/tables in a cell are not part of this simple grid.
++        if children(shape).any(|(_, t, _)| t == 0xF003) {
++            return None;
++        }
++        shapes.push(shape);
++        bounds.push(rect);
++    }
++    if shapes.is_empty() {
++        return None;
++    }
++    let mut xs: Vec<_> = bounds.iter().flat_map(|r| [r[0], r[2]]).collect();
++    let mut ys: Vec<_> = bounds.iter().flat_map(|r| [r[1], r[3]]).collect();
++    xs.sort_unstable();
++    xs.dedup();
++    ys.sort_unstable();
++    ys.dedup();
++    let cols = xs.len().checked_sub(1)?;
++    let rows = ys.len().checked_sub(1)?;
++    let count = rows.checked_mul(cols)?;
++    if count == 0 || count as u64 > limits::MAX_GRID_SLOTS {
++        return None;
++    }
++    let mut slots = vec![usize::MAX; count];
++    let mut positions = Vec::new();
++    for (index, rect) in bounds.iter().enumerate() {
++        let left = xs.binary_search(&rect[0]).ok()?;
++        let top = ys.binary_search(&rect[1]).ok()?;
++        let right = xs.binary_search(&rect[2]).ok()?;
++        let bottom = ys.binary_search(&rect[3]).ok()?;
++        for row in top..bottom {
++            for col in left..right {
++                let slot = &mut slots[row * cols + col];
++                if *slot != usize::MAX {
++                    return None;
++                }
++                *slot = index;
++            }
++        }
++        positions.push((top, left, bottom - top, right - left));
++    }
++    // Gaps/overlaps mean the geometry is not an unambiguous complete table.
++    if slots.contains(&usize::MAX) {
++        return None;
++    }
++    Some(TableLayout {
++        shapes,
++        positions,
++        slots,
++        rows,
++        cols,
++    })
++}
 --- a/src/formats/ppt/mod.rs
 +++ b/src/formats/ppt/mod.rs
-@@ -48,7 +48,12 @@
+@@ -6,10 +6,16 @@
+ //! files whose persist directory is unusable. Speaker notes are included
+ //! (fixed policy), rendered as a quote after their slide.
+ 
++mod drawing;
+ mod styletext;
++#[cfg(test)]
++mod tests;
+ 
+ use crate::error::ConvertError;
+-use crate::model::{Block, Document, Inline, Style, inlines_are_empty};
++use crate::model::{
++    Block, Cell, Diagnostic, Document, GridBuilder, Inline, LinkTarget, SourceLocation, Style,
++    TableKind, inlines_are_empty,
++};
+ use crate::package::limits;
+ use crate::shared::binary::{get_u32, read_ole_stream, utf16le_units};
+ use crate::shared::delta::{StyleDelta, rebase_emphasis};
+@@ -48,7 +54,13 @@
          return Err(ConvertError::Encrypted);
      }
      let assets = collect_pictures(&mut ole)?;
 -    Ok(Document { blocks: ex.into_blocks(), notes: Vec::new(), assets })
++    let diagnostics = std::mem::take(&mut ex.diagnostics);
 +    Ok(Document {
 +        blocks: ex.into_blocks(),
 +        notes: Vec::new(),
 +        assets,
-+        diagnostics: Vec::new(),
++        diagnostics,
 +    })
  }
  
  /// Retain the deck's embedded pictures from the `Pictures` stream (OfficeArt
-@@ -163,7 +168,9 @@
+@@ -99,11 +111,34 @@
+     })
+ }
+ 
++fn push_run(inlines: &mut Vec<Inline>, text: String, style: Style, target: Option<LinkTarget>) {
++    let text = Inline::Text { text, style };
++    if let Some(target) = target {
++        if let Some(Inline::Link {
++            content,
++            target: previous,
++        }) = inlines.last_mut()
++            && *previous == target
++        {
++            content.push(text);
++            return;
++        }
++        inlines.push(Inline::Link {
++            content: vec![text],
++            target,
++        });
++    } else {
++        inlines.push(text);
++    }
++}
++
+ /// A text shape being accumulated: header type, text, then styling.
+ struct PendingShape {
+     tx_type: u8,
+     text: String,
+     styles: Option<StyleRuns>,
++    links: Vec<(usize, usize, Option<LinkTarget>)>,
++    interactive: Option<Option<LinkTarget>>,
+ }
+ 
+ #[derive(Default)]
+@@ -124,11 +159,15 @@
+     recovering: bool,
+     /// Records visited across the whole extraction, capped.
+     records: u64,
++    walk_depth: usize,
++    hyperlinks: HashMap<u32, Option<LinkTarget>>,
++    diagnostics: Vec<Diagnostic>,
+ }
+ 
+ /// The persist-resolved layout of the presentation: slide/notes lists from
+ /// the current DocumentContainer, persist id -> offset for every container.
+ struct DocLayout<'a> {
++    document: &'a [u8],
+     persist: HashMap<u32, usize>,
+     slide_list: &'a [u8],
+     notes_list: Option<&'a [u8]>,
+@@ -163,7 +202,9 @@
                  pos += 4;
                  for k in 0..count {
                      // Newer edits win: keep the first offset seen.
@@ -2945,12 +3988,13 @@
                      pos += 4;
                  }
              }
-@@ -187,7 +194,12 @@
+@@ -187,7 +228,13 @@
      let master_list = children(doc)
          .find(|&(ver_inst, rec_type, _)| rec_type == 0x0FF0 && ver_inst >> 4 == 1)
          .map(|(.., body)| body);
 -    Some(DocLayout { persist, slide_list, notes_list, master_list })
 +    Some(DocLayout {
++        document: doc,
 +        persist,
 +        slide_list,
 +        notes_list,
@@ -2959,7 +4003,7 @@
  }
  
  /// One master's TxMasterStyleAtoms, keyed by text-type instance.
-@@ -196,7 +208,9 @@
+@@ -196,7 +243,9 @@
      for (ver_inst, rec_type, body) in children(master) {
          if rec_type == 0x0FA3 {
              let instance = ver_inst >> 4;
@@ -2970,7 +4014,108 @@
          }
      }
      styles
-@@ -300,7 +314,11 @@
+@@ -239,6 +288,92 @@
+ }
+ 
+ impl Extractor {
++    fn notice(&mut self, code: &str) {
++        // One notice per kind/slide keeps adversarial shapes from producing
++        // unbounded diagnostic output, while retaining a useful location.
++        let object = format!("segment-{}", self.segments.len() + 1);
++        if !self
++            .diagnostics
++            .iter()
++            .rev()
++            .take_while(|d| d.location.as_ref().and_then(|l| l.object.as_ref()) == Some(&object))
++            .any(|d| d.code == code)
++        {
++            self.diagnostics.push(Diagnostic {
++                code: code.into(),
++                severity: "warning".into(),
++                location: Some(SourceLocation {
++                    part: "PowerPoint Document".into(),
++                    sheet: None,
++                    object: Some(object),
++                }),
++                arguments: Vec::new(),
++            });
++        }
++    }
++
++    fn interactive(&mut self, ver_inst: u16, body: &[u8]) {
++        // Click actions only. Mouseover actions cannot be represented by a
++        // Markdown link and must not overwrite a click target.
++        if ver_inst >> 4 != 0 {
++            self.notice("presentation.linkUnavailable");
++            return;
++        }
++        let action = children(body)
++            .find(|&(_, t, _)| t == 0x0FF3)
++            .map(|(.., b)| b);
++        let target = action
++            .filter(|b| b.get(8) == Some(&4) && b.get(12) == Some(&8))
++            .and_then(|b| get_u32(b, 4))
++            .and_then(|id| self.hyperlinks.get(&id))
++            .cloned()
++            .flatten();
++        if let Some(shape) = &mut self.pending {
++            // An action with no text range is reported when the shape ends.
++            shape.interactive = Some(target);
++        } else {
++            self.notice("presentation.linkUnavailable");
++        }
++    }
++
++    fn table(&mut self, body: &[u8]) -> Result<bool, ConvertError> {
++        let Some(layout) = drawing::table_layout(body) else {
++            return Ok(false);
++        };
++        self.flush_shape();
++        flush_list(&mut self.current, &mut self.list_run);
++        let parent = std::mem::take(&mut self.current);
++        let mut contents = Vec::with_capacity(layout.shapes.len());
++        for shape in &layout.shapes {
++            self.walk(shape)?;
++            self.flush_shape();
++            flush_list(&mut self.current, &mut self.list_run);
++            contents.push(std::mem::take(&mut self.current));
++        }
++        self.current = parent;
++        let mut grid = GridBuilder::new();
++        for row in 0..layout.rows {
++            grid.next_row();
++            for col in 0..layout.cols {
++                let index = layout.slots[row * layout.cols + col];
++                let (top, left, height, width) = layout.positions[index];
++                if (row, col) == (top, left) {
++                    grid.place(Cell::spanning(
++                        std::mem::take(&mut contents[index]),
++                        width as u32,
++                        height as u32,
++                    ))?;
++                } else {
++                    grid.covered();
++                }
++            }
++        }
++        let mut table = grid.finish(TableKind::Data);
++        table.header_rows = crate::shared::header::resolve_header_rows(&table, 0);
++        self.current.push(Block::Table(table));
++        Ok(true)
++    }
++
+     /// Walk slides in presentation order: the UserEditAtom chain yields the
+     /// persist directory, the DocumentContainer's SlideListWithText yields
+     /// slide order and outline text, each slide container its own textboxes.
+@@ -248,6 +383,7 @@
+             return Ok(false);
+         };
+         self.masters = collect_masters(layout.master_list, &layout.persist, data);
++        self.hyperlinks = drawing::hyperlinks(layout.document);
+         self.walk_slide_list(layout.slide_list, &layout.persist, data, false, 0x03EE)?;
+         if let Some(notes_list) = layout.notes_list {
+             self.walk_slide_list(notes_list, &layout.persist, data, true, 0x03F0)?;
+@@ -300,7 +436,11 @@
          let Some((persist_ref, slide_id)) = pending else {
              return Ok(None);
          };
@@ -2983,7 +4128,70 @@
          if let Some(off) = persist.get(&persist_ref)
              && let Some((_, t, body)) = record_at(data, *off)
              && t == container_type
-@@ -470,8 +488,9 @@
+@@ -377,6 +517,13 @@
+     /// record-count bounds — nesting or record counts beyond any real
+     /// presentation are attack shapes and hard-fail.
+     fn walk(&mut self, data: &[u8]) -> Result<(), ConvertError> {
++        self.walk_depth += 1;
++        if self.walk_depth > limits::MAX_RECORD_DEPTH {
++            return Err(ConvertError::ResourceLimit {
++                limit: "max_record_depth",
++                detail: "nested drawing tables".into(),
++            });
++        }
+         let mut stack: Vec<(&[u8], usize)> = vec![(data, 0)];
+         while let Some((buf, pos)) = stack.last_mut() {
+             let Some((ver_inst, rec_type, body)) = record_at(buf, *pos) else {
+@@ -389,7 +536,25 @@
+                 self.atom(rec_type, body);
+                 continue;
+             }
++            if rec_type == 0xF004 {
++                self.flush_shape();
++                flush_list(&mut self.current, &mut self.list_run);
++            }
+             match rec_type {
++                0xF003 if drawing::is_table(body) => {
++                    if self.table(body)? {
++                        continue;
++                    }
++                    self.notice("presentation.tableFlattened");
++                    if stack.len() >= limits::MAX_RECORD_DEPTH {
++                        return Err(ConvertError::ResourceLimit {
++                            limit: "max_record_depth",
++                            detail: "table group nesting".into(),
++                        });
++                    }
++                    stack.push((body, 0));
++                }
++                0x0FF2 => self.interactive(ver_inst, body),
+                 // CryptSession10Container: the stream is encrypted.
+                 0x2F14 => self.encrypted = true,
+                 // Notes containers are walked via the notes list; recovery
+@@ -425,6 +590,7 @@
+                 }
+             }
+         }
++        self.walk_depth -= 1;
+         Ok(())
+     }
+ 
+@@ -434,6 +600,7 @@
+         self.charge_record()?;
+         if ver_inst & 0xF == 0xF {
+             match rec_type {
++                0x0FF2 => self.interactive(ver_inst, body),
+                 0x2F14 => self.encrypted = true,
+                 0x03F0 | 0x03F8 | 0x0FC9 => {}
+                 0x0FF0 if ver_inst >> 4 != 0 => {}
+@@ -465,13 +632,16 @@
+                     tx_type: body.first().copied().unwrap_or(1),
+                     text: String::new(),
+                     styles: None,
++                    links: Vec::new(),
++                    interactive: None,
+                 });
+             }
              // TextCharsAtom: UTF-16LE.
              0x0FA0 => {
                  let units = utf16le_units(body);
@@ -2995,7 +4203,28 @@
                  self.push_text(text);
              }
              // TextBytesAtom: low bytes of UTF-16 code units.
-@@ -499,7 +518,11 @@
+@@ -486,10 +656,16 @@
+                     pending.styles = Some(styletext::parse_style_text(body, len));
+                 }
+             }
+-            // ExHyperlinkAtom: explicit degradation — hyperlink targets in
+-            // the legacy record stream are not resolved to link inlines.
+-            0x0FD3 => {
+-                log::debug!("ppt hyperlink records present; targets are not resolved");
++            0x0FDF => {
++                if let Some(pending) = &mut self.pending {
++                    if let Some(target) = pending.interactive.take() {
++                        pending.links.push((
++                            get_u32(body, 0).unwrap_or(u32::MAX) as usize,
++                            get_u32(body, 4).unwrap_or(0) as usize,
++                            target,
++                        ));
++                    }
++                }
+             }
+             _ => {}
+         }
+@@ -499,7 +675,13 @@
          match &mut self.pending {
              Some(pending) => pending.text.push_str(&text),
              None => {
@@ -3004,11 +4233,53 @@
 +                    tx_type: 1,
 +                    text,
 +                    styles: None,
++                    links: Vec::new(),
++                    interactive: None,
 +                });
              }
          }
      }
-@@ -525,8 +548,12 @@
+@@ -507,11 +689,38 @@
+     /// Emit the pending shape: paragraphs split on CR, styled by the
+     /// character runs, listed by paragraph depth/bullet with master defaults.
+     fn flush_shape(&mut self) {
+-        let Some(shape) = self.pending.take() else {
++        let Some(mut shape) = self.pending.take() else {
+             return;
+         };
+         if shape.text.is_empty() {
+             return;
++        }
++        // Ranges use the original UTF-16 text, including CR paragraph
++        // separators. Reject boundaries inside surrogate pairs and overlaps.
++        let mut boundaries = vec![0];
++        let mut offset = 0;
++        for c in shape.text.chars() {
++            offset += c.len_utf16();
++            boundaries.push(offset);
++        }
++        shape.links.sort_by_key(|&(start, end, _)| (start, end));
++        let mut end = 0;
++        let mut unavailable = shape.interactive.is_some();
++        shape.links.retain(|(start, stop, target)| {
++            let valid = *start < *stop
++                && *start >= end
++                && boundaries.binary_search(start).is_ok()
++                && boundaries.binary_search(stop).is_ok()
++                && target.is_some();
++            if valid {
++                end = *stop;
++            } else {
++                unavailable = true;
++            }
++            valid
++        });
++        if unavailable {
++            self.notice("presentation.linkUnavailable");
+         }
+         self.shape_counter += 1;
+         let shape_id = self.shape_counter;
+@@ -525,8 +734,12 @@
              .and_then(|(_, m)| m.get(&(shape.tx_type as u16)))
              .cloned()
              .unwrap_or_default();
@@ -3023,8 +4294,31 @@
  
          // Cursors over the style runs, counted in UTF-16 units.
          let mut char_runs = styles.chars.iter();
-@@ -548,8 +575,12 @@
+@@ -540,16 +753,35 @@
+         let mut inlines: Vec<Inline> = Vec::new();
+         let mut run_text = String::new();
+         let mut run_style = Style::PLAIN;
++        let mut run_link = None;
++        let mut text_offset = 0;
++        let mut link_cursor = 0;
+         let para_props = |r: Option<&styletext::ParaProps>| match r {
+             Some(p) => (p.depth, p.bullet),
+             None => (0, None),
+         };
+ 
          for c in shape.text.chars() {
++            while shape
++                .links
++                .get(link_cursor)
++                .is_some_and(|(_, end, _)| *end <= text_offset)
++            {
++                link_cursor += 1;
++            }
++            let link = shape
++                .links
++                .get(link_cursor)
++                .filter(|(start, _, _)| *start <= text_offset)
++                .map(|_| link_cursor);
              let d = level_default(para_props(para_run).0);
              let style = Style {
 +                script: crate::model::Script::Baseline,
@@ -3037,55 +4331,73 @@
                  strike: false,
                  code: false,
              };
-@@ -557,7 +588,10 @@
+@@ -557,7 +789,12 @@
                  if !run_text.is_empty() {
                      let text = clean_text(&std::mem::take(&mut run_text));
                      if !text.is_empty() {
 -                        inlines.push(Inline::Text { text, style: run_style });
-+                        inlines.push(Inline::Text {
++                        push_run(
++                            &mut inlines,
 +                            text,
-+                            style: run_style,
-+                        });
++                            run_style,
++                            run_link.and_then(|i: usize| shape.links[i].2.clone()),
++                        );
                      }
                  }
                  let (depth, bullet) = para_props(para_run);
-@@ -566,7 +600,10 @@
+@@ -566,22 +803,34 @@
                  if !run_text.is_empty() {
                      let text = clean_text(&std::mem::take(&mut run_text));
                      if !text.is_empty() {
 -                        inlines.push(Inline::Text { text, style: run_style });
-+                        inlines.push(Inline::Text {
++                        push_run(
++                            &mut inlines,
 +                            text,
-+                            style: run_style,
-+                        });
++                            run_style,
++                            run_link.and_then(|i: usize| shape.links[i].2.clone()),
++                        );
                      }
                  }
                  inlines.push(Inline::LineBreak);
-@@ -574,7 +611,10 @@
-                 if style != run_style && !run_text.is_empty() {
+             } else {
+-                if style != run_style && !run_text.is_empty() {
++                if (style != run_style || link != run_link) && !run_text.is_empty() {
                      let text = clean_text(&std::mem::take(&mut run_text));
                      if !text.is_empty() {
 -                        inlines.push(Inline::Text { text, style: run_style });
-+                        inlines.push(Inline::Text {
++                        push_run(
++                            &mut inlines,
 +                            text,
-+                            style: run_style,
-+                        });
++                            run_style,
++                            run_link.and_then(|i: usize| shape.links[i].2.clone()),
++                        );
                      }
                  }
                  run_style = style;
-@@ -596,7 +636,10 @@
++                run_link = link;
+                 run_text.push(c);
+             }
+             // Advance run cursors by the character's UTF-16 width.
+             let width = c.len_utf16();
++            text_offset += width;
+             char_left = char_left.saturating_sub(width);
+             if char_left == 0 {
+                 char_run = char_runs.next();
+@@ -596,7 +845,12 @@
          if !run_text.is_empty() {
              let text = clean_text(&run_text);
              if !text.is_empty() {
 -                inlines.push(Inline::Text { text, style: run_style });
-+                inlines.push(Inline::Text {
++                push_run(
++                    &mut inlines,
 +                    text,
-+                    style: run_style,
-+                });
++                    run_style,
++                    run_link.and_then(|i: usize| shape.links[i].2.clone()),
++                );
              }
          }
          if !inlines.is_empty() {
-@@ -612,17 +655,28 @@
+@@ -612,17 +866,28 @@
              if is_title {
                  flush_list(&mut self.current, &mut self.list_run);
                  let d = level_default(depth);
@@ -3158,6 +4470,247 @@
      }
      out
  }
+--- /dev/null
++++ b/src/formats/ppt/tests.rs
+@@ -0,0 +1,238 @@
++use super::*;
++use crate::model::{CellSlot, inlines_to_plain_text};
++
++fn record(t: u16, vi: u16, body: &[u8]) -> Vec<u8> {
++    [
++        vi.to_le_bytes().as_slice(),
++        t.to_le_bytes().as_slice(),
++        (body.len() as u32).to_le_bytes().as_slice(),
++        body,
++    ]
++    .concat()
++}
++fn container(t: u16, body: Vec<u8>) -> Vec<u8> {
++    record(t, 15, &body)
++}
++fn text(value: &str) -> Vec<u8> {
++    [
++        record(0x0F9F, 0, &[4, 0, 0, 0]),
++        record(
++            0x0FA0,
++            0,
++            &value
++                .encode_utf16()
++                .flat_map(u16::to_le_bytes)
++                .collect::<Vec<_>>(),
++        ),
++    ]
++    .concat()
++}
++fn cell(rect: [i32; 4], value: &str) -> Vec<u8> {
++    container(
++        0xF004,
++        [
++            record(
++                0xF00F,
++                0,
++                &rect
++                    .into_iter()
++                    .flat_map(i32::to_le_bytes)
++                    .collect::<Vec<_>>(),
++            ),
++            container(0xF00D, text(value)),
++        ]
++        .concat(),
++    )
++}
++fn table(cells: Vec<Vec<u8>>) -> Vec<u8> {
++    let flag = container(0xF004, record(0xF122, 3 | (1 << 4), &[0x9f, 3, 1, 0, 0, 0]));
++    container(0xF003, [vec![flag], cells].concat().concat())
++}
++fn extract(bytes: &[u8]) -> Extractor {
++    let mut ex = Extractor::default();
++    ex.walk(bytes).unwrap();
++    ex.flush_shape();
++    ex
++}
++fn hyperlink(id: u32, target: &str) -> Vec<u8> {
++    container(
++        0x0FD7,
++        [
++            record(0x0FD3, 0, &id.to_le_bytes()),
++            record(
++                0x0FBA,
++                1 << 4,
++                &target
++                    .encode_utf16()
++                    .flat_map(u16::to_le_bytes)
++                    .collect::<Vec<_>>(),
++            ),
++        ]
++        .concat(),
++    )
++}
++fn action(id: u32, start: u32, end: u32) -> Vec<u8> {
++    let mut atom = vec![0; 16];
++    atom[4..8].copy_from_slice(&id.to_le_bytes());
++    atom[8] = 4;
++    atom[12] = 8;
++    [
++        container(0x0FF2, record(0x0FF3, 0, &atom)),
++        record(
++            0x0FDF,
++            0,
++            &[start.to_le_bytes(), end.to_le_bytes()].concat(),
++        ),
++    ]
++    .concat()
++}
++
++#[test]
++fn explicitly_flagged_grid_preserves_row_column_order_and_infers_header() {
++    // Deliberately stored in non-row order; geometry, not stream order, wins.
++    let bytes = table(vec![
++        cell([10, 10, 20, 20], "12"),
++        cell([0, 0, 10, 10], "Fruit"),
++        cell([0, 10, 10, 20], "Apple"),
++        cell([10, 0, 20, 10], "Quantity"),
++    ]);
++    let ex = extract(&bytes);
++    let [Block::Table(t)] = ex.current.as_slice() else {
++        panic!("{:?}", ex.current);
++    };
++    assert_eq!(t.header_rows, 1);
++    assert_eq!(t.grid.len(), 2);
++    let CellSlot::Origin(c) = &t.grid[1][1] else {
++        panic!()
++    };
++    assert!(matches!(&c.blocks[0], Block::Paragraph(v) if inlines_to_plain_text(v) == "12"));
++    assert!(ex.diagnostics.is_empty());
++}
++#[test]
++fn merged_cells_have_one_origin_and_covered_positions() {
++    let ex = extract(&table(vec![
++        cell([0, 0, 20, 10], "Shared title"),
++        cell([0, 10, 10, 20], "A"),
++        cell([10, 10, 20, 20], "B"),
++    ]));
++    let Block::Table(t) = &ex.current[0] else {
++        panic!()
++    };
++    assert_eq!(t.header_rows, 0);
++    assert!(matches!(&t.grid[0][0], CellSlot::Origin(c) if c.col_span == 2));
++    assert!(matches!(t.grid[0][1], CellSlot::Covered { .. }));
++}
++#[test]
++fn overlaps_and_gaps_preserve_text_with_a_notice_instead_of_guessing() {
++    for second in [[5, 0, 15, 10], [20, 0, 30, 10]] {
++        let ex = extract(&table(vec![
++            cell([0, 0, 10, 10], "First"),
++            cell(second, "Second"),
++        ]));
++        assert_eq!(ex.current.len(), 2);
++        assert!(ex.current.iter().all(|b| matches!(b, Block::Paragraph(_))));
++        assert_eq!(ex.diagnostics[0].code, "presentation.tableFlattened");
++    }
++}
++#[test]
++fn ordinary_groups_are_not_promoted_to_tables() {
++    let bytes = container(
++        0xF003,
++        [cell([0, 0, 10, 10], "A"), cell([10, 0, 20, 10], "B")].concat(),
++    );
++    let ex = extract(&bytes);
++    assert_eq!(ex.current.len(), 2);
++    assert!(ex.diagnostics.is_empty());
++}
++#[test]
++fn links_use_current_document_targets_and_utf16_ranges_across_paragraphs() {
++    let doc = container(0x0409, hyperlink(21, "https://example.org/fruit"));
++    // hyperlinks expects a DocumentContainer body, including ExObjList.
++    let mut ex = Extractor {
++        hyperlinks: drawing::hyperlinks(&doc),
++        ..Default::default()
++    };
++    let source = "Visit 🍎 fruit\rAgain fruit";
++    ex.walk(&container(
++        0xF004,
++        [container(
++            0xF00D,
++            [text(source), action(21, 6, 14), action(21, 21, 26)].concat(),
++        )]
++        .concat(),
++    ))
++    .unwrap();
++    ex.flush_shape();
++    assert_eq!(ex.current.len(), 2);
++    let labels: Vec<_> = ex
++        .current
++        .iter()
++        .flat_map(|b| match b {
++            Block::Paragraph(v) => v.as_slice(),
++            _ => &[],
++        })
++        .filter_map(|i| match i {
++            Inline::Link { content, .. } => Some(inlines_to_plain_text(content)),
++            _ => None,
++        })
++        .collect();
++    assert_eq!(labels, ["🍎 fruit", "fruit"]);
++    assert!(ex.diagnostics.is_empty());
++}
++#[test]
++fn invalid_overlapping_unsafe_and_missing_links_keep_all_text() {
++    for (target, start, end) in [
++        (Some("https://example.org"), 1, 2), // inside emoji surrogate pair
++        (Some("https://example.org"), 0, 200),
++        (Some("javascript:alert(1)"), 0, 2),
++        (None, 0, 2),
++    ] {
++        let mut ex = Extractor::default();
++        if let Some(target) = target {
++            ex.hyperlinks = drawing::hyperlinks(&container(0x0409, hyperlink(1, target)));
++        }
++        ex.walk(&container(
++            0xF004,
++            container(0xF00D, [text("🍎 fruit"), action(1, start, end)].concat()),
++        ))
++        .unwrap();
++        ex.flush_shape();
++        let Block::Paragraph(v) = &ex.current[0] else {
++            panic!()
++        };
++        assert_eq!(inlines_to_plain_text(v), "🍎 fruit");
++        assert!(!v.iter().any(|i| matches!(i, Inline::Link { .. })));
++        assert_eq!(ex.diagnostics[0].code, "presentation.linkUnavailable");
++    }
++}
++#[test]
++fn duplicate_ids_are_not_assigned_arbitrarily_and_shapes_do_not_share_actions() {
++    let map = drawing::hyperlinks(&container(
++        0x0409,
++        [
++            hyperlink(1, "https://one.org"),
++            hyperlink(1, "https://two.org"),
++        ]
++        .concat(),
++    ));
++    assert!(map[&1].is_none());
++    let mut ex = Extractor::default();
++    ex.walk(
++        &[
++            container(0xF004, container(0xF00D, text("First"))),
++            container(0xF004, action(1, 0, 5)),
++        ]
++        .concat(),
++    )
++    .unwrap();
++    ex.flush_shape();
++    let Block::Paragraph(v) = &ex.current[0] else {
++        panic!()
++    };
++    assert_eq!(inlines_to_plain_text(v), "First");
++    assert!(
++        ex.diagnostics
++            .iter()
++            .any(|d| d.code == "presentation.linkUnavailable")
++    );
++}
 --- a/src/formats/pptx/cascade.rs
 +++ b/src/formats/pptx/cascade.rs
 @@ -19,7 +19,11 @@

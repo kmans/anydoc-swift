@@ -109,7 +109,7 @@ and patch hashes offline. After an intentional source change, review the diff an
 refresh using the original verified archive:
 
 ```sh
-python3 Scripts/check-vendored-anydoc.py \
+python3 Scripts/check-vendored-source.py \
   --archive .build/sources/anydoc-0.2.4.crate --refresh
 ```
 
@@ -138,3 +138,30 @@ checksum with `python3 Scripts/record-apple-release.py`. Update the package
 checksum to that recorded value before the compatibility workflow, and publish
 only the exact checked candidate. The vendored parser's pinned development lock
 is separate from the bridge's release graph; `just test-core` runs its unit tests.
+
+## Additional document formats
+
+PDF Unicode bullet markers are recognized even when text extraction supplies no
+space after the marker. A larger marker glyph cannot merge neighboring list
+items into a heading. Ordinary nonbold URL reference lines are excluded from
+the rarity/sequence heading heuristics; explicit structure-tree and font-size
+headings retain priority. PDF text extraction, OCR rejection, and image policy
+remain unchanged. The exact published PDF engine is vendored and patched beside
+anydoc so these repairs ship with the bridge.
+
+EPUB keeps the first readable chapter's visible H1, including inline formatting,
+when it matches the metadata title after case/whitespace normalization. Different
+titles remain distinct; a later chapter cannot suppress the book's opening title.
+CSV retains the existing portable-table flattening of cell line breaks and now
+reports one informational `table.cellLineBreakFlattened` notice at the first
+affected source cell.
+
+Legacy PPT resolves hyperlink IDs from the current DocumentContainer, and click
+text ranges from the original UTF-16 text. Styles and paragraph offsets survive;
+unsafe/missing targets, invalid/overlapping ranges and unrepresentable actions
+keep text and produce `presentation.linkUnavailable`. Only explicitly flagged
+OfficeArt tables with complete, nonoverlapping geometry become structured tables.
+Merged cells retain one origin; ambiguous groups keep their text and produce
+`presentation.tableFlattened`. Arbitrary aligned text boxes are never guessed
+to be tables. Legacy charts and image placement are unchanged. No relationship
+executes an action or fetches a remote resource.

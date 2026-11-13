@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-"""Verify pinned anydoc source and its reviewed patch; refresh only intentionally."""
+"""Verify pinned native source and its reviewed patch; refresh only intentionally."""
 from pathlib import Path
 import argparse, difflib, hashlib, io, json, subprocess, tarfile, tempfile
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = ROOT / 'Rust/anydoc'
-PATCH = ROOT / 'Native/patches/anydoc-0.2.4-fidelity.patch'
-HASHES = ROOT / 'Native/patches/anydoc-0.2.4-fidelity-files.json'
 
 def digest(data): return hashlib.sha256(data).hexdigest()
-def files():
+def files(SOURCE):
     return {p.relative_to(SOURCE).as_posix(): p.read_bytes() for p in SOURCE.rglob('*')
             if p.is_file() and 'target' not in p.relative_to(SOURCE).parts and p.name != 'VENDORED-SOURCE.json'}
 
@@ -16,12 +13,17 @@ def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--archive', type=Path)
     parser.add_argument('--refresh', action='store_true')
+    parser.add_argument('--crate', choices=['anydoc', 'pdf-inspector'], default='anydoc')
     args = parser.parse_args()
-    actual = files()
+    SOURCE = ROOT / 'Rust' / args.crate
     provenance = json.loads((SOURCE/'VENDORED-SOURCE.json').read_text())
+    stem = args.crate + '-' + provenance['version'] + '-fidelity'
+    PATCH = ROOT / 'Native/patches' / (stem + '.patch')
+    HASHES = ROOT / 'Native/patches' / (stem + '-files.json')
+    actual = files(SOURCE)
     if args.archive:
         data = args.archive.read_bytes()
-        if digest(data) != provenance['sha256']: raise ValueError('original anydoc archive checksum differs')
+        if digest(data) != provenance['sha256']: raise ValueError('original crate archive checksum differs')
         with tarfile.open(fileobj=io.BytesIO(data)) as archive:
             original = {m.name.split('/',1)[1]: archive.extractfile(m).read()
                         for m in archive.getmembers() if m.isfile()}
@@ -50,6 +52,6 @@ def main():
     expected = json.loads(HASHES.read_text())
     if expected['files'] != {name:digest(data) for name,data in sorted(actual.items())}: raise ValueError('vendored source changed; review and refresh the patch')
     if expected['patchSHA256'] != digest(PATCH.read_bytes()): raise ValueError('patch checksum differs')
-    print('Verified pinned anydoc source and reviewed fidelity patch')
+    print('Verified pinned ' + args.crate + ' source and reviewed fidelity patch')
 
 if __name__ == '__main__': main()

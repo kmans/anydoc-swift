@@ -78,12 +78,14 @@ Embedded resources remain available. Its import, function, and caller are
 excluded together; other targets retain upstream behavior. This does not fix
 the separate [CMap decoder limitation](cmap-portability-investigation.md).
 
-The [preparation script](../Scripts/prepare-ios-pdf-inspector.py) verifies the
-published crate archive and exact source hashes, stages the patch under `.build`,
-and emits Cargo's supported `paths` configuration. The registry lockfile is
-unchanged by staging; metadata identifies the actual source path. There is no
-upstream fork, shared-cache mutation, or compiler wrapper. Patch provenance is
-documented in [Native/patches](../Native/patches/README.md).
+The checksum-pinned published crate now lives in `Rust/pdf-inspector`, alongside
+`Rust/anydoc`. Its reviewed fidelity patch includes the same three iOS-only
+CMap guards plus the PDF list and heading repairs. The native and development
+manifests both resolve this local source. The [source checker](../Scripts/check-vendored-source.py)
+verifies every file and can reconstruct it from the original archive and patch.
+The iOS producer verifies the resolved manifest path before compiling. It does
+not modify Cargo's shared cache. Provenance is documented in
+[Native/patches](../Native/patches/README.md).
 
 The [iOS producer](../Scripts/build-ios-bridge.sh) rebuilds Rust 1.94.1's standard
 library with `-Zbuild-std=std,panic_unwind` and

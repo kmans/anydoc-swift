@@ -30,3 +30,17 @@ caches, zero and error results, true chartsheets, a missing worksheet part, and
 dynamic-name caches. A plain numeric date chart remains Mermaid; the percentage
 chart retains raw values and percentage displays in a table. These are original,
 deterministic CC0 fixtures; they do not redistribute the third-party demo downloads.
+
+The additional-format fixtures are original CC0 inputs authored for Telescopo on
+12 November 2026. `coastal-field-notes.pdf` has three independently drawn Unicode
+bullets, an ordinary reference URL, and a three-column table.
+`coastal-field-guide.epub` has a matching metadata/visible title and deliberately
+reverse-alphabetical chapter filenames to check spine order.
+`coastal-records.csv` has 30 cells covering quoted multiline text, commas, literal
+Markdown, empty values and Unicode. `legacy-tables-links.ppt` is a small authored
+OLE2 deck with a current persist directory, a flagged OfficeArt table, and a
+UTF-16 hyperlink range containing an emoji. `generate_additional_formats.py`
+recreates the legacy deck without copying any third-party presentation data.
+
+`station-readings.xlsx` is an original CC0 demonstration workbook: three labeled
+temperatures and one plain numeric line chart, also used by the website example.

@@ -6,6 +6,45 @@ final class AnyDocCombinedConversionTests: XCTestCase, @unchecked Sendable {
   private let options = AnyDocMarkdownOptions(
     scripts: .latex, charts: .mermaidOrTable, tables: .portable, images: .assetReferences)
 
+  func testPDFBulletsAndBodyReferenceKeepTheirRoles() async throws {
+    let markdown = try await AnyDocConverter().markdown(
+      from: fixtureData("fidelity/coastal-field-notes.pdf"), format: .pdf)
+    for item in [
+      "Check the tide gauge.", "Record the water temperature.", "Share the summary with the team.",
+    ] {
+      XCTAssertTrue(markdown.components(separatedBy: "\n").contains("- " + item), markdown)
+    }
+    XCTAssertFalse(
+      markdown.components(separatedBy: "\n").contains {
+        $0.hasPrefix("#") && $0.contains("Project guide")
+      })
+    XCTAssertTrue(markdown.contains("|Station|Temperature|Status|"))
+  }
+
+  func testEPUBOpeningTitleAndCSVAdaptationNotice() async throws {
+    let epub = try await AnyDocConverter().convert(
+      from: fixtureData("fidelity/coastal-field-guide.epub"), format: .epub, options: options)
+    XCTAssertEqual(
+      epub.markdown.components(separatedBy: "\n").filter { $0 == "# Coastal field guide" }.count, 1)
+    XCTAssertTrue(
+      epub.markdown.range(of: "Before the survey")!.lowerBound
+        < epub.markdown.range(of: "At the shore")!.lowerBound)
+    let csv = try await AnyDocConverter().convert(
+      from: fixtureData("fidelity/coastal-records.csv"), format: .csv, options: options)
+    let notice = try XCTUnwrap(csv.diagnostics.first { $0.code == "table.cellLineBreakFlattened" })
+    XCTAssertEqual(notice.severity, .information)
+    XCTAssertEqual(notice.location?.part, "csv")
+  }
+
+  func testLegacyPowerPointTableAndUTF16LinkThroughPublicAPI() async throws {
+    let result = try await AnyDocConverter().convert(
+      from: fixtureData("fidelity/legacy-tables-links.ppt"), format: .ppt, options: options)
+    XCTAssertTrue(result.markdown.contains("| Fruit | Quantity | Price |"))
+    XCTAssertTrue(result.markdown.contains("| Apple | 5 | $0.50 |"))
+    XCTAssertTrue(result.markdown.contains("[🍎 fruit](https://example.org/fruit)"))
+    XCTAssertTrue(result.diagnostics.isEmpty)
+  }
+
   func testRealHandbookPreservesMeaningCodeAndInlineAssets() async throws {
     let result = try await AnyDocConverter().convert(
       from: fixtureData("fidelity/handbook.docx"), format: .docx, options: options)
