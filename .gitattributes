@@ -7,3 +7,7 @@ Tests/Fixtures/**/*.pdf binary
 # Preserve verbatim upstream notices, including their original whitespace.
 Native/licenses/Rust*Notices.* -whitespace
 THIRD_PARTY_NOTICES.txt -whitespace
+
+# Keep the published Adobe notice byte-identical; CRLF is meaningful CSV input.
+Rust/pdf-inspector/external/bcmaps/LICENSE -whitespace
+Tests/Fixtures/**/*.csv whitespace=cr-at-eol
